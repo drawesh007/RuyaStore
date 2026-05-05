@@ -1,0 +1,1788 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>Ruya Schools App</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+:root{
+  --navy:#0d1f5c;--navy2:#162272;--navy3:#1a2a8c;
+  --red:#c0201a;--red2:#e0302a;
+  --white:#ffffff;--bg:#eef1f8;--card:#ffffff;
+  --text:#0d1530;--text2:#374151;--muted:#6b7280;
+  --border:#e5e7eb;--green:#059669;--green2:#d1fae5;
+  --amber:#d97706;--amber2:#fef3c7;--blue:#2563eb;
+  --shadow:0 4px 20px rgba(13,31,92,0.12);
+}
+
+/* ── RESET & BASE ─────────────────────────────────── */
+html{height:100%;-webkit-text-size-adjust:100%;}
+body{
+  font-family:'Nunito',sans-serif;
+  background:#c8cfe8;
+  min-height:100vh;
+  /* MOBILE: full screen app */
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
+
+/* ── SCREEN CONTAINER ─────────────────────────────── */
+/* On real mobile: fills the whole viewport               */
+/* On desktop: shows as phone frame                       */
+.app-container{
+  position:relative;
+  background:var(--white);
+  width:100%;
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+}
+
+/* ── DESKTOP ONLY: phone frame + nav buttons ─────── */
+@media(min-width:500px){
+  body{
+    padding:30px 20px;
+    align-items:flex-start;
+    justify-content:center;
+    flex-direction:row;
+    flex-wrap:wrap;
+    gap:20px;
+  }
+  .app-container{
+    width:390px;
+    min-height:0;
+    height:844px;
+    border-radius:50px;
+    box-shadow:0 0 0 12px #1a1a1a,0 0 0 14px #333,0 30px 80px rgba(0,0,0,0.4);
+    flex-shrink:0;
+  }
+  .notch{display:block!important;}
+  .side-btn{display:block!important;}
+  .vol1{display:block!important;}
+  .vol2{display:block!important;}
+  .pg-nav{display:flex!important;}
+  .scr-label{display:block!important;}
+}
+
+/* ── PHONE CHROME (desktop only) ──────────────────── */
+.notch{
+  display:none;
+  position:absolute;top:0;left:50%;transform:translateX(-50%);
+  width:130px;height:34px;background:#1a1a1a;
+  border-radius:0 0 22px 22px;z-index:999;
+}
+.side-btn{display:none;position:absolute;right:-14px;top:160px;width:6px;height:70px;background:#333;border-radius:3px;}
+.vol1{display:none;position:absolute;left:-14px;top:150px;width:6px;height:40px;background:#333;border-radius:3px;}
+.vol2{display:none;position:absolute;left:-14px;top:205px;width:6px;height:60px;background:#333;border-radius:3px;}
+
+/* ── SCREEN NAV (desktop only) ───────────────────── */
+.pg-nav{
+  display:none;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:8px;
+  max-width:420px;
+  padding:0 10px;
+}
+.pg-btn{
+  background:rgba(255,255,255,0.15);
+  border:1px solid rgba(255,255,255,0.25);
+  color:white;border-radius:8px;padding:5px 10px;
+  font-size:10px;font-weight:700;cursor:pointer;
+  font-family:'Nunito',sans-serif;transition:all 0.2s;
+  white-space:nowrap;
+}
+.pg-btn:hover,.pg-btn.on{background:white;color:var(--navy);}
+.scr-label{
+  display:none;
+  text-align:center;
+  font-size:11px;font-weight:700;color:rgba(255,255,255,0.6);
+  margin-top:8px;letter-spacing:0.5px;font-family:'Nunito',sans-serif;
+  width:390px;
+}
+
+/* ── SCREENS ──────────────────────────────────────── */
+.screen{
+  display:none;
+  flex-direction:column;
+  /* Mobile: fill viewport height */
+  height:100vh;
+  /* Desktop: fill phone frame */
+}
+@media(min-width:500px){
+  .screen{height:844px;}
+}
+.screen.active{display:flex;}
+
+/* ── STATUS BAR ───────────────────────────────────── */
+.sbar{
+  background:var(--navy);
+  padding:10px 22px 6px;
+  display:flex;justify-content:space-between;align-items:center;
+  color:white;font-size:11px;font-weight:700;flex-shrink:0;
+}
+/* On real iPhone: add safe-area padding for notch */
+@supports(padding-top:env(safe-area-inset-top)){
+  .sbar{padding-top:calc(env(safe-area-inset-top) + 6px);}
+}
+@media(min-width:500px){
+  .sbar{padding-top:38px;}
+}
+.sbar-icons{display:flex;gap:5px;align-items:center;}
+
+/* ── SCROLL AREAS ─────────────────────────────────── */
+.scrl{flex:1;overflow-y:auto;background:var(--bg);-webkit-overflow-scrolling:touch;scrollbar-width:none;}
+.scrl::-webkit-scrollbar{display:none;}
+.scrl-white{flex:1;overflow-y:auto;background:white;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
+.scrl-white::-webkit-scrollbar{display:none;}
+
+/* ── HEADER ───────────────────────────────────────── */
+.hdr{
+  background:var(--navy);
+  padding:14px 18px;color:white;
+  display:flex;align-items:center;gap:10px;flex-shrink:0;
+}
+.hdr-title{font-size:17px;font-weight:800;flex:1;font-family:'Poppins',sans-serif;}
+.hdr-sub{font-size:11px;color:rgba(255,255,255,0.65);margin-top:1px;}
+.back{
+  width:36px;height:36px;border-radius:50%;
+  background:rgba(255,255,255,0.15);border:none;color:white;
+  cursor:pointer;font-size:20px;display:flex;align-items:center;justify-content:center;
+  min-width:44px;min-height:44px;
+}
+
+/* ── BOTTOM NAV ───────────────────────────────────── */
+.bnav{
+  background:white;
+  border-top:1.5px solid var(--border);
+  display:grid;grid-template-columns:repeat(5,1fr);
+  padding:8px 0;flex-shrink:0;
+  box-shadow:0 -4px 20px rgba(0,0,0,0.06);
+}
+/* iPhone home bar safe area */
+@supports(padding-bottom:env(safe-area-inset-bottom)){
+  .bnav{padding-bottom:calc(env(safe-area-inset-bottom) + 8px);}
+}
+.nv{
+  display:flex;flex-direction:column;align-items:center;gap:3px;
+  color:var(--muted);font-size:10px;font-weight:700;
+  cursor:pointer;border:none;background:none;padding:4px 0;
+  min-height:44px;font-family:'Nunito',sans-serif;
+}
+.nv.on{color:var(--navy);}
+.nv svg{width:22px;height:22px;}
+
+/* ── LOADING OVERLAY ──────────────────────────────── */
+.loading{
+  display:none;position:absolute;inset:0;
+  background:rgba(255,255,255,0.92);z-index:500;
+  align-items:center;justify-content:center;flex-direction:column;gap:12px;
+}
+.loading.on{display:flex;}
+.spin{width:40px;height:40px;border:4px solid var(--border);border-top-color:var(--navy);border-radius:50%;animation:spin 0.7s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+/* ── CARDS ────────────────────────────────────────── */
+.card{background:white;border-radius:18px;padding:16px;margin:8px 16px;border:1px solid var(--border);box-shadow:0 2px 12px rgba(13,31,92,0.06);}
+
+/* ── BUTTONS ──────────────────────────────────────── */
+.btn{background:var(--navy);color:white;border:none;border-radius:16px;padding:15px 20px;font-size:15px;font-weight:800;font-family:'Poppins',sans-serif;cursor:pointer;width:100%;transition:all 0.2s;letter-spacing:0.3px;min-height:50px;}
+.btn:active{background:var(--navy2);transform:scale(0.98);}
+.btn-red{background:var(--red);color:white;border:none;border-radius:16px;padding:15px 20px;font-size:15px;font-weight:800;font-family:'Poppins',sans-serif;cursor:pointer;width:100%;min-height:50px;}
+.btn-out{background:white;color:var(--navy);border:2.5px solid var(--navy);border-radius:16px;padding:13px 20px;font-size:14px;font-weight:800;font-family:'Poppins',sans-serif;cursor:pointer;width:100%;min-height:50px;}
+.btn-sm{background:var(--navy);color:white;border:none;border-radius:10px;padding:8px 16px;font-size:12px;font-weight:700;font-family:'Nunito',sans-serif;cursor:pointer;min-height:36px;}
+
+/* ── INPUT ────────────────────────────────────────── */
+.lbl{font-size:12px;color:var(--muted);font-weight:700;margin-bottom:5px;letter-spacing:0.3px;}
+.inp{width:100%;border:2px solid var(--border);border-radius:13px;padding:13px 15px;font-size:16px;font-family:'Nunito',sans-serif;outline:none;color:var(--text);transition:border-color 0.2s;background:white;-webkit-appearance:none;}
+.inp:focus{border-color:var(--navy);}
+.ig{margin-bottom:14px;}
+
+/* ── BADGE ────────────────────────────────────────── */
+.bdg{font-size:11px;padding:4px 10px;border-radius:20px;font-weight:700;}
+.bdg-g{background:#d1fae5;color:#065f46;}
+.bdg-r{background:#fee2e2;color:#991b1b;}
+.bdg-b{background:#dbeafe;color:#1e40af;}
+.bdg-a{background:#fef3c7;color:#92400e;}
+.bdg-n{background:#e0e7ff;color:#3730a3;}
+
+/* ── SELECTION CARD ───────────────────────────────── */
+.scard{background:white;border-radius:16px;padding:14px 16px;margin:7px 16px;border:2.5px solid transparent;cursor:pointer;display:flex;align-items:center;gap:12px;box-shadow:0 2px 10px rgba(13,31,92,0.06);transition:all 0.2s;min-height:64px;}
+.scard:active,.scard.sel{border-color:var(--navy);background:#f0f3ff;}
+.scard-icon{width:48px;height:48px;border-radius:14px;background:var(--navy);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;}
+.scard-icon.r{background:var(--red);}
+.scard-icon.g{background:#059669;}
+.scard-icon.p{background:#7c3aed;}
+
+/* ── CONTEXT BAR ──────────────────────────────────── */
+.ctxbar{background:white;border-bottom:1.5px solid var(--border);padding:8px 16px;display:flex;gap:6px;align-items:center;flex-wrap:wrap;flex-shrink:0;}
+.chip{background:#eef0fa;color:var(--navy);font-size:11px;font-weight:700;padding:4px 10px;border-radius:8px;}
+
+/* ── STUDENT CARD ─────────────────────────────────── */
+.stcard{background:white;border-radius:18px;margin:8px 16px;overflow:hidden;box-shadow:var(--shadow);border:1px solid var(--border);}
+.stcard-hdr{background:var(--navy);padding:13px 16px;display:flex;align-items:center;gap:10px;}
+.stcard-av{width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:800;color:white;border:2px solid rgba(255,255,255,0.3);}
+.stcard-body{padding:13px 16px;}
+
+/* ── FIN ROW ──────────────────────────────────────── */
+.frow{display:flex;justify-content:space-between;margin-bottom:7px;}
+.frow-l{font-size:12px;color:var(--muted);font-weight:600;}
+.frow-v{font-size:12px;font-weight:800;color:var(--text);}
+
+/* ── GRID MENU ────────────────────────────────────── */
+.mgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;padding:12px 16px;}
+.mitem{background:white;border-radius:16px;padding:18px 12px;display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer;border:1.5px solid var(--border);box-shadow:0 2px 8px rgba(13,31,92,0.05);transition:all 0.2s;min-height:90px;}
+.mitem:active{background:#f0f3ff;transform:scale(0.97);}
+.micon{width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;}
+.mlbl{font-size:12px;font-weight:800;color:var(--text);text-align:center;font-family:'Poppins',sans-serif;}
+
+/* ── TOTALS ───────────────────────────────────────── */
+.tgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin:8px 16px;}
+.tcell{background:white;border-radius:14px;padding:13px;text-align:center;border:1.5px solid var(--border);}
+.tcell-l{font-size:10px;color:var(--muted);font-weight:700;margin-bottom:5px;text-transform:uppercase;letter-spacing:0.4px;}
+.tcell-v{font-size:17px;font-weight:900;color:var(--navy);font-family:'Poppins',sans-serif;}
+.tcell.rem .tcell-v{color:var(--red);}
+.tcell.paid .tcell-v{color:var(--green);}
+
+/* ── QUICK SWITCH ─────────────────────────────────── */
+.qs{background:rgba(255,255,255,0.1);border-radius:12px;padding:9px 12px;display:flex;gap:7px;align-items:center;flex-wrap:wrap;}
+.qs-btn{background:rgba(255,255,255,0.15);border:1.5px solid rgba(255,255,255,0.25);border-radius:9px;padding:5px 10px;font-size:10px;color:white;cursor:pointer;font-family:'Nunito',sans-serif;font-weight:700;min-height:32px;}
+
+/* ── PAY METHOD ───────────────────────────────────── */
+.pmeth{border:2.5px solid var(--border);border-radius:14px;padding:13px 16px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:all 0.2s;margin-bottom:10px;min-height:60px;}
+.pmeth.sel{border-color:var(--navy);background:#f0f3ff;}
+.pmeth-logo{font-size:26px;width:40px;text-align:center;}
+.pmeth-name{font-size:14px;font-weight:700;color:var(--text);}
+.pmeth-sub{font-size:11px;color:var(--muted);}
+.pmeth-check{margin-left:auto;width:22px;height:22px;border-radius:50%;background:var(--navy);display:none;align-items:center;justify-content:center;color:white;font-size:11px;}
+.pmeth.sel .pmeth-check{display:flex;}
+
+/* ── MISC ─────────────────────────────────────────── */
+.suc-icon{width:90px;height:90px;border-radius:50%;background:#d1fae5;display:flex;align-items:center;justify-content:center;font-size:40px;margin:0 auto 16px;}
+.fail-icon{width:90px;height:90px;border-radius:50%;background:#fee2e2;display:flex;align-items:center;justify-content:center;font-size:40px;margin:0 auto 16px;}
+.nitem{display:flex;gap:12px;padding:13px 16px;border-bottom:1.5px solid var(--border);cursor:pointer;min-height:60px;}
+.ndot{width:9px;height:9px;border-radius:50%;background:var(--red);flex-shrink:0;margin-top:5px;}
+.ndot.read{background:var(--border);}
+.tli{display:flex;gap:14px;padding:0 16px 20px;position:relative;}
+.tli-dot{width:14px;height:14px;border-radius:50%;background:var(--navy);flex-shrink:0;margin-top:4px;border:3px solid white;box-shadow:0 0 0 2px var(--navy);}
+.tli-dot.done{background:var(--green);}
+.srow{display:flex;justify-content:space-between;padding:11px 16px;border-bottom:1.5px solid var(--border);font-size:13px;}
+.s-dr{color:var(--red);font-weight:700;}
+.s-cr{color:var(--green);font-weight:700;}
+.rrow{display:flex;justify-content:space-between;padding:11px 0;border-bottom:1px dashed var(--border);}
+.rl{font-size:13px;color:var(--muted);font-weight:600;}
+.rv{font-size:13px;font-weight:800;color:var(--text);}
+.psec{background:white;margin:8px 16px;border-radius:16px;overflow:hidden;border:1.5px solid var(--border);}
+.pitem{display:flex;align-items:center;gap:13px;padding:15px 16px;border-bottom:1.5px solid var(--border);cursor:pointer;min-height:54px;}
+.pitem:last-child{border-bottom:none;}
+.picon{font-size:20px;width:30px;text-align:center;}
+.ptxt{flex:1;font-size:14px;font-weight:700;color:var(--text);}
+.ycard{background:white;border-radius:14px;padding:14px 16px;margin:7px 16px;display:flex;justify-content:space-between;align-items:center;border:2.5px solid transparent;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,0.05);transition:all 0.2s;min-height:60px;}
+.ycard.sel{border-color:var(--navy);background:#f0f3ff;}
+.ainp{border:2px solid var(--navy);border-radius:11px;padding:9px 12px;font-size:16px;font-family:'Poppins',sans-serif;width:100%;outline:none;color:var(--navy);font-weight:800;text-align:center;-webkit-appearance:none;}
+.encard{background:white;border-radius:16px;margin:8px 16px;padding:14px 16px;display:flex;align-items:center;gap:12px;border:1.5px solid var(--border);box-shadow:0 2px 8px rgba(13,31,92,0.05);}
+.en-av{width:46px;height:46px;border-radius:50%;background:var(--navy);display:flex;align-items:center;justify-content:center;color:white;font-size:17px;font-weight:800;flex-shrink:0;}
+.sel-inp{width:100%;border:2px solid var(--border);border-radius:13px;padding:12px 14px;font-size:16px;font-family:'Nunito',sans-serif;outline:none;color:var(--text);background:white;margin-bottom:12px;-webkit-appearance:none;}
+.tarea{width:100%;border:2px solid var(--border);border-radius:13px;padding:12px 14px;font-size:16px;font-family:'Nunito',sans-serif;outline:none;color:var(--text);resize:none;height:110px;margin-bottom:12px;}
+.out-ban{background:linear-gradient(135deg,var(--red),#a01515);color:white;border-radius:16px;padding:18px;margin:10px 16px;position:relative;overflow:hidden;}
+.out-ban::before{content:'';position:absolute;right:-20px;top:-20px;width:100px;height:100px;background:rgba(255,255,255,0.08);border-radius:50%;}
+.pol-section{padding:0 16px 12px;}
+.pol-title{font-size:14px;font-weight:800;color:var(--navy);margin:13px 0 5px;font-family:'Poppins',sans-serif;}
+.pol-text{font-size:13px;color:var(--muted);line-height:1.65;}
+.stmt-row{display:flex;justify-content:space-between;padding:11px 16px;border-bottom:1.5px solid var(--border);font-size:13px;}
+.div{height:1.5px;background:var(--border);margin:8px 0;}
+.sec-t{font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:0.6px;padding:12px 16px 4px;}
+.face-id-svg{width:72px;height:72px;}
+.hdr-grad{background:linear-gradient(145deg,#0a1550 0%,#0d1f5c 50%,#162272 100%);padding:46px 18px 20px;color:white;flex-shrink:0;position:relative;overflow:hidden;}
+.hdr-grad::before{content:'';position:absolute;top:-40px;right:-40px;width:200px;height:200px;background:rgba(192,32,26,0.15);border-radius:50%;}
+@media(min-width:500px){.hdr-grad{padding:14px 18px 20px;}}
+.p16{padding:0 16px;}
+.mt8{margin-top:8px;}
+.mb16{margin-bottom:16px;}
+.mb8{margin-bottom:8px;}
+.tc{text-align:center;}
+.fw8{font-weight:800;}
+.fw7{font-weight:700;}
+.f12{font-size:12px;}
+.f13{font-size:13px;}
+.f14{font-size:14px;}
+.f15{font-size:15px;}
+.navy{color:var(--navy);}
+.red{color:var(--red);}
+.green{color:var(--green);}
+.muted{color:var(--muted);}
+.poppins{font-family:'Poppins',sans-serif;}
+</style>
+</head>
+<body>
+
+<!-- ── DESKTOP: screen navigator ──────────────────── -->
+<div class="pg-nav" id="pgNav">
+  <button class="pg-btn on" onclick="showScr('scr-001',this)">001 Login</button>
+  <button class="pg-btn" onclick="showScr('scr-002',this)">002 Institution</button>
+  <button class="pg-btn" onclick="showScr('scr-003',this)">003 School</button>
+  <button class="pg-btn" onclick="showScr('scr-004',this)">004 Branch</button>
+  <button class="pg-btn" onclick="showScr('scr-005',this)">005 Dashboard</button>
+  <button class="pg-btn" onclick="showScr('scr-006',this)">006 Home</button>
+  <button class="pg-btn" onclick="showScr('scr-007',this)">007 Pay Menu</button>
+  <button class="pg-btn" onclick="showScr('scr-008',this)">008 Pay Current</button>
+  <button class="pg-btn" onclick="showScr('scr-009',this)">009 Pay Details</button>
+  <button class="pg-btn" onclick="showScr('scr-010',this)">010 Advance</button>
+  <button class="pg-btn" onclick="showScr('scr-011',this)">011 Adv Details</button>
+  <button class="pg-btn" onclick="showScr('scr-012',this)">012 Old Debts</button>
+  <button class="pg-btn" onclick="showScr('scr-013',this)">013 Debt Students</button>
+  <button class="pg-btn" onclick="showScr('scr-014',this)">014 Checkout</button>
+  <button class="pg-btn" onclick="showScr('scr-015',this)">015 Result</button>
+  <button class="pg-btn" onclick="showScr('scr-016',this)">016 Reports</button>
+  <button class="pg-btn" onclick="showScr('scr-017',this)">017 Policy</button>
+  <button class="pg-btn" onclick="showScr('scr-018',this)">018 History</button>
+  <button class="pg-btn" onclick="showScr('scr-019',this)">019 Statement</button>
+  <button class="pg-btn" onclick="showScr('scr-020',this)">020 Enrollment</button>
+  <button class="pg-btn" onclick="showScr('scr-021',this)">021 Academic</button>
+  <button class="pg-btn" onclick="showScr('scr-022',this)">022 Contact</button>
+  <button class="pg-btn" onclick="showScr('scr-023',this)">023 Notifications</button>
+  <button class="pg-btn" onclick="showScr('scr-024',this)">024 Settings</button>
+  <button class="pg-btn" onclick="showScr('scr-025',this)">025 Receipt</button>
+</div>
+
+<!-- ── APP FRAME ───────────────────────────────────── -->
+<div style="display:flex;flex-direction:column;align-items:center;">
+<div class="app-container" id="mainPhone">
+  <div class="notch"></div>
+  <div class="side-btn"></div>
+  <div class="vol1"></div>
+  <div class="vol2"></div>
+  <div class="loading" id="loadingEl">
+    <div class="spin"></div>
+    <div style="font-size:13px;color:var(--muted);font-family:'Nunito',sans-serif;font-weight:700;">Loading...</div>
+  </div>
+  <div class="screen active" id="scr-001">
+    <div class="scrl-white">
+      <!-- HERO TOP -->
+      <div style="background:linear-gradient(155deg,#080f35 0%,#0d1f5c 55%,#1a2a8c 100%);padding:52px 24px 36px;text-align:center;position:relative;overflow:hidden;">
+        <div style="position:absolute;top:-50px;right:-50px;width:220px;height:220px;background:rgba(192,32,26,0.12);border-radius:50%;"></div>
+        <div style="position:absolute;bottom:-80px;left:-40px;width:200px;height:200px;background:rgba(255,255,255,0.04);border-radius:50%;"></div>
+        <!-- Logo -->
+        <div style="background:white;border-radius:22px;padding:14px 32px;display:inline-block;margin-bottom:18px;box-shadow:0 8px 30px rgba(0,0,0,0.3);">
+          <div style="display:flex;align-items:center;gap:6px;">
+            <span style="font-family:'Poppins',sans-serif;font-size:28px;font-weight:900;color:#0d1f5c;letter-spacing:-1px;">al<span style="color:#c0201a;">ru</span>ya</span>
+            <div style="width:8px;height:8px;background:#c0201a;border-radius:50%;margin-bottom:14px;"></div>
+          </div>
+        </div>
+        <!-- Icon Circles — matching reference image -->
+        <div style="display:flex;justify-content:center;gap:14px;flex-wrap:wrap;margin-bottom:8px;">
+          <div style="width:50px;height:50px;border-radius:50%;background:white;border:2.5px solid #c0201a;display:flex;align-items:center;justify-content:center;font-size:22px;box-shadow:0 4px 14px rgba(192,32,26,0.25);">🧮</div>
+          <div style="width:50px;height:50px;border-radius:50%;background:white;border:2.5px solid #c0201a;display:flex;align-items:center;justify-content:center;font-size:22px;box-shadow:0 4px 14px rgba(192,32,26,0.25);">🎓</div>
+          <div style="width:50px;height:50px;border-radius:50%;background:white;border:2.5px solid #c0201a;display:flex;align-items:center;justify-content:center;font-size:22px;box-shadow:0 4px 14px rgba(192,32,26,0.25);">✏️</div>
+          <div style="width:50px;height:50px;border-radius:50%;background:white;border:2.5px solid #c0201a;display:flex;align-items:center;justify-content:center;font-size:22px;box-shadow:0 4px 14px rgba(192,32,26,0.25);">💡</div>
+          <div style="width:50px;height:50px;border-radius:50%;background:white;border:2.5px solid #c0201a;display:flex;align-items:center;justify-content:center;font-size:22px;box-shadow:0 4px 14px rgba(192,32,26,0.25);">📊</div>
+        </div>
+        <div style="color:rgba(255,255,255,0.65);font-size:12px;font-weight:600;letter-spacing:0.5px;margin-top:6px;">SCHOOL MANAGEMENT SYSTEM</div>
+      </div>
+
+      <!-- FORM -->
+      <div style="padding:28px 22px;">
+        <div style="font-size:22px;font-weight:900;color:var(--text);margin-bottom:4px;font-family:'Poppins',sans-serif;">Welcome Back</div>
+        <div style="font-size:13px;color:var(--muted);margin-bottom:22px;font-weight:600;">Sign in to manage your children's education</div>
+
+        <div class="ig">
+          <div class="lbl">USERNAME / MOBILE / CIVIL ID</div>
+          <div style="position:relative;">
+            <input class="inp" type="text" placeholder="Enter your credentials" value="mohammed.ahmed">
+            <span style="position:absolute;right:14px;top:50%;transform:translateY(-50%);font-size:18px;">👤</span>
+          </div>
+        </div>
+        <div class="ig">
+          <div class="lbl">PASSWORD</div>
+          <div style="position:relative;">
+            <input class="inp" type="password" placeholder="••••••••" value="password123">
+            <span style="position:absolute;right:14px;top:50%;transform:translateY(-50%);font-size:18px;cursor:pointer;">👁️</span>
+          </div>
+        </div>
+
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:22px;">
+          <div style="font-size:12px;color:var(--red);cursor:pointer;font-weight:700;">Forgot Password?</div>
+          <div style="display:flex;gap:7px;">
+            <div style="font-size:11px;padding:5px 12px;border-radius:8px;background:var(--navy);color:white;cursor:pointer;font-weight:700;">EN</div>
+            <div style="font-size:11px;padding:5px 12px;border-radius:8px;border:1.5px solid var(--border);cursor:pointer;font-weight:700;">AR</div>
+          </div>
+        </div>
+
+        <button class="btn" onclick="goTo('scr-002')">Sign In</button>
+
+        <!-- FACE ID -->
+        <div style="text-align:center;margin-top:24px;">
+          <div style="font-size:11px;color:var(--muted);font-weight:700;margin-bottom:12px;letter-spacing:0.5px;">OR USE BIOMETRICS</div>
+          <div style="cursor:pointer;display:inline-block;" onclick="doFaceId()">
+            <svg class="face-id-svg" viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg" id="faceIdSvg">
+              <!-- Corner brackets -->
+              <path d="M8 22V8H22" stroke="#0d1f5c" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M50 8H64V22" stroke="#0d1f5c" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M64 50V64H50" stroke="#0d1f5c" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M22 64H8V50" stroke="#0d1f5c" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <!-- Eyes -->
+              <circle cx="26" cy="30" r="2.5" fill="#0d1f5c"/>
+              <circle cx="46" cy="30" r="2.5" fill="#0d1f5c"/>
+              <!-- Nose -->
+              <path d="M34 33V40H38" stroke="#0d1f5c" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <!-- Mouth -->
+              <path d="M26 46C26 46 29 50 36 50C43 50 46 46 46 46" stroke="#0d1f5c" stroke-width="2.5" stroke-linecap="round"/>
+              <!-- Eyebrow left -->
+              <path d="M22 25C23 23 25 22 28 22" stroke="#0d1f5c" stroke-width="2" stroke-linecap="round"/>
+              <!-- Eyebrow right -->
+              <path d="M50 25C49 23 47 22 44 22" stroke="#0d1f5c" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div style="font-size:12px;color:var(--navy);font-weight:700;margin-top:6px;">Tap to use Face ID</div>
+        </div>
+
+        <div style="text-align:center;margin-top:18px;font-size:13px;color:var(--muted);font-weight:600;">
+          New user? <span style="color:var(--navy);font-weight:800;cursor:pointer;">Create Account</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!-- SCR-002: INSTITUTION SELECTION -->
+  <!-- ═══════════════════════════════════════════════ -->
+  <div class="screen" id="scr-002">
+    <div class="sbar"><span>9:41</span><div class="sbar-icons"><span>▲▲▲</span><span>WiFi</span><span>🔋</span></div></div>
+    <div class="hdr-grad" style="padding:14px 18px 20px;">
+      <div style="font-size:20px;font-weight:900;font-family:'Poppins',sans-serif;">Select Institution</div>
+      <div style="font-size:12px;color:rgba(255,255,255,0.65);margin-top:3px;">Welcome, Mohammed Ahmed 👋</div>
+    </div>
+    <div class="scrl">
+      <div style="font-size:11px;font-weight:700;color:var(--muted);padding:12px 16px 4px;letter-spacing:0.5px;text-transform:uppercase;">Available Institutions</div>
+      <div class="scard sel" onclick="toggleSel(this)">
+        <div class="scard-icon">🏛️</div>
+        <div style="flex:1;">
+          <div style="font-size:15px;font-weight:800;color:var(--text);font-family:'Poppins',sans-serif;">Alruya Educational Group</div>
+          <div style="font-size:12px;color:var(--muted);margin-top:3px;font-weight:600;">3 Schools • 8 Students</div>
+        </div>
+        <div style="color:var(--navy);font-size:20px;">✓</div>
+      </div>
+      <div class="scard" onclick="toggleSel(this)">
+        <div class="scard-icon r">🏫</div>
+        <div style="flex:1;">
+          <div style="font-size:15px;font-weight:800;color:var(--text);font-family:'Poppins',sans-serif;">International Academy</div>
+          <div style="font-size:12px;color:var(--muted);margin-top:3px;font-weight:600;">2 Schools • 3 Students</div>
+        </div>
+        <div style="color:var(--muted);font-size:20px;">›</div>
+      </div>
+      <div class="scard" onclick="toggleSel(this)">
+        <div class="scard-icon g">⭐</div>
+        <div style="flex:1;">
+          <div style="font-size:15px;font-weight:800;color:var(--text);font-family:'Poppins',sans-serif;">Stars Schools</div>
+          <div style="font-size:12px;color:var(--muted);margin-top:3px;font-weight:600;">1 School • 2 Students</div>
+        </div>
+        <div style="color:var(--muted);font-size:20px;">›</div>
+      </div>
+      <div style="padding:16px;"><button class="btn" onclick="showLoading('scr-003')">Continue</button></div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!-- SCR-003: SCHOOL SELECTION -->
+  <!-- ═══════════════════════════════════════════════ -->
+  <div class="screen" id="scr-003">
+    <div class="sbar"><span>9:41</span><div class="sbar-icons"><span>🔋</span></div></div>
+    <div class="hdr"><button class="back" onclick="goTo('scr-002')">‹</button><div><div class="hdr-title">Select School</div></div></div>
+    <div class="ctxbar"><div class="chip">🏛️ Alruya Group</div></div>
+    <div class="scrl">
+      <div class="sec-t">Schools under this institution</div>
+      <div class="scard" onclick="toggleSel(this)">
+        <div class="scard-icon">📚</div>
+        <div style="flex:1;"><div style="font-size:15px;font-weight:800;color:var(--text);font-family:'Poppins',sans-serif;">Alruya Primary School</div><div style="font-size:12px;color:var(--muted);margin-top:3px;font-weight:600;">4 Branches</div></div>
+        <div style="color:var(--muted);font-size:20px;">›</div>
+      </div>
+      <div class="scard sel" onclick="toggleSel(this)">
+        <div class="scard-icon r">🎒</div>
+        <div style="flex:1;"><div style="font-size:15px;font-weight:800;color:var(--text);font-family:'Poppins',sans-serif;">Alruya Middle School</div><div style="font-size:12px;color:var(--muted);margin-top:3px;font-weight:600;">3 Branches</div></div>
+        <div style="color:var(--navy);font-size:20px;">✓</div>
+      </div>
+      <div class="scard" onclick="toggleSel(this)">
+        <div class="scard-icon p">🎓</div>
+        <div style="flex:1;"><div style="font-size:15px;font-weight:800;color:var(--text);font-family:'Poppins',sans-serif;">Alruya High School</div><div style="font-size:12px;color:var(--muted);margin-top:3px;font-weight:600;">2 Branches</div></div>
+        <div style="color:var(--muted);font-size:20px;">›</div>
+      </div>
+      <div style="padding:16px;"><button class="btn" onclick="showLoading('scr-004')">Continue</button></div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!-- SCR-004: BRANCH SELECTION -->
+  <!-- ═══════════════════════════════════════════════ -->
+  <div class="screen" id="scr-004">
+    <div class="sbar"><span>9:41</span><div class="sbar-icons"><span>🔋</span></div></div>
+    <div class="hdr"><button class="back" onclick="goTo('scr-003')">‹</button><div><div class="hdr-title">Select Branch</div></div></div>
+    <div class="ctxbar"><div class="chip">🏛️ Alruya</div><span style="color:var(--muted);font-size:11px;">›</span><div class="chip">🎒 Middle</div></div>
+    <div class="scrl">
+      <div class="sec-t">Available Branches</div>
+      <div class="scard" onclick="toggleSel(this)">
+        <div class="scard-icon">📍</div>
+        <div style="flex:1;"><div style="font-size:15px;font-weight:800;color:var(--text);font-family:'Poppins',sans-serif;">Salmiya Branch</div><div style="font-size:12px;color:var(--muted);margin-top:3px;font-weight:600;">5 Students linked</div></div>
+        <div style="color:var(--muted);font-size:20px;">›</div>
+      </div>
+      <div class="scard sel" onclick="toggleSel(this)">
+        <div class="scard-icon r">📍</div>
+        <div style="flex:1;"><div style="font-size:15px;font-weight:800;color:var(--text);font-family:'Poppins',sans-serif;">Hawalli Branch</div><div style="font-size:12px;color:var(--muted);margin-top:3px;font-weight:600;">3 Students linked</div></div>
+        <div style="color:var(--navy);font-size:20px;">✓</div>
+      </div>
+      <div class="scard" onclick="toggleSel(this)">
+        <div class="scard-icon g">📍</div>
+        <div style="flex:1;"><div style="font-size:15px;font-weight:800;color:var(--text);font-family:'Poppins',sans-serif;">Mangaf Branch</div><div style="font-size:12px;color:var(--muted);margin-top:3px;font-weight:600;">2 Students linked</div></div>
+        <div style="color:var(--muted);font-size:20px;">›</div>
+      </div>
+      <div style="padding:16px;"><button class="btn" onclick="showLoading('scr-005')">Continue — Load Students</button></div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!-- SCR-005: STUDENTS DASHBOARD -->
+  <!-- ═══════════════════════════════════════════════ -->
+  <div class="screen" id="scr-005">
+    <div class="sbar" style="padding-top:36px;"><span>9:41</span><div class="sbar-icons"><span>🔋</span></div></div>
+    <div style="background:linear-gradient(145deg,#080f35 0%,#0d1f5c 55%,#162272 100%);padding:12px 18px 16px;flex-shrink:0;position:relative;overflow:hidden;">
+      <div style="position:absolute;right:-30px;top:-30px;width:160px;height:160px;background:rgba(192,32,26,0.12);border-radius:50%;"></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+        <div><div style="font-size:12px;color:rgba(255,255,255,0.6);font-weight:600;">GUARDIAN</div><div style="font-size:17px;font-weight:900;color:white;font-family:'Poppins',sans-serif;">Mohammed Ahmed</div></div>
+        <div style="background:rgba(255,255,255,0.15);border-radius:12px;padding:8px 10px;text-align:center;cursor:pointer;position:relative;" onclick="goTo('scr-023')">
+          <div style="font-size:20px;">🔔</div>
+          <div style="position:absolute;top:-2px;right:-2px;width:16px;height:16px;background:var(--red);border-radius:50%;font-size:9px;color:white;display:flex;align-items:center;justify-content:center;font-weight:800;">3</div>
+        </div>
+      </div>
+      <!-- Context -->
+      <div style="background:rgba(255,255,255,0.08);border-radius:10px;padding:8px 11px;margin-bottom:10px;">
+        <div style="font-size:10px;color:rgba(255,255,255,0.5);font-weight:700;letter-spacing:0.5px;margin-bottom:5px;">CURRENT CONTEXT</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;">
+          <div style="background:rgba(255,255,255,0.15);border-radius:7px;padding:3px 9px;font-size:11px;font-weight:700;color:white;">🏛️ Alruya Group</div>
+          <div style="background:rgba(255,255,255,0.15);border-radius:7px;padding:3px 9px;font-size:11px;font-weight:700;color:white;">🎒 Middle School</div>
+          <div style="background:rgba(255,255,255,0.15);border-radius:7px;padding:3px 9px;font-size:11px;font-weight:700;color:white;">📍 Hawalli</div>
+        </div>
+      </div>
+      <!-- Quick Switch -->
+      <div class="qs">
+        <span style="font-size:10px;color:rgba(255,255,255,0.5);font-weight:700;">⚡ QUICK SWITCH:</span>
+        <button class="qs-btn" onclick="goTo('scr-002')">Institution</button>
+        <button class="qs-btn" onclick="goTo('scr-003')">School</button>
+        <button class="qs-btn" onclick="goTo('scr-004')">Branch</button>
+      </div>
+    </div>
+    <div class="scrl">
+      <!-- Overall Totals -->
+      <div class="sec-t">Overall Financial Summary</div>
+      <div class="tgrid">
+        <div class="tcell"><div class="tcell-l">Total Required</div><div class="tcell-v">KWD 950</div></div>
+        <div class="tcell paid"><div class="tcell-l">Total Paid</div><div class="tcell-v">580</div></div>
+        <div class="tcell"><div class="tcell-l">Discount</div><div class="tcell-v" style="color:var(--amber);">50</div></div>
+        <div class="tcell rem"><div class="tcell-l">Remaining</div><div class="tcell-v">320</div></div>
+      </div>
+
+      <!-- Quick Actions -->
+      <div class="sec-t">Quick Actions</div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:4px 16px 8px;">
+        <div style="background:var(--navy);border-radius:14px;padding:12px 6px;text-align:center;cursor:pointer;" onclick="goTo('scr-007')">
+          <div style="font-size:22px;margin-bottom:4px;">💳</div>
+          <div style="font-size:10px;font-weight:800;color:white;">Pay</div>
+        </div>
+        <div style="background:var(--red);border-radius:14px;padding:12px 6px;text-align:center;cursor:pointer;" onclick="goTo('scr-016')">
+          <div style="font-size:22px;margin-bottom:4px;">📋</div>
+          <div style="font-size:10px;font-weight:800;color:white;">Reports</div>
+        </div>
+        <div style="background:#059669;border-radius:14px;padding:12px 6px;text-align:center;cursor:pointer;" onclick="goTo('scr-019')">
+          <div style="font-size:22px;margin-bottom:4px;">📄</div>
+          <div style="font-size:10px;font-weight:800;color:white;">Statement</div>
+        </div>
+        <div style="background:#7c3aed;border-radius:14px;padding:12px 6px;text-align:center;cursor:pointer;" onclick="goTo('scr-023')">
+          <div style="font-size:22px;margin-bottom:4px;">🔔</div>
+          <div style="font-size:10px;font-weight:800;color:white;">Alerts</div>
+        </div>
+      </div>
+
+      <!-- Students -->
+      <div class="sec-t">Students (3)</div>
+
+      <!-- Student 1 -->
+      <div class="stcard">
+        <div class="stcard-hdr">
+          <div class="stcard-av">AH</div>
+          <div style="flex:1;"><div style="color:white;font-size:14px;font-weight:800;font-family:'Poppins',sans-serif;">Ahmad Mohammed</div><div style="color:rgba(255,255,255,0.65);font-size:12px;font-weight:600;">Grade 7 — Class A • ID: 2024001</div></div>
+          <span class="bdg" style="background:rgba(255,255,255,0.2);color:white;font-size:10px;">Active</span>
+        </div>
+        <div class="stcard-body">
+          <div class="frow"><div class="frow-l">Total Fees</div><div class="frow-v">KWD 350</div></div>
+          <div class="frow"><div class="frow-l">Paid</div><div class="frow-v" style="color:var(--green);">KWD 200</div></div>
+          <div class="frow"><div class="frow-l">Discount</div><div class="frow-v" style="color:var(--amber);">KWD 20</div></div>
+          <div style="height:1px;background:var(--border);margin:6px 0;"></div>
+          <div class="frow"><div class="frow-l" style="font-weight:800;color:var(--text);">Remaining</div><div class="frow-v" style="color:var(--red);font-size:14px;">KWD 130</div></div>
+        </div>
+      </div>
+
+      <!-- Student 2 -->
+      <div class="stcard">
+        <div class="stcard-hdr" style="background:var(--red);">
+          <div class="stcard-av">SM</div>
+          <div style="flex:1;"><div style="color:white;font-size:14px;font-weight:800;font-family:'Poppins',sans-serif;">Sara Mohammed</div><div style="color:rgba(255,255,255,0.65);font-size:12px;font-weight:600;">Grade 5 — Class B • ID: 2024002</div></div>
+          <span class="bdg" style="background:rgba(255,255,255,0.2);color:white;font-size:10px;">Active</span>
+        </div>
+        <div class="stcard-body">
+          <div class="frow"><div class="frow-l">Total Fees</div><div class="frow-v">KWD 300</div></div>
+          <div class="frow"><div class="frow-l">Paid</div><div class="frow-v" style="color:var(--green);">KWD 280</div></div>
+          <div class="frow"><div class="frow-l">Discount</div><div class="frow-v" style="color:var(--amber);">KWD 30</div></div>
+          <div style="height:1px;background:var(--border);margin:6px 0;"></div>
+          <div class="frow"><div class="frow-l" style="font-weight:800;color:var(--text);">Remaining</div><div class="frow-v" style="color:var(--red);font-size:14px;">KWD 20</div></div>
+        </div>
+      </div>
+
+      <!-- Student 3 -->
+      <div class="stcard">
+        <div class="stcard-hdr" style="background:#059669;">
+          <div class="stcard-av">KM</div>
+          <div style="flex:1;"><div style="color:white;font-size:14px;font-weight:800;font-family:'Poppins',sans-serif;">Khalid Mohammed</div><div style="color:rgba(255,255,255,0.65);font-size:12px;font-weight:600;">Grade 9 — Class C • ID: 2024003</div></div>
+          <span class="bdg" style="background:rgba(255,255,255,0.2);color:white;font-size:10px;">Active</span>
+        </div>
+        <div class="stcard-body">
+          <div class="frow"><div class="frow-l">Total Fees</div><div class="frow-v">KWD 300</div></div>
+          <div class="frow"><div class="frow-l">Paid</div><div class="frow-v" style="color:var(--green);">KWD 100</div></div>
+          <div class="frow"><div class="frow-l">Discount</div><div class="frow-v" style="color:var(--amber);">KWD 0</div></div>
+          <div style="height:1px;background:var(--border);margin:6px 0;"></div>
+          <div class="frow"><div class="frow-l" style="font-weight:800;color:var(--text);">Remaining</div><div class="frow-v" style="color:var(--red);font-size:14px;">KWD 200</div></div>
+        </div>
+      </div>
+      <div style="height:16px;"></div>
+    </div>
+    <div class="bnav">
+      <button class="nv" onclick="goTo('scr-006')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>Home</button>
+      <button class="nv on" onclick="goTo('scr-007')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>Payments</button>
+      <button class="nv" onclick="goTo('scr-016')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>Reports</button>
+      <button class="nv" onclick="goTo('scr-023')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>Alerts</button>
+      <button class="nv" onclick="goTo('scr-024')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>More</button>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!-- SCR-006: HOME -->
+  <!-- ═══════════════════════════════════════════════ -->
+  <div class="screen" id="scr-006">
+    <div class="sbar" style="padding-top:36px;"><span>9:41</span><div class="sbar-icons"><span>🔋</span></div></div>
+    <div style="background:linear-gradient(145deg,#080f35 0%,#0d1f5c 100%);padding:12px 18px 20px;flex-shrink:0;">
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <div><div style="font-size:22px;font-weight:900;color:white;font-family:'Poppins',sans-serif;">Home</div><div style="font-size:11px;color:rgba(255,255,255,0.6);font-weight:600;margin-top:2px;">🏛️ Alruya • 🎒 Middle • 📍 Hawalli</div></div>
+        <div onclick="goTo('scr-023')" style="cursor:pointer;position:relative;">
+          <div style="width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;font-size:20px;">🔔</div>
+          <div style="position:absolute;top:-2px;right:-2px;width:15px;height:15px;background:var(--red);border-radius:50%;font-size:8px;color:white;display:flex;align-items:center;justify-content:center;font-weight:800;">3</div>
+        </div>
+      </div>
+      <!-- Outstanding Banner -->
+      <div class="out-ban" style="margin:14px 0 0;">
+        <div style="font-size:11px;font-weight:700;opacity:0.7;letter-spacing:0.5px;margin-bottom:4px;">TOTAL OUTSTANDING</div>
+        <div style="font-size:30px;font-weight:900;font-family:'Poppins',sans-serif;">KWD 320.000</div>
+        <div style="font-size:11px;opacity:0.7;margin-top:4px;">Last payment: KWD 80 on 25 Apr 2025</div>
+        <button class="btn-sm" style="margin-top:10px;background:white;color:var(--red);" onclick="goTo('scr-007')">Pay Now →</button>
+      </div>
+    </div>
+    <div class="scrl">
+      <div class="sec-t">Services</div>
+      <div class="mgrid">
+        <div class="mitem" onclick="goTo('scr-007')"><div class="micon" style="background:#e0edff;">💳</div><div class="mlbl">Pay Fees</div></div>
+        <div class="mitem" onclick="goTo('scr-016')"><div class="micon" style="background:#fef2f2;">📋</div><div class="mlbl">Reports</div></div>
+        <div class="mitem" onclick="goTo('scr-017')"><div class="micon" style="background:#f0fdf4;">📜</div><div class="mlbl">Financial Policy</div></div>
+        <div class="mitem" onclick="goTo('scr-018')"><div class="micon" style="background:#fefce8;">🧾</div><div class="mlbl">Payment History</div></div>
+        <div class="mitem" onclick="goTo('scr-019')"><div class="micon" style="background:#f5f3ff;">📊</div><div class="mlbl">Statement</div></div>
+        <div class="mitem" onclick="goTo('scr-020')"><div class="micon" style="background:#fff7ed;">📝</div><div class="mlbl">Enrollment</div></div>
+        <div class="mitem" onclick="goTo('scr-021')"><div class="micon" style="background:#ecfeff;">🎯</div><div class="mlbl">Academic Sequence</div></div>
+        <div class="mitem" onclick="goTo('scr-022')"><div class="micon" style="background:#fdf2f8;">💬</div><div class="mlbl">Contact Admin</div></div>
+        <div class="mitem" onclick="goTo('scr-023')"><div class="micon" style="background:#fff1f2;">🔔</div><div class="mlbl">Notifications</div></div>
+        <div class="mitem" onclick="goTo('scr-024')"><div class="micon" style="background:#f8fafc;">⚙️</div><div class="mlbl">Settings</div></div>
+      </div>
+      <div style="height:12px;"></div>
+    </div>
+    <div class="bnav">
+      <button class="nv on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>Home</button>
+      <button class="nv" onclick="goTo('scr-007')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>Payments</button>
+      <button class="nv" onclick="goTo('scr-016')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>Reports</button>
+      <button class="nv" onclick="goTo('scr-023')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>Alerts</button>
+      <button class="nv" onclick="goTo('scr-024')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>More</button>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!-- SCR-007: PAY FEES MENU -->
+  <!-- ═══════════════════════════════════════════════ -->
+  <div class="screen" id="scr-007">
+    <div class="sbar"><span>9:41</span><div class="sbar-icons"><span>🔋</span></div></div>
+    <div class="hdr"><button class="back" onclick="goTo('scr-006')">‹</button><div><div class="hdr-title">Pay Fees</div><div class="hdr-sub">Choose payment type</div></div></div>
+    <div class="scrl">
+      <div style="padding:16px;">
+        <div style="background:var(--navy);border-radius:18px;padding:18px;margin-bottom:12px;display:flex;align-items:center;gap:14px;cursor:pointer;box-shadow:0 6px 20px rgba(13,31,92,0.25);" onclick="goTo('scr-008')">
+          <div style="width:56px;height:56px;background:rgba(255,255,255,0.15);border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:28px;">📅</div>
+          <div style="flex:1;"><div style="font-size:16px;font-weight:900;color:white;font-family:'Poppins',sans-serif;">Pay Current Year</div><div style="font-size:12px;color:rgba(255,255,255,0.65);margin-top:3px;font-weight:600;">2024-2025 Academic Year</div></div>
+          <div style="color:rgba(255,255,255,0.6);font-size:22px;">›</div>
+        </div>
+        <div style="background:var(--red);border-radius:18px;padding:18px;margin-bottom:12px;display:flex;align-items:center;gap:14px;cursor:pointer;box-shadow:0 6px 20px rgba(192,32,26,0.25);" onclick="goTo('scr-010')">
+          <div style="width:56px;height:56px;background:rgba(255,255,255,0.15);border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:28px;">⏩</div>
+          <div style="flex:1;"><div style="font-size:16px;font-weight:900;color:white;font-family:'Poppins',sans-serif;">Pay in Advance</div><div style="font-size:12px;color:rgba(255,255,255,0.65);margin-top:3px;font-weight:600;">Next academic year fees</div></div>
+          <div style="color:rgba(255,255,255,0.6);font-size:22px;">›</div>
+        </div>
+        <div style="background:linear-gradient(135deg,#1a1a4e,#2d2d6e);border-radius:18px;padding:18px;display:flex;align-items:center;gap:14px;cursor:pointer;box-shadow:0 6px 20px rgba(0,0,0,0.2);" onclick="goTo('scr-012')">
+          <div style="width:56px;height:56px;background:rgba(255,255,255,0.1);border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:28px;">🗂️</div>
+          <div style="flex:1;"><div style="font-size:16px;font-weight:900;color:white;font-family:'Poppins',sans-serif;">Pay Old Debts</div><div style="font-size:12px;color:rgba(255,255,255,0.65);margin-top:3px;font-weight:600;">Previous years outstanding</div></div>
+          <div style="color:rgba(255,255,255,0.6);font-size:22px;">›</div>
+        </div>
+      </div>
+      <!-- Outstanding summary -->
+      <div class="card" style="margin-top:4px;">
+        <div style="font-size:13px;font-weight:800;color:var(--text);margin-bottom:10px;font-family:'Poppins',sans-serif;">Outstanding Summary</div>
+        <div class="frow"><div class="frow-l">Current Year</div><div class="frow-v navy">KWD 320.000</div></div>
+        <div class="frow"><div class="frow-l">Old Debts</div><div class="frow-v red">KWD 150.000</div></div>
+        <div class="div"></div>
+        <div class="frow"><div class="frow-l fw8">Total Due</div><div class="frow-v" style="font-size:15px;color:var(--red);">KWD 470.000</div></div>
+      </div>
+    </div>
+    <div class="bnav">
+      <button class="nv" onclick="goTo('scr-006')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>Home</button>
+      <button class="nv on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>Payments</button>
+      <button class="nv" onclick="goTo('scr-016')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/></svg>Reports</button>
+      <button class="nv" onclick="goTo('scr-023')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/></svg>Alerts</button>
+      <button class="nv" onclick="goTo('scr-024')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>More</button>
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!-- SCR-008: PAY CURRENT YEAR — Accordion Design   -->
+  <!-- ═══════════════════════════════════════════════ -->
+  <div class="screen" id="scr-008">
+    <div class="sbar"><span>9:41</span><div class="sbar-icons"><span>▲▲▲</span><span>🔋</span></div></div>
+    <div class="hdr">
+      <button class="back" onclick="goTo('scr-007')">‹</button>
+      <div><div class="hdr-title">Current Year Fees</div><div class="hdr-sub">2024–2025 · Tap a student to expand</div></div>
+    </div>
+
+    <div class="scrl" style="background:#eef1f8;">
+
+      <!-- ─── INFO HINT ─────────────────────────────── -->
+      <div style="display:flex;align-items:center;gap:10px;background:white;margin:10px 16px 6px;border-radius:13px;padding:10px 13px;border-left:4px solid var(--navy);">
+        <span style="font-size:18px;flex-shrink:0;">ℹ️</span>
+        <div style="font-size:12px;color:var(--muted);font-weight:600;line-height:1.45;">Tap any student to view and select fees. Remaining balance shown next to each name.</div>
+      </div>
+
+      <!-- ════════════════════════════════════════════ -->
+      <!-- STUDENT 1 — Ahmad Mohammed (3 fees)          -->
+      <!-- ════════════════════════════════════════════ -->
+      <div style="margin:6px 16px;border-radius:16px;overflow:hidden;box-shadow:0 2px 14px rgba(13,31,92,0.08);border:1.5px solid var(--border);">
+
+        <!-- COLLAPSED HEADER — always visible -->
+        <div id="s1-hdr" onclick="toggleAccordion('s1')"
+          style="background:var(--navy);padding:14px 16px;display:flex;align-items:center;gap:12px;cursor:pointer;user-select:none;">
+          <!-- Checkbox -->
+          <input type="checkbox" id="s1-master" onclick="event.stopPropagation();masterCheck('s1',['s1f1','s1f2','s1f3']);recalc008()"
+            style="width:18px;height:18px;accent-color:white;flex-shrink:0;">
+          <!-- Avatar -->
+          <div style="width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,0.18);border:2px solid rgba(255,255,255,0.3);display:flex;align-items:center;justify-content:center;color:white;font-size:14px;font-weight:800;flex-shrink:0;">AH</div>
+          <!-- Name + grade -->
+          <div style="flex:1;min-width:0;">
+            <div style="font-size:14px;font-weight:800;color:white;font-family:'Poppins',sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Ahmad Mohammed</div>
+            <div style="font-size:11px;color:rgba(255,255,255,0.6);font-weight:600;margin-top:1px;">Grade 7 — Class A</div>
+          </div>
+          <!-- Remaining + chevron -->
+          <div style="text-align:right;flex-shrink:0;">
+            <div style="font-size:10px;color:rgba(255,255,255,0.5);font-weight:700;letter-spacing:0.3px;">REMAINING</div>
+            <div style="font-size:15px;font-weight:900;color:white;font-family:'Poppins',sans-serif;">275.000</div>
+          </div>
+          <div id="s1-chevron" style="color:rgba(255,255,255,0.7);font-size:18px;transition:transform 0.25s;margin-left:4px;flex-shrink:0;">⌄</div>
+        </div>
+
+        <!-- EXPANDED BODY -->
+        <div id="s1-body" style="display:none;background:white;">
+
+          <!-- fee table header -->
+          <div style="display:grid;grid-template-columns:1fr 70px 70px 70px;gap:0;background:#f0f3ff;padding:7px 16px 7px 46px;border-bottom:1.5px solid var(--border);">
+            <div style="font-size:10px;font-weight:800;color:var(--navy);letter-spacing:0.4px;text-transform:uppercase;">Fee Type</div>
+            <div style="font-size:10px;font-weight:800;color:var(--muted);text-align:center;text-transform:uppercase;">Fee</div>
+            <div style="font-size:10px;font-weight:800;color:var(--amber);text-align:center;text-transform:uppercase;">Disc.</div>
+            <div style="font-size:10px;font-weight:800;color:var(--red);text-align:center;text-transform:uppercase;">Due</div>
+          </div>
+
+          <!-- ── FEE ROW: Tuition ── -->
+          <div style="border-bottom:1.5px solid var(--border);">
+            <div style="display:grid;grid-template-columns:22px 24px 1fr 70px 70px 70px;align-items:center;gap:6px;padding:11px 16px;">
+              <input type="checkbox" id="s1f1-chk" checked onchange="recalc008()"
+                style="width:16px;height:16px;accent-color:var(--navy);">
+              <div style="width:28px;height:28px;border-radius:8px;background:#e0e7ff;display:flex;align-items:center;justify-content:center;font-size:14px;">📚</div>
+              <div style="font-size:13px;font-weight:800;color:var(--text);">Tuition Fee</div>
+              <div style="text-align:center;font-size:13px;font-weight:700;color:var(--text);">350</div>
+              <div style="text-align:center;font-size:13px;font-weight:700;color:var(--amber);">20</div>
+              <div style="text-align:center;font-size:13px;font-weight:800;color:var(--red);">130</div>
+            </div>
+            <!-- Amount input row -->
+            <div id="s1f1-inp-row" style="padding:0 16px 11px;display:flex;align-items:center;gap:8px;">
+              <div style="width:22px;flex-shrink:0;"></div>
+              <div style="font-size:11px;color:var(--muted);font-weight:700;white-space:nowrap;">Pay amount:</div>
+              <div style="position:relative;flex:1;">
+                <span style="position:absolute;left:10px;top:50%;transform:translateY(-50%);font-size:11px;font-weight:800;color:var(--navy);">KWD</span>
+                <input id="s1f1-amt" class="ainp" type="number" value="130" min="0" max="130" step="0.001"
+                  style="padding-left:40px;height:34px;font-size:13px;" oninput="capVal(this,130);recalc008()">
+              </div>
+              <button class="btn-sm" style="padding:7px 10px;font-size:11px;background:var(--green);" onclick="setAmt('s1f1-amt',130)">Full</button>
+              <button class="btn-sm" style="padding:7px 10px;font-size:11px;background:#f1f5f9;color:var(--muted);" onclick="setAmt('s1f1-amt',0)">✕</button>
+            </div>
+            <div id="s1f1-warn" style="display:none;font-size:11px;color:var(--red);font-weight:700;padding:0 16px 8px 46px;">⚠️ Cannot exceed KWD 130</div>
+          </div>
+
+          <!-- ── FEE ROW: Books ── -->
+          <div style="border-bottom:1.5px solid var(--border);">
+            <div style="display:grid;grid-template-columns:22px 24px 1fr 70px 70px 70px;align-items:center;gap:6px;padding:11px 16px;">
+              <input type="checkbox" id="s1f2-chk" checked onchange="recalc008()"
+                style="width:16px;height:16px;accent-color:var(--navy);">
+              <div style="width:28px;height:28px;border-radius:8px;background:#fef3c7;display:flex;align-items:center;justify-content:center;font-size:14px;">📖</div>
+              <div style="font-size:13px;font-weight:800;color:var(--text);">Books Fee</div>
+              <div style="text-align:center;font-size:13px;font-weight:700;color:var(--text);">80</div>
+              <div style="text-align:center;font-size:13px;font-weight:700;color:var(--amber);">0</div>
+              <div style="text-align:center;font-size:13px;font-weight:800;color:var(--red);">80</div>
+            </div>
+            <div id="s1f2-inp-row" style="padding:0 16px 11px;display:flex;align-items:center;gap:8px;">
+              <div style="width:22px;flex-shrink:0;"></div>
+              <div style="font-size:11px;color:var(--muted);font-weight:700;white-space:nowrap;">Pay amount:</div>
+              <div style="position:relative;flex:1;">
+                <span style="position:absolute;left:10px;top:50%;transform:translateY(-50%);font-size:11px;font-weight:800;color:var(--navy);">KWD</span>
+                <input id="s1f2-amt" class="ainp" type="number" value="80" min="0" max="80" step="0.001"
+                  style="padding-left:40px;height:34px;font-size:13px;" oninput="capVal(this,80);recalc008()">
+              </div>
+              <button class="btn-sm" style="padding:7px 10px;font-size:11px;background:var(--green);" onclick="setAmt('s1f2-amt',80)">Full</button>
+              <button class="btn-sm" style="padding:7px 10px;font-size:11px;background:#f1f5f9;color:var(--muted);" onclick="setAmt('s1f2-amt',0)">✕</button>
+            </div>
+            <div id="s1f2-warn" style="display:none;font-size:11px;color:var(--red);font-weight:700;padding:0 16px 8px 46px;">⚠️ Cannot exceed KWD 80</div>
+          </div>
+
+          <!-- ── FEE ROW: Uniform ── -->
+          <div>
+            <div style="display:grid;grid-template-columns:22px 24px 1fr 70px 70px 70px;align-items:center;gap:6px;padding:11px 16px;">
+              <input type="checkbox" id="s1f3-chk" onchange="toggleFeeInput('s1f3');recalc008()"
+                style="width:16px;height:16px;accent-color:var(--navy);">
+              <div style="width:28px;height:28px;border-radius:8px;background:#fce7f3;display:flex;align-items:center;justify-content:center;font-size:14px;">👕</div>
+              <div style="font-size:13px;font-weight:800;color:var(--text);">Uniform Fee</div>
+              <div style="text-align:center;font-size:13px;font-weight:700;color:var(--text);">65</div>
+              <div style="text-align:center;font-size:13px;font-weight:700;color:var(--amber);">0</div>
+              <div style="text-align:center;font-size:13px;font-weight:800;color:var(--red);">65</div>
+            </div>
+            <div id="s1f3-inp-row" style="display:none;padding:0 16px 11px;flex-direction:row;align-items:center;gap:8px;">
+              <div style="width:22px;flex-shrink:0;"></div>
+              <div style="font-size:11px;color:var(--muted);font-weight:700;white-space:nowrap;">Pay amount:</div>
+              <div style="position:relative;flex:1;">
+                <span style="position:absolute;left:10px;top:50%;transform:translateY(-50%);font-size:11px;font-weight:800;color:var(--navy);">KWD</span>
+                <input id="s1f3-amt" class="ainp" type="number" value="65" min="0" max="65" step="0.001"
+                  style="padding-left:40px;height:34px;font-size:13px;" oninput="capVal(this,65);recalc008()">
+              </div>
+              <button class="btn-sm" style="padding:7px 10px;font-size:11px;background:var(--green);" onclick="setAmt('s1f3-amt',65)">Full</button>
+              <button class="btn-sm" style="padding:7px 10px;font-size:11px;background:#f1f5f9;color:var(--muted);" onclick="setAmt('s1f3-amt',0)">✕</button>
+            </div>
+            <div id="s1f3-warn" style="display:none;font-size:11px;color:var(--red);font-weight:700;padding:0 16px 8px 46px;">⚠️ Cannot exceed KWD 65</div>
+          </div>
+
+          <!-- subtotal bar -->
+          <div style="background:#f0f3ff;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;border-top:1.5px solid #d0d8f0;">
+            <div style="font-size:12px;font-weight:700;color:var(--navy);">Ahmad — Selected</div>
+            <div id="s1-sub" style="font-size:15px;font-weight:900;color:var(--navy);font-family:'Poppins',sans-serif;">KWD 210.000</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ════════════════════════════════════════════ -->
+      <!-- STUDENT 2 — Sara Mohammed (2 fees)           -->
+      <!-- ════════════════════════════════════════════ -->
+      <div style="margin:6px 16px;border-radius:16px;overflow:hidden;box-shadow:0 2px 14px rgba(13,31,92,0.08);border:1.5px solid var(--border);">
+
+        <div id="s2-hdr" onclick="toggleAccordion('s2')"
+          style="background:var(--red);padding:14px 16px;display:flex;align-items:center;gap:12px;cursor:pointer;user-select:none;">
+          <input type="checkbox" id="s2-master" onclick="event.stopPropagation();masterCheck('s2',['s2f1','s2f2']);recalc008()"
+            style="width:18px;height:18px;accent-color:white;flex-shrink:0;">
+          <div style="width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,0.18);border:2px solid rgba(255,255,255,0.3);display:flex;align-items:center;justify-content:center;color:white;font-size:14px;font-weight:800;flex-shrink:0;">SM</div>
+          <div style="flex:1;min-width:0;">
+            <div style="font-size:14px;font-weight:800;color:white;font-family:'Poppins',sans-serif;">Sara Mohammed</div>
+            <div style="font-size:11px;color:rgba(255,255,255,0.6);font-weight:600;margin-top:1px;">Grade 5 — Class B</div>
+          </div>
+          <div style="text-align:right;flex-shrink:0;">
+            <div style="font-size:10px;color:rgba(255,255,255,0.5);font-weight:700;letter-spacing:0.3px;">REMAINING</div>
+            <div style="font-size:15px;font-weight:900;color:white;font-family:'Poppins',sans-serif;">80.000</div>
+          </div>
+          <div id="s2-chevron" style="color:rgba(255,255,255,0.7);font-size:18px;transition:transform 0.25s;margin-left:4px;flex-shrink:0;">⌄</div>
+        </div>
+
+        <div id="s2-body" style="display:none;background:white;">
+          <!-- fee table header -->
+          <div style="display:grid;grid-template-columns:1fr 70px 70px 70px;gap:0;background:#fff0f0;padding:7px 16px 7px 46px;border-bottom:1.5px solid var(--border);">
+            <div style="font-size:10px;font-weight:800;color:var(--red);letter-spacing:0.4px;text-transform:uppercase;">Fee Type</div>
+            <div style="font-size:10px;font-weight:800;color:var(--muted);text-align:center;text-transform:uppercase;">Fee</div>
+            <div style="font-size:10px;font-weight:800;color:var(--amber);text-align:center;text-transform:uppercase;">Disc.</div>
+            <div style="font-size:10px;font-weight:800;color:var(--red);text-align:center;text-transform:uppercase;">Due</div>
+          </div>
+
+          <!-- Tuition -->
+          <div style="border-bottom:1.5px solid var(--border);">
+            <div style="display:grid;grid-template-columns:22px 24px 1fr 70px 70px 70px;align-items:center;gap:6px;padding:11px 16px;">
+              <input type="checkbox" id="s2f1-chk" checked onchange="recalc008()" style="width:16px;height:16px;accent-color:var(--red);">
+              <div style="width:28px;height:28px;border-radius:8px;background:#e0e7ff;display:flex;align-items:center;justify-content:center;font-size:14px;">📚</div>
+              <div style="font-size:13px;font-weight:800;color:var(--text);">Tuition Fee</div>
+              <div style="text-align:center;font-size:13px;font-weight:700;color:var(--text);">300</div>
+              <div style="text-align:center;font-size:13px;font-weight:700;color:var(--amber);">30</div>
+              <div style="text-align:center;font-size:13px;font-weight:800;color:var(--red);">20</div>
+            </div>
+            <div style="padding:0 16px 11px;display:flex;align-items:center;gap:8px;">
+              <div style="width:22px;flex-shrink:0;"></div>
+              <div style="font-size:11px;color:var(--muted);font-weight:700;white-space:nowrap;">Pay amount:</div>
+              <div style="position:relative;flex:1;">
+                <span style="position:absolute;left:10px;top:50%;transform:translateY(-50%);font-size:11px;font-weight:800;color:var(--red);">KWD</span>
+                <input id="s2f1-amt" class="ainp" type="number" value="20" min="0" max="20" step="0.001"
+                  style="padding-left:40px;height:34px;font-size:13px;border-color:var(--red);" oninput="capVal(this,20);recalc008()">
+              </div>
+              <button class="btn-sm" style="padding:7px 10px;font-size:11px;background:var(--green);" onclick="setAmt('s2f1-amt',20)">Full</button>
+              <button class="btn-sm" style="padding:7px 10px;font-size:11px;background:#f1f5f9;color:var(--muted);" onclick="setAmt('s2f1-amt',0)">✕</button>
+            </div>
+            <div id="s2f1-warn" style="display:none;font-size:11px;color:var(--red);font-weight:700;padding:0 16px 8px 46px;">⚠️ Cannot exceed KWD 20</div>
+          </div>
+
+          <!-- Books -->
+          <div>
+            <div style="display:grid;grid-template-columns:22px 24px 1fr 70px 70px 70px;align-items:center;gap:6px;padding:11px 16px;">
+              <input type="checkbox" id="s2f2-chk" onchange="toggleFeeInput('s2f2');recalc008()" style="width:16px;height:16px;accent-color:var(--red);">
+              <div style="width:28px;height:28px;border-radius:8px;background:#fef3c7;display:flex;align-items:center;justify-content:center;font-size:14px;">📖</div>
+              <div style="font-size:13px;font-weight:800;color:var(--text);">Books Fee</div>
+              <div style="text-align:center;font-size:13px;font-weight:700;color:var(--text);">60</div>
+              <div style="text-align:center;font-size:13px;font-weight:700;color:var(--amber);">0</div>
+              <div style="text-align:center;font-size:13px;font-weight:800;color:var(--red);">60</div>
+            </div>
+            <div id="s2f2-inp-row" style="display:none;padding:0 16px 11px;flex-direction:row;align-items:center;gap:8px;">
+              <div style="width:22px;flex-shrink:0;"></div>
+              <div style="font-size:11px;color:var(--muted);font-weight:700;white-space:nowrap;">Pay amount:</div>
+              <div style="position:relative;flex:1;">
+                <span style="position:absolute;left:10px;top:50%;transform:translateY(-50%);font-size:11px;font-weight:800;color:var(--red);">KWD</span>
+                <input id="s2f2-amt" class="ainp" type="number" value="60" min="0" max="60" step="0.001"
+                  style="padding-left:40px;height:34px;font-size:13px;" oninput="capVal(this,60);recalc008()">
+              </div>
+              <button class="btn-sm" style="padding:7px 10px;font-size:11px;background:var(--green);" onclick="setAmt('s2f2-amt',60)">Full</button>
+              <button class="btn-sm" style="padding:7px 10px;font-size:11px;background:#f1f5f9;color:var(--muted);" onclick="setAmt('s2f2-amt',0)">✕</button>
+            </div>
+            <div id="s2f2-warn" style="display:none;font-size:11px;color:var(--red);font-weight:700;padding:0 16px 8px 46px;">⚠️ Cannot exceed KWD 60</div>
+          </div>
+
+          <div style="background:#fff0f0;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;border-top:1.5px solid #ffc8c8;">
+            <div style="font-size:12px;font-weight:700;color:var(--red);">Sara — Selected</div>
+            <div id="s2-sub" style="font-size:15px;font-weight:900;color:var(--red);font-family:'Poppins',sans-serif;">KWD 20.000</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ════════════════════════════════════════════ -->
+      <!-- STUDENT 3 — Khalid Mohammed (1 fee only)    -->
+      <!-- ════════════════════════════════════════════ -->
+      <div style="margin:6px 16px;border-radius:16px;overflow:hidden;box-shadow:0 2px 14px rgba(13,31,92,0.08);border:1.5px solid var(--border);">
+
+        <div id="s3-hdr" onclick="toggleAccordion('s3')"
+          style="background:#059669;padding:14px 16px;display:flex;align-items:center;gap:12px;cursor:pointer;user-select:none;">
+          <input type="checkbox" id="s3-master" onclick="event.stopPropagation();masterCheck('s3',['s3f1']);recalc008()"
+            style="width:18px;height:18px;accent-color:white;flex-shrink:0;">
+          <div style="width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,0.18);border:2px solid rgba(255,255,255,0.3);display:flex;align-items:center;justify-content:center;color:white;font-size:14px;font-weight:800;flex-shrink:0;">KM</div>
+          <div style="flex:1;min-width:0;">
+            <div style="font-size:14px;font-weight:800;color:white;font-family:'Poppins',sans-serif;">Khalid Mohammed</div>
+            <div style="font-size:11px;color:rgba(255,255,255,0.6);font-weight:600;margin-top:1px;">Grade 9 — Class C</div>
+          </div>
+          <div style="text-align:right;flex-shrink:0;">
+            <div style="font-size:10px;color:rgba(255,255,255,0.5);font-weight:700;letter-spacing:0.3px;">REMAINING</div>
+            <div style="font-size:15px;font-weight:900;color:white;font-family:'Poppins',sans-serif;">200.000</div>
+          </div>
+          <div id="s3-chevron" style="color:rgba(255,255,255,0.7);font-size:18px;transition:transform 0.25s;margin-left:4px;flex-shrink:0;">⌄</div>
+        </div>
+
+        <div id="s3-body" style="display:none;background:white;">
+          <div style="display:grid;grid-template-columns:1fr 70px 70px 70px;gap:0;background:#f0fdf4;padding:7px 16px 7px 46px;border-bottom:1.5px solid var(--border);">
+            <div style="font-size:10px;font-weight:800;color:#059669;letter-spacing:0.4px;text-transform:uppercase;">Fee Type</div>
+            <div style="font-size:10px;font-weight:800;color:var(--muted);text-align:center;text-transform:uppercase;">Fee</div>
+            <div style="font-size:10px;font-weight:800;color:var(--amber);text-align:center;text-transform:uppercase;">Disc.</div>
+            <div style="font-size:10px;font-weight:800;color:var(--red);text-align:center;text-transform:uppercase;">Due</div>
+          </div>
+
+          <!-- Tuition only -->
+          <div>
+            <div style="display:grid;grid-template-columns:22px 24px 1fr 70px 70px 70px;align-items:center;gap:6px;padding:11px 16px;">
+              <input type="checkbox" id="s3f1-chk" onchange="toggleFeeInput('s3f1');recalc008()" style="width:16px;height:16px;accent-color:#059669;">
+              <div style="width:28px;height:28px;border-radius:8px;background:#e0e7ff;display:flex;align-items:center;justify-content:center;font-size:14px;">📚</div>
+              <div style="font-size:13px;font-weight:800;color:var(--text);">Tuition Fee</div>
+              <div style="text-align:center;font-size:13px;font-weight:700;color:var(--text);">300</div>
+              <div style="text-align:center;font-size:13px;font-weight:700;color:var(--amber);">0</div>
+              <div style="text-align:center;font-size:13px;font-weight:800;color:var(--red);">200</div>
+            </div>
+            <div id="s3f1-inp-row" style="display:none;padding:0 16px 11px;flex-direction:row;align-items:center;gap:8px;">
+              <div style="width:22px;flex-shrink:0;"></div>
+              <div style="font-size:11px;color:var(--muted);font-weight:700;white-space:nowrap;">Pay amount:</div>
+              <div style="position:relative;flex:1;">
+                <span style="position:absolute;left:10px;top:50%;transform:translateY(-50%);font-size:11px;font-weight:800;color:#059669;">KWD</span>
+                <input id="s3f1-amt" class="ainp" type="number" value="200" min="0" max="200" step="0.001"
+                  style="padding-left:40px;height:34px;font-size:13px;" oninput="capVal(this,200);recalc008()">
+              </div>
+              <button class="btn-sm" style="padding:7px 10px;font-size:11px;background:var(--green);" onclick="setAmt('s3f1-amt',200)">Full</button>
+              <button class="btn-sm" style="padding:7px 10px;font-size:11px;background:#f1f5f9;color:var(--muted);" onclick="setAmt('s3f1-amt',0)">✕</button>
+            </div>
+            <div id="s3f1-warn" style="display:none;font-size:11px;color:var(--red);font-weight:700;padding:0 16px 8px 46px;">⚠️ Cannot exceed KWD 200</div>
+          </div>
+
+          <div style="background:#f0fdf4;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;border-top:1.5px solid #bbf7d0;">
+            <div style="font-size:12px;font-weight:700;color:#059669;">Khalid — Selected</div>
+            <div id="s3-sub" style="font-size:15px;font-weight:900;color:#059669;font-family:'Poppins',sans-serif;">KWD 0.000</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="height:10px;"></div>
+    </div>
+
+    <!-- ─── STICKY FOOTER ─────────────────────────── -->
+    <div style="background:white;border-top:1.5px solid var(--border);padding:13px 16px;flex-shrink:0;box-shadow:0 -4px 16px rgba(13,31,92,0.07);">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:11px;">
+        <div>
+          <div style="font-size:10px;color:var(--muted);font-weight:800;text-transform:uppercase;letter-spacing:0.5px;">Grand Total</div>
+          <div id="totalAmt008" style="font-size:24px;font-weight:900;color:var(--navy);font-family:'Poppins',sans-serif;">KWD 230.000</div>
+        </div>
+        <div style="text-align:right;">
+          <div style="font-size:10px;color:var(--muted);font-weight:800;letter-spacing:0.3px;">ITEMS</div>
+          <div id="stuCount008" style="font-size:18px;font-weight:900;color:var(--navy);">3 fees</div>
+        </div>
+      </div>
+      <button class="btn" onclick="goTo('scr-009')">Continue to Payment →</button>
+    </div>
+  </div>
+
+  <!-- SCR-009: PAYMENT DETAILS -->
+  <!-- ═══════════════════════════════════════════════ -->
+  <div class="screen" id="scr-009">
+    <div class="sbar"><span>9:41</span><div class="sbar-icons"><span>🔋</span></div></div>
+    <div class="hdr"><button class="back" onclick="goTo('scr-008')">‹</button><div><div class="hdr-title">Payment Details</div></div></div>
+    <div class="scrl">
+      <div class="card">
+        <div style="font-size:13px;font-weight:800;color:var(--text);margin-bottom:10px;font-family:'Poppins',sans-serif;">Fee Breakdown</div>
+        <div class="frow"><div class="frow-l">Ahmad Mohammed</div><div class="frow-v">KWD 130</div></div>
+        <div class="frow"><div class="frow-l">Sara Mohammed</div><div class="frow-v">KWD 20</div></div>
+        <div class="div"></div>
+        <div class="frow"><div class="frow-l fw8">Total Amount</div><div class="frow-v" style="font-size:16px;color:var(--navy);">KWD 150.000</div></div>
+      </div>
+      <div class="sec-t">Payment Method</div>
+      <div style="padding:4px 16px;">
+        <div class="pmeth sel" onclick="selectPay(this)">
+          <div class="pmeth-logo">🏦</div>
+          <div><div class="pmeth-name">KNET</div><div class="pmeth-sub">Kuwait national payment</div></div>
+          <div class="pmeth-check">✓</div>
+        </div>
+        <div class="pmeth" onclick="selectPay(this)">
+          <div class="pmeth-logo">💳</div>
+          <div><div class="pmeth-name">Visa / Mastercard</div><div class="pmeth-sub">International credit card</div></div>
+          <div class="pmeth-check">✓</div>
+        </div>
+        <div class="pmeth" onclick="selectPay(this)">
+          <div class="pmeth-logo"></div>
+          <div><div class="pmeth-name">Apple Pay</div><div class="pmeth-sub">Touch or Face ID payment</div></div>
+          <div class="pmeth-check">✓</div>
+        </div>
+      </div>
+    </div>
+    <div style="background:white;border-top:1.5px solid var(--border);padding:14px 16px;flex-shrink:0;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;"><span style="font-size:13px;color:var(--muted);font-weight:700;">Total:</span><span style="font-size:22px;font-weight:900;color:var(--navy);font-family:'Poppins',sans-serif;">KWD 150.000</span></div>
+      <button class="btn" onclick="showLoading('scr-015')">🔐 Confirm & Pay</button>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!-- SCR-010: PAY ADVANCE -->
+  <!-- ═══════════════════════════════════════════════ -->
+  <div class="screen" id="scr-010">
+    <div class="sbar"><span>9:41</span><div class="sbar-icons"><span>🔋</span></div></div>
+    <div class="hdr"><button class="back" onclick="goTo('scr-007')">‹</button><div><div class="hdr-title">Advance Payment</div><div class="hdr-sub">Next Academic Year 2025-2026</div></div></div>
+    <div class="scrl">
+      <div style="background:linear-gradient(135deg,#c0201a,#a01515);margin:12px 16px;border-radius:16px;padding:16px;color:white;">
+        <div style="font-size:11px;opacity:0.7;font-weight:700;margin-bottom:4px;">ℹ️ ADVANCE PAYMENT INFO</div>
+        <div style="font-size:13px;opacity:0.9;font-weight:600;line-height:1.5;">Paying in advance reserves your child's seat for the next academic year and may qualify for early-payment discounts.</div>
+      </div>
+      <div class="sec-t">Select Student</div>
+      <div class="card" style="margin-bottom:8px;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+          <input type="radio" name="adv" checked style="width:18px;height:18px;accent-color:var(--navy);">
+          <div style="width:36px;height:36px;border-radius:50%;background:var(--navy);display:flex;align-items:center;justify-content:center;color:white;font-size:13px;font-weight:800;">AH</div>
+          <div><div style="font-size:14px;font-weight:800;color:var(--text);">Ahmad Mohammed</div><div style="font-size:11px;color:var(--muted);font-weight:600;">Current: Grade 7 → Next: Grade 8</div></div>
+        </div>
+        <div class="div"></div>
+        <div style="font-size:12px;color:var(--muted);font-weight:700;margin-bottom:6px;">ADVANCE AMOUNT (KWD)</div>
+        <input class="ainp" type="number" value="100" placeholder="Enter advance amount">
+        <div style="font-size:11px;color:var(--muted);margin-top:5px;font-weight:600;">Expected next year fee: KWD 380</div>
+      </div>
+      <div style="padding:0 16px 16px;"><button class="btn" onclick="goTo('scr-011')">Continue →</button></div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!-- SCR-011: ADVANCE DETAILS -->
+  <!-- ═══════════════════════════════════════════════ -->
+  <div class="screen" id="scr-011">
+    <div class="sbar"><span>9:41</span><div class="sbar-icons"><span>🔋</span></div></div>
+    <div class="hdr"><button class="back" onclick="goTo('scr-010')">‹</button><div><div class="hdr-title">Advance Confirmation</div></div></div>
+    <div class="scrl">
+      <div class="card" style="margin-top:12px;">
+        <div style="font-size:13px;font-weight:800;font-family:'Poppins',sans-serif;margin-bottom:12px;">Advance Payment Summary</div>
+        <div class="frow"><div class="frow-l">Student</div><div class="frow-v">Ahmad Mohammed</div></div>
+        <div class="frow"><div class="frow-l">Current Grade</div><div class="frow-v">Grade 7</div></div>
+        <div class="frow"><div class="frow-l">Next Year Grade</div><div class="frow-v">Grade 8</div></div>
+        <div class="frow"><div class="frow-l">Academic Year</div><div class="frow-v">2025–2026</div></div>
+        <div class="div"></div>
+        <div class="frow"><div class="frow-l fw8">Advance Amount</div><div class="frow-v" style="font-size:16px;color:var(--navy);">KWD 100.000</div></div>
+      </div>
+      <div class="sec-t">Payment Method</div>
+      <div style="padding:4px 16px;">
+        <div class="pmeth sel" onclick="selectPay(this)"><div class="pmeth-logo">🏦</div><div><div class="pmeth-name">KNET</div><div class="pmeth-sub">Kuwait national payment</div></div><div class="pmeth-check">✓</div></div>
+        <div class="pmeth" onclick="selectPay(this)"><div class="pmeth-logo">💳</div><div><div class="pmeth-name">Visa / Mastercard</div></div><div class="pmeth-check">✓</div></div>
+      </div>
+      <div style="padding:8px 16px 16px;"><button class="btn" onclick="showLoading('scr-015')">🔐 Confirm Advance Payment</button></div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!-- SCR-012: OLD DEBTS YEAR SELECTION -->
+  <!-- ═══════════════════════════════════════════════ -->
+  <div class="screen" id="scr-012">
+    <div class="sbar"><span>9:41</span><div class="sbar-icons"><span>🔋</span></div></div>
+    <div class="hdr"><button class="back" onclick="goTo('scr-007')">‹</button><div><div class="hdr-title">Old Debts</div><div class="hdr-sub">Select one year to pay</div></div></div>
+    <div class="scrl">
+      <div style="background:#fef3c7;margin:12px 16px;border-radius:14px;padding:12px 14px;display:flex;gap:10px;">
+        <span style="font-size:18px;">⚠️</span>
+        <div style="font-size:12px;color:#92400e;font-weight:700;line-height:1.5;">You can only pay debts for one year per transaction. Please select one year below.</div>
+      </div>
+      <div class="sec-t">Outstanding Years</div>
+      <div class="ycard sel" onclick="selectYear(this)">
+        <div><div style="font-size:15px;font-weight:900;color:var(--text);font-family:'Poppins',sans-serif;">2022–2023</div><div style="font-size:11px;color:var(--muted);font-weight:600;">2 students</div></div>
+        <div><div style="font-size:16px;font-weight:900;color:var(--red);">KWD 90.000</div><span class="bdg bdg-r">Overdue</span></div>
+      </div>
+      <div class="ycard" onclick="selectYear(this)">
+        <div><div style="font-size:15px;font-weight:900;color:var(--text);font-family:'Poppins',sans-serif;">2021–2022</div><div style="font-size:11px;color:var(--muted);font-weight:600;">1 student</div></div>
+        <div><div style="font-size:16px;font-weight:900;color:var(--red);">KWD 60.000</div><span class="bdg bdg-a">Pending</span></div>
+      </div>
+      <div style="padding:16px;"><button class="btn" onclick="goTo('scr-013')">Continue →</button></div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!-- SCR-013: OLD DEBTS STUDENTS -->
+  <!-- ═══════════════════════════════════════════════ -->
+  <div class="screen" id="scr-013">
+    <div class="sbar"><span>9:41</span><div class="sbar-icons"><span>🔋</span></div></div>
+    <div class="hdr"><button class="back" onclick="goTo('scr-012')">‹</button><div><div class="hdr-title">Old Debts — 2022/2023</div></div></div>
+    <div class="scrl">
+      <div class="card">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+          <input type="checkbox" checked style="width:18px;height:18px;accent-color:var(--navy);">
+          <div style="width:36px;height:36px;border-radius:50%;background:var(--navy);display:flex;align-items:center;justify-content:center;color:white;font-size:13px;font-weight:800;">AH</div>
+          <div><div style="font-size:14px;font-weight:800;color:var(--text);">Ahmad Mohammed</div><div style="font-size:11px;color:var(--muted);font-weight:600;">Was Grade 5 in 2022-2023</div></div>
+        </div>
+        <div class="frow"><div class="frow-l">Old Balance</div><div class="frow-v red">KWD 60</div></div>
+        <div class="div"></div>
+        <div style="font-size:12px;color:var(--muted);font-weight:700;margin-bottom:6px;">PAYMENT AMOUNT</div>
+        <input class="ainp" type="number" value="60" max="60">
+        <button class="btn-sm" style="background:var(--green);margin-top:8px;" onclick="this.previousElementSibling.value=60">Pay Full Amount</button>
+      </div>
+      <div class="card">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+          <input type="checkbox" style="width:18px;height:18px;accent-color:var(--navy);">
+          <div style="width:36px;height:36px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;color:white;font-size:13px;font-weight:800;">SM</div>
+          <div><div style="font-size:14px;font-weight:800;color:var(--text);">Sara Mohammed</div><div style="font-size:11px;color:var(--muted);font-weight:600;">Was Grade 3 in 2022-2023</div></div>
+        </div>
+        <div class="frow"><div class="frow-l">Old Balance</div><div class="frow-v red">KWD 30</div></div>
+        <div class="div"></div>
+        <input class="ainp" type="number" value="0" max="30">
+      </div>
+    </div>
+    <div style="background:white;border-top:1.5px solid var(--border);padding:12px 16px;flex-shrink:0;">
+      <div style="display:flex;justify-content:space-between;margin-bottom:10px;"><span style="font-size:13px;color:var(--muted);font-weight:700;">Total:</span><span style="font-size:18px;font-weight:900;color:var(--navy);font-family:'Poppins',sans-serif;">KWD 60.000</span></div>
+      <button class="btn" onclick="goTo('scr-014')">Continue →</button>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!-- SCR-014: PAYMENT CHECKOUT -->
+  <!-- ═══════════════════════════════════════════════ -->
+  <div class="screen" id="scr-014">
+    <div class="sbar"><span>9:41</span><div class="sbar-icons"><span>🔋</span></div></div>
+    <div class="hdr"><button class="back" onclick="goTo('scr-013')">‹</button><div><div class="hdr-title">Checkout</div></div></div>
+    <div class="scrl">
+      <div class="card" style="margin-top:12px;">
+        <div style="font-size:13px;font-weight:800;font-family:'Poppins',sans-serif;margin-bottom:12px;">Order Summary</div>
+        <div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);">
+          <div><div style="font-size:13px;font-weight:700;">Ahmad Mohammed</div><div style="font-size:11px;color:var(--muted);">Old Debt 2022-2023</div></div>
+          <div style="font-size:14px;font-weight:800;color:var(--navy);">KWD 60</div>
+        </div>
+        <div class="div"></div>
+        <div class="frow"><div class="frow-l fw8">Total Payment</div><div class="frow-v" style="font-size:18px;color:var(--navy);">KWD 60.000</div></div>
+      </div>
+      <div class="sec-t">Payment Method</div>
+      <div style="padding:4px 16px;">
+        <div class="pmeth sel" onclick="selectPay(this)"><div class="pmeth-logo">🏦</div><div><div class="pmeth-name">KNET</div><div class="pmeth-sub">Kuwait national payment</div></div><div class="pmeth-check">✓</div></div>
+        <div class="pmeth" onclick="selectPay(this)"><div class="pmeth-logo">💳</div><div><div class="pmeth-name">Visa / Mastercard</div></div><div class="pmeth-check">✓</div></div>
+        <div class="pmeth" onclick="selectPay(this)"><div class="pmeth-logo"></div><div><div class="pmeth-name">Apple Pay</div></div><div class="pmeth-check">✓</div></div>
+      </div>
+      <div style="padding:8px 16px 20px;"><button class="btn" onclick="showLoading('scr-015')">🔐 Proceed to Payment</button></div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!-- SCR-015: PAYMENT RESULT -->
+  <!-- ═══════════════════════════════════════════════ -->
+  <div class="screen" id="scr-015">
+    <div class="sbar"><span>9:41</span><div class="sbar-icons"><span>🔋</span></div></div>
+    <div class="scrl-white" style="background:white;">
+      <div style="padding:40px 24px 20px;text-align:center;">
+        <div class="suc-icon">✅</div>
+        <div style="font-size:24px;font-weight:900;color:var(--text);font-family:'Poppins',sans-serif;">Payment Successful!</div>
+        <div style="font-size:14px;color:var(--muted);margin-top:6px;font-weight:600;">Your payment has been processed</div>
+      </div>
+      <div class="card" style="margin:8px 16px;">
+        <div class="rrow"><div class="rl">Transaction ID</div><div class="rv navy">TXN-2025-048291</div></div>
+        <div class="rrow"><div class="rl">Track ID</div><div class="rv">KWT-847362910</div></div>
+        <div class="rrow"><div class="rl">Amount Paid</div><div class="rv green">KWD 150.000</div></div>
+        <div class="rrow"><div class="rl">Payment Method</div><div class="rv">KNET</div></div>
+        <div class="rrow"><div class="rl">Date & Time</div><div class="rv">05 May 2025, 09:41</div></div>
+        <div class="rrow" style="border:none;"><div class="rl">Status</div><div><span class="bdg bdg-g">Approved</span></div></div>
+      </div>
+      <div style="padding:12px 16px;display:flex;gap:10px;">
+        <button class="btn-out" onclick="goTo('scr-025')">📄 Download Receipt</button>
+        <button class="btn" onclick="goTo('scr-006')">Done</button>
+      </div>
+      <!-- Failed state toggle -->
+      <div style="padding:0 16px 20px;text-align:center;">
+        <div style="font-size:11px;color:var(--muted);font-weight:600;cursor:pointer;" onclick="togglePayResult()">Toggle: Show Failed State</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!-- SCR-016: REPORTS -->
+  <!-- ═══════════════════════════════════════════════ -->
+  <div class="screen" id="scr-016">
+    <div class="sbar"><span>9:41</span><div class="sbar-icons"><span>🔋</span></div></div>
+    <div class="hdr"><button class="back" onclick="goTo('scr-006')">‹</button><div><div class="hdr-title">Reports</div></div></div>
+    <div class="scrl">
+      <div style="padding:12px 16px 4px;display:grid;grid-template-columns:repeat(2,1fr);gap:10px;">
+        <div style="background:white;border-radius:18px;padding:18px;text-align:center;border:1.5px solid var(--border);cursor:pointer;box-shadow:0 2px 10px rgba(0,0,0,0.05);" onclick="goTo('scr-017')">
+          <div style="font-size:34px;margin-bottom:8px;">📜</div>
+          <div style="font-size:13px;font-weight:800;color:var(--text);font-family:'Poppins',sans-serif;">Financial Policy</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:3px;font-weight:600;">Rules & installments</div>
+        </div>
+        <div style="background:white;border-radius:18px;padding:18px;text-align:center;border:1.5px solid var(--border);cursor:pointer;box-shadow:0 2px 10px rgba(0,0,0,0.05);" onclick="goTo('scr-018')">
+          <div style="font-size:34px;margin-bottom:8px;">🧾</div>
+          <div style="font-size:13px;font-weight:800;color:var(--text);font-family:'Poppins',sans-serif;">Payment History</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:3px;font-weight:600;">All receipts</div>
+        </div>
+        <div style="background:white;border-radius:18px;padding:18px;text-align:center;border:1.5px solid var(--border);cursor:pointer;box-shadow:0 2px 10px rgba(0,0,0,0.05);" onclick="goTo('scr-019')">
+          <div style="font-size:34px;margin-bottom:8px;">📊</div>
+          <div style="font-size:13px;font-weight:800;color:var(--text);font-family:'Poppins',sans-serif;">Statement</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:3px;font-weight:600;">Account overview</div>
+        </div>
+        <div style="background:white;border-radius:18px;padding:18px;text-align:center;border:1.5px solid var(--border);cursor:pointer;box-shadow:0 2px 10px rgba(0,0,0,0.05);" onclick="goTo('scr-021')">
+          <div style="font-size:34px;margin-bottom:8px;">🎯</div>
+          <div style="font-size:13px;font-weight:800;color:var(--text);font-family:'Poppins',sans-serif;">Academic Sequence</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:3px;font-weight:600;">Timeline & progress</div>
+        </div>
+      </div>
+    </div>
+    <div class="bnav">
+      <button class="nv" onclick="goTo('scr-006')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>Home</button>
+      <button class="nv" onclick="goTo('scr-007')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="1" y="4" width="22" height="16" rx="2"/></svg>Payments</button>
+      <button class="nv on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>Reports</button>
+      <button class="nv" onclick="goTo('scr-023')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/></svg>Alerts</button>
+      <button class="nv" onclick="goTo('scr-024')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>More</button>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!-- SCR-017: FINANCIAL POLICY -->
+  <!-- ═══════════════════════════════════════════════ -->
+  <div class="screen" id="scr-017">
+    <div class="sbar"><span>9:41</span><div class="sbar-icons"><span>🔋</span></div></div>
+    <div class="hdr"><button class="back" onclick="goTo('scr-016')">‹</button><div><div class="hdr-title">Financial Policy</div></div></div>
+    <div class="scrl">
+      <div class="pol-section">
+        <div class="pol-title">📋 General Rules</div>
+        <div class="pol-text">All fees must be paid by the specified deadlines. Late payments may result in a delay in issuing school certificates and reports. The school reserves the right to refuse admission for the next year if fees remain unpaid.</div>
+        <div class="pol-title">📅 Installment Plan</div>
+        <div style="background:#f0f3ff;border-radius:14px;overflow:hidden;margin-top:6px;">
+          <div style="display:flex;justify-content:space-between;padding:10px 14px;background:var(--navy);color:white;font-size:12px;font-weight:800;">
+            <span>Installment</span><span>Due Date</span><span>Amount</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;padding:10px 14px;border-bottom:1px solid var(--border);font-size:13px;"><span>1st</span><span>Sep 1, 2024</span><span class="fw8">40%</span></div>
+          <div style="display:flex;justify-content:space-between;padding:10px 14px;border-bottom:1px solid var(--border);font-size:13px;"><span>2nd</span><span>Nov 1, 2024</span><span class="fw8">30%</span></div>
+          <div style="display:flex;justify-content:space-between;padding:10px 14px;font-size:13px;"><span>3rd</span><span>Feb 1, 2025</span><span class="fw8">30%</span></div>
+        </div>
+        <div class="pol-title">🎁 Discounts</div>
+        <div class="pol-text">Sibling discount: 10% for 2nd child, 15% for 3rd child and beyond. Early payment (full year before September 1st): 5% discount. Excellence scholarship: Up to 25% for top performers.</div>
+        <div class="pol-title">↩️ Refund Policy</div>
+        <div class="pol-text">Full refund if withdrawal is before the start of the academic year. 50% refund for withdrawal in the first month. No refund after the first month of the academic year.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!-- SCR-018: PAYMENT HISTORY -->
+  <!-- ═══════════════════════════════════════════════ -->
+  <div class="screen" id="scr-018">
+    <div class="sbar"><span>9:41</span><div class="sbar-icons"><span>🔋</span></div></div>
+    <div class="hdr"><button class="back" onclick="goTo('scr-016')">‹</button><div><div class="hdr-title">Payment History</div></div></div>
+    <div class="scrl">
+      <div style="background:white;margin:12px 16px;border-radius:16px;overflow:hidden;border:1.5px solid var(--border);">
+        <div style="padding:12px 16px;background:#f9fafb;border-bottom:1.5px solid var(--border);display:flex;justify-content:space-between;font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:0.4px;">
+          <span>Receipt</span><span>Date</span><span>Amount</span><span>Status</span>
+        </div>
+        <div onclick="goTo('scr-025')" style="cursor:pointer;">
+          <div style="padding:13px 16px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;">
+            <div><div style="font-size:13px;font-weight:800;">#REC-1042</div><div style="font-size:11px;color:var(--muted);">KNET</div></div>
+            <div style="font-size:12px;color:var(--muted);font-weight:600;">25 Apr</div>
+            <div style="font-size:13px;font-weight:800;color:var(--navy);">80.000</div>
+            <span class="bdg bdg-g">Paid</span>
+          </div>
+        </div>
+        <div onclick="goTo('scr-025')" style="cursor:pointer;">
+          <div style="padding:13px 16px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;">
+            <div><div style="font-size:13px;font-weight:800;">#REC-0981</div><div style="font-size:11px;color:var(--muted);">Visa</div></div>
+            <div style="font-size:12px;color:var(--muted);font-weight:600;">10 Mar</div>
+            <div style="font-size:13px;font-weight:800;color:var(--navy);">200.000</div>
+            <span class="bdg bdg-g">Paid</span>
+          </div>
+        </div>
+        <div style="padding:13px 16px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;">
+          <div><div style="font-size:13px;font-weight:800;">#REC-0920</div><div style="font-size:11px;color:var(--muted);">KNET</div></div>
+          <div style="font-size:12px;color:var(--muted);font-weight:600;">1 Feb</div>
+          <div style="font-size:13px;font-weight:800;color:var(--navy);">150.000</div>
+          <span class="bdg bdg-g">Paid</span>
+        </div>
+        <div style="padding:13px 16px;display:flex;justify-content:space-between;align-items:center;">
+          <div><div style="font-size:13px;font-weight:800;">#REC-0871</div><div style="font-size:11px;color:var(--muted);">Apple Pay</div></div>
+          <div style="font-size:12px;color:var(--muted);font-weight:600;">15 Jan</div>
+          <div style="font-size:13px;font-weight:800;color:var(--navy);">150.000</div>
+          <span class="bdg bdg-r">Failed</span>
+        </div>
+      </div>
+      <div style="padding:4px 16px 16px;">
+        <div style="background:#f0f3ff;border-radius:14px;padding:13px;text-align:center;">
+          <div style="font-size:12px;color:var(--muted);font-weight:700;margin-bottom:4px;">TOTAL PAID THIS YEAR</div>
+          <div style="font-size:24px;font-weight:900;color:var(--navy);font-family:'Poppins',sans-serif;">KWD 580.000</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!-- SCR-019: STATEMENT OF ACCOUNT -->
+  <!-- ═══════════════════════════════════════════════ -->
+  <div class="screen" id="scr-019">
+    <div class="sbar"><span>9:41</span><div class="sbar-icons"><span>🔋</span></div></div>
+    <div class="hdr"><button class="back" onclick="goTo('scr-016')">‹</button><div><div class="hdr-title">Statement of Account</div></div></div>
+    <div class="scrl">
+      <div class="tgrid" style="margin-top:10px;">
+        <div class="tcell"><div class="tcell-l">Opening Balance</div><div class="tcell-v" style="font-size:15px;">0.000</div></div>
+        <div class="tcell"><div class="tcell-l">Total Fees</div><div class="tcell-v" style="font-size:15px;">950.000</div></div>
+        <div class="tcell paid"><div class="tcell-l">Total Paid</div><div class="tcell-v" style="font-size:15px;">580.000</div></div>
+        <div class="tcell rem"><div class="tcell-l">Balance Due</div><div class="tcell-v" style="font-size:15px;">320.000</div></div>
+      </div>
+      <div class="sec-t">Transaction History</div>
+      <div style="background:white;margin:4px 16px;border-radius:16px;overflow:hidden;border:1.5px solid var(--border);">
+        <div style="padding:10px 16px;background:#f9fafb;border-bottom:1.5px solid var(--border);display:flex;justify-content:space-between;font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;">
+          <span>Description</span><span>Debit</span><span>Credit</span>
+        </div>
+        <div class="srow"><span class="f13 fw7">Registration Fees</span><span class="s-dr">50.000</span><span>—</span></div>
+        <div class="srow"><span class="f13 fw7">Tuition Fees – Ahmad</span><span class="s-dr">350.000</span><span>—</span></div>
+        <div class="srow"><span class="f13 fw7">Tuition Fees – Sara</span><span class="s-dr">300.000</span><span>—</span></div>
+        <div class="srow"><span class="f13 fw7">Sibling Discount</span><span>—</span><span class="s-cr">50.000</span></div>
+        <div class="srow"><span class="f13 fw7">Payment #871</span><span>—</span><span class="s-cr">150.000</span></div>
+        <div class="srow"><span class="f13 fw7">Payment #920</span><span>—</span><span class="s-cr">150.000</span></div>
+        <div class="srow"><span class="f13 fw7">Payment #981</span><span>—</span><span class="s-cr">200.000</span></div>
+        <div class="srow" style="border:none;background:#fef2f2;"><span class="f13 fw8 red">Balance Due</span><span class="s-dr">320.000</span><span>—</span></div>
+      </div>
+      <div style="height:16px;"></div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!-- SCR-020: NEXT YEAR ENROLLMENT -->
+  <!-- ═══════════════════════════════════════════════ -->
+  <div class="screen" id="scr-020">
+    <div class="sbar"><span>9:41</span><div class="sbar-icons"><span>🔋</span></div></div>
+    <div class="hdr"><button class="back" onclick="goTo('scr-006')">‹</button><div><div class="hdr-title">Next Year Enrollment</div><div class="hdr-sub">2025–2026 Academic Year</div></div></div>
+    <div class="scrl">
+      <div class="encard">
+        <div class="en-av">AH</div>
+        <div style="flex:1;"><div style="font-size:14px;font-weight:800;color:var(--text);font-family:'Poppins',sans-serif;">Ahmad Mohammed</div><div style="font-size:12px;color:var(--muted);font-weight:600;">Grade 7 → Grade 8</div></div>
+        <span class="bdg bdg-g">Approved</span>
+      </div>
+      <div class="encard">
+        <div class="en-av" style="background:var(--red);">SM</div>
+        <div style="flex:1;"><div style="font-size:14px;font-weight:800;color:var(--text);font-family:'Poppins',sans-serif;">Sara Mohammed</div><div style="font-size:12px;color:var(--muted);font-weight:600;">Grade 5 → Grade 6</div></div>
+        <span class="bdg bdg-a">Pending</span>
+      </div>
+      <div class="encard">
+        <div class="en-av" style="background:#059669;">KM</div>
+        <div style="flex:1;"><div style="font-size:14px;font-weight:800;color:var(--text);font-family:'Poppins',sans-serif;">Khalid Mohammed</div><div style="font-size:12px;color:var(--muted);font-weight:600;">Grade 9 → Grade 10</div></div>
+        <span class="bdg bdg-r">Rejected</span>
+      </div>
+      <div style="background:#fef3c7;margin:8px 16px;border-radius:14px;padding:13px;"><div style="font-size:12px;font-weight:700;color:#92400e;">⚠️ Khalid's enrollment was rejected. Please contact school administration for more details.</div></div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!-- SCR-021: ACADEMIC SEQUENCE -->
+  <!-- ═══════════════════════════════════════════════ -->
+  <div class="screen" id="scr-021">
+    <div class="sbar"><span>9:41</span><div class="sbar-icons"><span>🔋</span></div></div>
+    <div class="hdr"><button class="back" onclick="goTo('scr-016')">‹</button><div><div class="hdr-title">Academic Sequence</div><div class="hdr-sub">Ahmad Mohammed</div></div></div>
+    <div class="scrl">
+      <div style="padding:14px 16px 6px;">
+        <div style="display:flex;gap:8px;margin-bottom:14px;">
+          <button class="btn-sm" style="background:var(--navy);">Ahmad</button>
+          <button class="btn-sm" style="background:#e0e7ff;color:var(--navy);">Sara</button>
+          <button class="btn-sm" style="background:#e0e7ff;color:var(--navy);">Khalid</button>
+        </div>
+      </div>
+      <!-- Timeline -->
+      <div style="position:relative;padding:0 16px;">
+        <div style="position:absolute;left:30px;top:8px;bottom:0;width:2px;background:var(--border);"></div>
+        <div class="tli"><div class="tli-dot done"></div><div><div style="font-size:13px;font-weight:800;color:var(--green);">2021–2022</div><div style="font-size:12px;color:var(--muted);">Grade 5 — Class A</div><span class="bdg bdg-g" style="margin-top:4px;display:inline-block;">Passed ✓</span></div></div>
+        <div class="tli"><div class="tli-dot done"></div><div><div style="font-size:13px;font-weight:800;color:var(--green);">2022–2023</div><div style="font-size:12px;color:var(--muted);">Grade 6 — Class B</div><span class="bdg bdg-g" style="margin-top:4px;display:inline-block;">Passed ✓</span></div></div>
+        <div class="tli"><div class="tli-dot done"></div><div><div style="font-size:13px;font-weight:800;color:var(--green);">2023–2024</div><div style="font-size:12px;color:var(--muted);">Grade 7 — Class A</div><span class="bdg bdg-g" style="margin-top:4px;display:inline-block;">Passed ✓</span></div></div>
+        <div class="tli"><div class="tli-dot" style="background:var(--navy);box-shadow:0 0 0 4px rgba(13,31,92,0.2);"></div><div><div style="font-size:13px;font-weight:800;color:var(--navy);">2024–2025</div><div style="font-size:12px;color:var(--muted);">Grade 8 — Class A</div><span class="bdg bdg-b" style="margin-top:4px;display:inline-block;">In Progress</span></div></div>
+        <div class="tli"><div class="tli-dot" style="background:var(--border);box-shadow:none;"></div><div><div style="font-size:13px;font-weight:800;color:var(--muted);">2025–2026</div><div style="font-size:12px;color:var(--muted);">Grade 9 — Pending Enrollment</div><span class="bdg" style="background:#f1f5f9;color:var(--muted);margin-top:4px;display:inline-block;">Upcoming</span></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!-- SCR-022: CONTACT ADMIN -->
+  <!-- ═══════════════════════════════════════════════ -->
+  <div class="screen" id="scr-022">
+    <div class="sbar"><span>9:41</span><div class="sbar-icons"><span>🔋</span></div></div>
+    <div class="hdr"><button class="back" onclick="goTo('scr-006')">‹</button><div><div class="hdr-title">Contact Administration</div></div></div>
+    <div class="scrl">
+      <div class="ctform" style="padding-top:14px;">
+        <div class="ig"><div class="lbl">STUDENT</div>
+          <select class="sel-inp"><option>Ahmad Mohammed — Grade 7</option><option>Sara Mohammed — Grade 5</option><option>Khalid Mohammed — Grade 9</option></select>
+        </div>
+        <div class="ig"><div class="lbl">CATEGORY</div>
+          <select class="sel-inp"><option>Financial Inquiry</option><option>Academic Issue</option><option>Enrollment Request</option><option>Complaint</option><option>Other</option></select>
+        </div>
+        <div class="ig"><div class="lbl">SUBJECT</div><input class="inp" type="text" placeholder="Brief description of your inquiry"></div>
+        <div class="ig"><div class="lbl">MESSAGE</div><textarea class="tarea" placeholder="Type your message here..."></textarea></div>
+        <div class="ig"><div class="lbl">ATTACHMENT (Optional)</div>
+          <div style="border:2px dashed var(--border);border-radius:13px;padding:18px;text-align:center;cursor:pointer;color:var(--muted);">
+            <div style="font-size:24px;margin-bottom:6px;">📎</div>
+            <div style="font-size:13px;font-weight:700;">Tap to attach files</div>
+            <div style="font-size:11px;margin-top:3px;">PDF, Images up to 10MB</div>
+          </div>
+        </div>
+        <button class="btn" style="margin-bottom:20px;">Send Message ✉️</button>
+      </div>
+      <!-- Message status -->
+      <div class="card" style="background:#f0fdf4;border-color:#bbf7d0;margin-bottom:16px;">
+        <div style="font-size:12px;font-weight:800;color:var(--green);margin-bottom:6px;">✅ PREVIOUS MESSAGE STATUS</div>
+        <div style="font-size:13px;font-weight:700;color:var(--text);">Fee payment clarification</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:3px;font-weight:600;">Sent: 28 Apr 2025 • <span style="color:var(--green);">Replied</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!-- SCR-023: NOTIFICATIONS -->
+  <!-- ═══════════════════════════════════════════════ -->
+  <div class="screen" id="scr-023">
+    <div class="sbar"><span>9:41</span><div class="sbar-icons"><span>🔋</span></div></div>
+    <div class="hdr"><button class="back" onclick="goTo('scr-006')">‹</button><div class="hdr-title">Notifications</div><button class="btn-sm" style="background:rgba(255,255,255,0.15);font-size:11px;">Mark All Read</button></div>
+    <div class="scrl" style="background:white;">
+      <div class="nitem">
+        <div class="ndot"></div>
+        <div style="flex:1;"><div style="font-size:13px;font-weight:800;color:var(--text);">Payment Reminder</div><div style="font-size:12px;color:var(--muted);margin-top:2px;font-weight:600;">KWD 320 outstanding for current year. Pay before May 15.</div><div style="font-size:11px;color:var(--navy);margin-top:4px;font-weight:700;">5 May 2025 • Financial</div></div>
+      </div>
+      <div class="nitem">
+        <div class="ndot"></div>
+        <div style="flex:1;"><div style="font-size:13px;font-weight:800;color:var(--text);">Enrollment Approved</div><div style="font-size:12px;color:var(--muted);margin-top:2px;font-weight:600;">Ahmad's enrollment for 2025-2026 has been approved.</div><div style="font-size:11px;color:var(--green);margin-top:4px;font-weight:700;">3 May 2025 • Enrollment</div></div>
+      </div>
+      <div class="nitem">
+        <div class="ndot"></div>
+        <div style="flex:1;"><div style="font-size:13px;font-weight:800;color:var(--text);">Receipt Issued</div><div style="font-size:12px;color:var(--muted);margin-top:2px;font-weight:600;">Payment receipt #REC-1042 for KWD 80 is ready.</div><div style="font-size:11px;color:var(--navy);margin-top:4px;font-weight:700;">25 Apr 2025 • Financial</div></div>
+      </div>
+      <div class="nitem">
+        <div class="ndot read"></div>
+        <div style="flex:1;"><div style="font-size:13px;font-weight:700;color:var(--text);">Admin Reply</div><div style="font-size:12px;color:var(--muted);margin-top:2px;font-weight:600;">Your inquiry about fees has been answered. Check messages.</div><div style="font-size:11px;color:var(--muted);margin-top:4px;font-weight:700;">28 Apr 2025 • Message</div></div>
+      </div>
+      <div class="nitem">
+        <div class="ndot read"></div>
+        <div style="flex:1;"><div style="font-size:13px;font-weight:700;color:var(--text);">Academic Results Posted</div><div style="font-size:12px;color:var(--muted);margin-top:2px;font-weight:600;">Mid-term results for Ahmad are now available.</div><div style="font-size:11px;color:var(--muted);margin-top:4px;font-weight:700;">20 Apr 2025 • Academic</div></div>
+      </div>
+      <div class="nitem">
+        <div class="ndot read"></div>
+        <div style="flex:1;"><div style="font-size:13px;font-weight:700;color:var(--text);">School Holiday Notice</div><div style="font-size:12px;color:var(--muted);margin-top:2px;font-weight:600;">School will be closed on May 10 for National Day.</div><div style="font-size:11px;color:var(--muted);margin-top:4px;font-weight:700;">15 Apr 2025 • General</div></div>
+      </div>
+    </div>
+    <div class="bnav">
+      <button class="nv" onclick="goTo('scr-006')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>Home</button>
+      <button class="nv" onclick="goTo('scr-007')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="1" y="4" width="22" height="16" rx="2"/></svg>Payments</button>
+      <button class="nv" onclick="goTo('scr-016')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/></svg>Reports</button>
+      <button class="nv on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>Alerts</button>
+      <button class="nv" onclick="goTo('scr-024')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>More</button>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!-- SCR-024: SETTINGS / OTHER SERVICES -->
+  <!-- ═══════════════════════════════════════════════ -->
+  <div class="screen" id="scr-024">
+    <div class="sbar"><span>9:41</span><div class="sbar-icons"><span>🔋</span></div></div>
+    <div style="background:linear-gradient(145deg,#080f35 0%,#0d1f5c 100%);padding:40px 18px 24px;flex-shrink:0;">
+      <div style="display:flex;align-items:center;gap:14px;">
+        <div style="width:60px;height:60px;border-radius:50%;background:rgba(255,255,255,0.15);border:2.5px solid rgba(255,255,255,0.3);display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:800;color:white;">MA</div>
+        <div><div style="font-size:18px;font-weight:900;color:white;font-family:'Poppins',sans-serif;">Mohammed Ahmed</div><div style="font-size:12px;color:rgba(255,255,255,0.6);font-weight:600;">Civil ID: 29012345678</div></div>
+      </div>
+    </div>
+    <div class="scrl">
+      <div class="sec-t">Account</div>
+      <div class="psec">
+        <div class="pitem"><div class="picon">👤</div><div class="ptxt">Edit Profile</div><div style="color:var(--muted);font-size:14px;">›</div></div>
+        <div class="pitem"><div class="picon">🔒</div><div class="ptxt">Change Password</div><div style="color:var(--muted);font-size:14px;">›</div></div>
+        <div class="pitem"><div class="picon">🔔</div><div class="ptxt">Notification Settings</div><div style="color:var(--muted);font-size:14px;">›</div></div>
+      </div>
+      <div class="sec-t">Preferences</div>
+      <div class="psec">
+        <div class="pitem"><div class="picon">🌐</div><div class="ptxt">Language</div><div style="display:flex;gap:4px;align-items:center;"><span style="font-size:12px;font-weight:700;color:var(--navy);">English</span><div style="color:var(--muted);font-size:14px;">›</div></div></div>
+        <div class="pitem"><div class="picon">🎨</div><div class="ptxt">Theme</div><div style="font-size:12px;font-weight:700;color:var(--navy);">Light ›</div></div>
+        <div class="pitem"><div class="picon">🔐</div><div class="ptxt">Biometric Login</div>
+          <div style="width:44px;height:24px;background:var(--navy);border-radius:12px;position:relative;cursor:pointer;">
+            <div style="position:absolute;right:3px;top:3px;width:18px;height:18px;background:white;border-radius:50%;"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sec-t">Support</div>
+      <div class="psec">
+        <div class="pitem" onclick="goTo('scr-022')"><div class="picon">💬</div><div class="ptxt">Contact Administration</div><div style="color:var(--muted);font-size:14px;">›</div></div>
+        <div class="pitem"><div class="picon">❓</div><div class="ptxt">Help & FAQ</div><div style="color:var(--muted);font-size:14px;">›</div></div>
+        <div class="pitem"><div class="picon">ℹ️</div><div class="ptxt">App Version 2.1.0</div></div>
+      </div>
+      <div class="psec" style="margin-top:8px;">
+        <div class="pitem" style="color:var(--red);" onclick="goTo('scr-001')"><div class="picon">🚪</div><div class="ptxt" style="color:var(--red);">Sign Out</div></div>
+      </div>
+      <div style="height:16px;"></div>
+    </div>
+    <div class="bnav">
+      <button class="nv" onclick="goTo('scr-006')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>Home</button>
+      <button class="nv" onclick="goTo('scr-007')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="1" y="4" width="22" height="16" rx="2"/></svg>Payments</button>
+      <button class="nv" onclick="goTo('scr-016')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/></svg>Reports</button>
+      <button class="nv" onclick="goTo('scr-023')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/></svg>Alerts</button>
+      <button class="nv on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>More</button>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!-- SCR-025: RECEIPT DETAILS -->
+  <!-- ═══════════════════════════════════════════════ -->
+  <div class="screen" id="scr-025">
+    <div class="sbar"><span>9:41</span><div class="sbar-icons"><span>🔋</span></div></div>
+    <div class="hdr"><button class="back" onclick="goTo('scr-018')">‹</button><div class="hdr-title">Receipt Details</div></div>
+    <div class="scrl-white">
+      <!-- Receipt design -->
+      <div style="margin:12px 16px;border-radius:18px;overflow:hidden;box-shadow:var(--shadow);border:1.5px solid var(--border);">
+        <!-- Header -->
+        <div style="background:var(--navy);padding:20px 20px 14px;text-align:center;">
+          <div style="background:white;border-radius:14px;padding:8px 20px;display:inline-block;margin-bottom:10px;">
+            <span style="font-family:'Poppins',sans-serif;font-size:20px;font-weight:900;color:#0d1f5c;letter-spacing:-0.5px;">al<span style="color:#c0201a;">ru</span>ya</span>
+            <span style="width:6px;height:6px;background:#c0201a;border-radius:50%;display:inline-block;margin-left:2px;vertical-align:super;"></span>
+          </div>
+          <div style="color:rgba(255,255,255,0.7);font-size:11px;font-weight:700;letter-spacing:1px;">OFFICIAL PAYMENT RECEIPT</div>
+          <div style="color:white;font-size:22px;font-weight:900;font-family:'Poppins',sans-serif;margin-top:4px;">KWD 80.000</div>
+        </div>
+        <!-- Zigzag divider -->
+        <div style="height:14px;background:repeating-linear-gradient(90deg,var(--navy) 0px,var(--navy) 10px,white 10px,white 20px);"></div>
+        <!-- Body -->
+        <div style="background:white;padding:16px 20px;">
+          <div class="rrow"><div class="rl">Receipt No.</div><div class="rv navy">#REC-1042</div></div>
+          <div class="rrow"><div class="rl">Student</div><div class="rv">Ahmad Mohammed</div></div>
+          <div class="rrow"><div class="rl">Grade</div><div class="rv">Grade 7 — Class A</div></div>
+          <div class="rrow"><div class="rl">School</div><div class="rv">Alruya Middle</div></div>
+          <div class="rrow"><div class="rl">Branch</div><div class="rv">Hawalli</div></div>
+          <div class="rrow"><div class="rl">Payment Type</div><div class="rv">Current Year Fees</div></div>
+          <div class="rrow"><div class="rl">Payment Method</div><div class="rv">KNET</div></div>
+          <div class="rrow"><div class="rl">Transaction ID</div><div class="rv f12">TXN-2025-048291</div></div>
+          <div class="rrow"><div class="rl">Track ID</div><div class="rv f12">KWT-847362910</div></div>
+          <div class="rrow"><div class="rl">Date & Time</div><div class="rv">25 Apr 2025, 14:22</div></div>
+          <div class="rrow" style="border:none;"><div class="rl">Status</div><div><span class="bdg bdg-g">✓ Approved</span></div></div>
+        </div>
+        <!-- Bottom total -->
+        <div style="background:#f0f3ff;padding:14px 20px;text-align:center;">
+          <div style="font-size:11px;font-weight:700;color:var(--muted);margin-bottom:3px;letter-spacing:0.5px;">AMOUNT PAID</div>
+          <div style="font-size:28px;font-weight:900;color:var(--navy);font-family:'Poppins',sans-serif;">KWD 80.000</div>
+        </div>
+      </div>
+      <div style="padding:10px 16px 24px;display:flex;gap:10px;">
+        <button class="btn-out">📤 Share</button>
+        <button class="btn">⬇️ Download PDF</button>
+      </div>
+    </div>
+  </div>
+
+
+</div><!-- end app-container -->
+<div class="scr-label" id="scrLabel">SCR-001 — Login</div>
+</div>
+
+<script>
+const labels={
+  'scr-001':'SCR-001 — Login','scr-002':'SCR-002 — Institution',
+  'scr-003':'SCR-003 — School','scr-004':'SCR-004 — Branch',
+  'scr-005':'SCR-005 — Students Dashboard','scr-006':'SCR-006 — Home',
+  'scr-007':'SCR-007 — Pay Fees Menu','scr-008':'SCR-008 — Pay Current Year',
+  'scr-009':'SCR-009 — Payment Details','scr-010':'SCR-010 — Pay Advance',
+  'scr-011':'SCR-011 — Advance Details','scr-012':'SCR-012 — Old Debts Year',
+  'scr-013':'SCR-013 — Debt Students','scr-014':'SCR-014 — Checkout',
+  'scr-015':'SCR-015 — Payment Result','scr-016':'SCR-016 — Reports',
+  'scr-017':'SCR-017 — Financial Policy','scr-018':'SCR-018 — Payment History',
+  'scr-019':'SCR-019 — Statement','scr-020':'SCR-020 — Enrollment',
+  'scr-021':'SCR-021 — Academic Sequence','scr-022':'SCR-022 — Contact Admin',
+  'scr-023':'SCR-023 — Notifications','scr-024':'SCR-024 — Settings',
+  'scr-025':'SCR-025 — Receipt Details'
+};
+
+function goTo(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  const scr=document.getElementById(id);
+  if(scr){scr.classList.add('active');scr.querySelector('.scrl,.scrl-white')&&(scr.querySelector('.scrl,.scrl-white').scrollTop=0);}
+  const lbl=document.getElementById('scrLabel');
+  if(lbl) lbl.textContent=labels[id]||id;
+  document.querySelectorAll('.pg-btn').forEach(b=>{
+    b.classList.remove('on');
+    if((b.getAttribute('onclick')||'').includes("'"+id+"'")) b.classList.add('on');
+  });
+}
+function showScr(id,btn){
+  goTo(id);
+  document.querySelectorAll('.pg-btn').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+}
+function showLoading(next){
+  const el=document.getElementById('loadingEl');
+  el.classList.add('on');
+  setTimeout(()=>{el.classList.remove('on');goTo(next);},1000);
+}
+function toggleSel(el){
+  const siblings=el.parentElement.querySelectorAll('.scard');
+  siblings.forEach(s=>{
+    s.classList.remove('sel');
+    const last=s.querySelector('div:last-child');
+    if(last){last.textContent='›';last.style.color='';}
+  });
+  el.classList.add('sel');
+  const last=el.querySelector('div:last-child');
+  if(last){last.textContent='✓';last.style.color='var(--navy)';}
+}
+function selectPay(el){
+  el.parentElement.querySelectorAll('.pmeth').forEach(s=>s.classList.remove('sel'));
+  el.classList.add('sel');
+}
+function selectYear(el){
+  el.parentElement.querySelectorAll('.ycard').forEach(s=>s.classList.remove('sel'));
+  el.classList.add('sel');
+}
+let paySuccess=true;
+function togglePayResult(){
+  paySuccess=!paySuccess;
+  const scr=document.getElementById('scr-015');
+  const si=scr.querySelector('.suc-icon');
+  let fi=scr.querySelector('.fail-icon');
+  if(!fi){fi=document.createElement('div');fi.className='fail-icon';fi.textContent='❌';si.parentNode.insertBefore(fi,si);}
+  if(paySuccess){si.style.display='flex';fi.style.display='none';}
+  else{si.style.display='none';fi.style.display='flex';}
+}
+function doFaceId(){
+  const svg=document.getElementById('faceIdSvg');
+  if(svg){svg.style.opacity='0.4';setTimeout(()=>{svg.style.opacity='1';showLoading('scr-002');},600);}
+}
+// SCR-008 accordion + fee logic
+function toggleAccordion(sid){
+  const body=document.getElementById(sid+'-body');
+  const chev=document.getElementById(sid+'-chevron');
+  if(!body) return;
+  const open=body.style.display!=='none';
+  body.style.display=open?'none':'block';
+  if(chev) chev.style.transform=open?'':'rotate(180deg)';
+}
+function masterCheck(sid,fids){
+  const master=document.getElementById(sid+'-master');
+  if(!master) return;
+  fids.forEach(fid=>{
+    const chk=document.getElementById(fid+'-chk');
+    if(chk){chk.checked=master.checked;toggleFeeInput(fid);}
+  });
+  recalc008();
+}
+function toggleFeeInput(fid){
+  const chk=document.getElementById(fid+'-chk');
+  const row=document.getElementById(fid+'-inp-row');
+  if(!row) return;
+  row.style.display=(chk&&chk.checked)?'flex':'none';
+}
+function capVal(inp,max){
+  const v=parseFloat(inp.value)||0;
+  const baseId=inp.id.replace('-amt','');
+  const warn=document.getElementById(baseId+'-warn');
+  if(v>max){inp.style.borderColor='var(--red)';if(warn)warn.style.display='block';}
+  else{inp.style.borderColor='';if(warn)warn.style.display='none';}
+  recalc008();
+}
+function setAmt(id,val){
+  const inp=document.getElementById(id);
+  if(!inp) return;
+  inp.value=val;
+  const baseId=id.replace('-amt','');
+  const chk=document.getElementById(baseId+'-chk');
+  const warn=document.getElementById(baseId+'-warn');
+  if(warn)warn.style.display='none';
+  inp.style.borderColor='';
+  if(val>0&&chk&&!chk.checked){chk.checked=true;toggleFeeInput(baseId);}
+  recalc008();
+}
+function recalc008(){
+  const fees=[
+    {chk:'s1f1-chk',amt:'s1f1-amt',max:130,sk:'s1'},
+    {chk:'s1f2-chk',amt:'s1f2-amt',max:80,sk:'s1'},
+    {chk:'s1f3-chk',amt:'s1f3-amt',max:65,sk:'s1'},
+    {chk:'s2f1-chk',amt:'s2f1-amt',max:20,sk:'s2'},
+    {chk:'s2f2-chk',amt:'s2f2-amt',max:60,sk:'s2'},
+    {chk:'s3f1-chk',amt:'s3f1-amt',max:200,sk:'s3'},
+  ];
+  const subs={s1:0,s2:0,s3:0};
+  let grand=0,count=0;
+  fees.forEach(f=>{
+    const c=document.getElementById(f.chk);
+    const i=document.getElementById(f.amt);
+    if(!c||!i) return;
+    if(c.checked){const v=Math.min(Math.max(parseFloat(i.value)||0,0),f.max);subs[f.sk]+=v;grand+=v;count++;}
+  });
+  ['s1','s2','s3'].forEach(k=>{const el=document.getElementById(k+'-sub');if(el)el.textContent='KWD '+subs[k].toFixed(3);});
+  [['s1',['s1f1','s1f2','s1f3']],['s2',['s2f1','s2f2']],['s3',['s3f1']]].forEach(([sid,fids])=>{
+    const m=document.getElementById(sid+'-master');
+    if(!m) return;
+    const checked=fids.filter(f=>{const c=document.getElementById(f+'-chk');return c&&c.checked;});
+    m.indeterminate=checked.length>0&&checked.length<fids.length;
+    m.checked=checked.length===fids.length;
+  });
+  const gt=document.getElementById('totalAmt008');
+  const gc=document.getElementById('stuCount008');
+  if(gt)gt.textContent='KWD '+grand.toFixed(3);
+  if(gc)gc.textContent=count+' fee'+(count!==1?'s':'');
+}
+</script>
+</body>
+</html>
