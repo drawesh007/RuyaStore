@@ -20,7 +20,7 @@
 }
 html{height:100%;-webkit-text-size-adjust:100%;}
 body{font-family:'Nunito',sans-serif;background:#c8cfe8;min-height:100vh;display:flex;flex-direction:column;align-items:center;}
-.app-container{position:relative;background:var(--white);width:100%;min-height:100vh;display:flex;flex-direction:column;overflow:visible;}
+.app-container{position:relative;background:var(--white);width:100%;height:100vh;height:100dvh;display:flex;flex-direction:column;overflow:hidden;}
 @media(min-width:500px){
   body{padding:30px 20px;align-items:flex-start;justify-content:center;flex-direction:row;flex-wrap:wrap;gap:20px;}
   .app-container{width:390px;min-height:0;height:844px;border-radius:50px;box-shadow:0 0 0 12px #1a1a1a,0 0 0 14px #333,0 30px 80px rgba(0,0,0,0.4);flex-shrink:0;overflow:hidden;}
@@ -39,9 +39,24 @@ body{font-family:'Nunito',sans-serif;background:#c8cfe8;min-height:100vh;display
 .pg-btn{background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.25);color:white;border-radius:8px;padding:5px 10px;font-size:10px;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif;transition:all 0.2s;white-space:nowrap;}
 .pg-btn:hover,.pg-btn.on{background:white;color:var(--navy);}
 .scr-label{display:none;text-align:center;font-size:11px;font-weight:700;color:rgba(255,255,255,0.6);margin-top:8px;letter-spacing:0.5px;font-family:'Nunito',sans-serif;width:390px;}
-.screen{display:none;flex-direction:column;height:100vh;}
-@media(min-width:500px){.screen{height:844px;}}
+.screen{
+  display:none;
+  flex-direction:column;
+  /* Fill the full app-container height */
+  position:absolute;
+  top:0;left:0;right:0;
+  /* leave room for nav bar (66px) at bottom */
+  bottom:66px;
+  overflow:hidden;
+}
+/* Login screen — no nav, fills full height */
+.screen#scr-001{bottom:0;}
+/* Payment gateway (scr-015) — full screen too */
+/* .screen#scr-015{bottom:0;} */
 .screen.active{display:flex;}
+/* scrollable content padding so last item not hidden */
+.screen.has-nav .scrl{padding-bottom:16px;}
+.screen.has-nav .scrl-white{padding-bottom:16px;}
 .sbar{background:var(--navy);padding:10px 22px 6px;display:flex;justify-content:space-between;align-items:center;color:white;font-size:11px;font-weight:700;flex-shrink:0;}
 @supports(padding-top:env(safe-area-inset-top)){.sbar{padding-top:calc(env(safe-area-inset-top) + 6px);}}
 @media(min-width:500px){.sbar{padding-top:38px;}}
@@ -54,12 +69,61 @@ body{font-family:'Nunito',sans-serif;background:#c8cfe8;min-height:100vh;display
 .hdr-title{font-size:17px;font-weight:800;flex:1;font-family:'Poppins',sans-serif;}
 .hdr-sub{font-size:11px;color:rgba(255,255,255,0.65);margin-top:1px;}
 .back{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.15);border:none;color:white;cursor:pointer;font-size:20px;display:flex;align-items:center;justify-content:center;min-width:44px;min-height:44px;}
-.bnav{background:white;border-top:1.5px solid var(--border);display:grid;grid-template-columns:repeat(5,1fr);padding:8px 0;flex-shrink:0;box-shadow:0 -4px 20px rgba(0,0,0,0.06);}
-@supports(padding-bottom:env(safe-area-inset-bottom)){.bnav{padding-bottom:calc(env(safe-area-inset-bottom) + 8px);}}
-.nv{display:flex;flex-direction:column;align-items:center;gap:3px;color:var(--muted);font-size:10px;font-weight:700;cursor:pointer;border:none;background:none;padding:4px 0;min-height:44px;font-family:'Nunito',sans-serif;}
+/* ── GLOBAL BOTTOM NAV — inside app-container ──────── */
+#globalNav{
+  position:absolute;
+  bottom:0;left:0;right:0;
+  height:66px;
+  background:white;
+  border-top:1.5px solid var(--border);
+  display:none; /* shown/hidden via JS */
+  grid-template-columns:repeat(6,1fr);
+  align-items:center;
+  padding:6px 0 8px;
+  z-index:800;
+  box-shadow:0 -4px 24px rgba(13,31,92,0.10);
+}
+@supports(padding-bottom:env(safe-area-inset-bottom)){
+  #globalNav{
+    height:calc(66px + env(safe-area-inset-bottom));
+    padding-bottom:calc(env(safe-area-inset-bottom) + 8px);
+  }
+}
+/* on desktop phone frame, round bottom corners */
+@media(min-width:500px){
+  #globalNav{border-radius:0 0 40px 40px;}
+}
+.nv{
+  display:flex;flex-direction:column;align-items:center;gap:2px;
+  color:var(--muted);font-size:9px;font-weight:700;
+  cursor:pointer;border:none;background:none;padding:5px 2px;
+  min-height:44px;font-family:'Nunito',sans-serif;
+  transition:color 0.2s;position:relative;
+  -webkit-tap-highlight-color:transparent;
+}
 .nv.on{color:var(--navy);}
-.nv svg{width:22px;height:22px;}
-.loading{display:none;position:absolute;inset:0;background:rgba(255,255,255,0.92);z-index:500;align-items:center;justify-content:center;flex-direction:column;gap:12px;}
+.nv.on::after{
+  content:'';position:absolute;bottom:-6px;left:50%;
+  transform:translateX(-50%);
+  width:20px;height:3px;background:var(--navy);
+  border-radius:2px 2px 0 0;
+}
+.nv svg{width:22px;height:22px;transition:transform 0.15s;}
+.nv.on svg{transform:scale(1.12);}
+.nv-lbl{font-size:9px;font-weight:800;letter-spacing:0.1px;}
+.nv-badge{
+  position:absolute;top:2px;left:calc(50% + 6px);
+  width:15px;height:15px;background:var(--red);
+  border-radius:50%;font-size:8px;color:white;
+  display:flex;align-items:center;justify-content:center;
+  font-weight:900;border:2px solid white;
+}
+/* screens need bottom padding so content isn't hidden behind nav */
+.screen.has-nav .scrl,
+.screen.has-nav .scrl-white{padding-bottom:64px;}
+/* legacy bnav class kept for safety */
+.bnav{display:none;}
+.loading{display:none;position:absolute;inset:0;background:rgba(255,255,255,0.92);z-index:900;align-items:center;justify-content:center;flex-direction:column;gap:12px;}
 .loading.on{display:flex;}
 .spin{width:40px;height:40px;border:4px solid var(--border);border-top-color:var(--navy);border-radius:50%;animation:spin 0.7s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg);}}
@@ -176,8 +240,7 @@ body{font-family:'Nunito',sans-serif;background:#c8cfe8;min-height:100vh;display
 
 /* ── RESPONSIVE ────────────────────────────────────── */
 @media(max-width:499px){
-  .app-container{width:100%;min-height:100vh;height:auto;border-radius:0;box-shadow:none;}
-  .screen{height:100vh;height:100dvh;}
+  .app-container{width:100%;height:100vh;height:100dvh;border-radius:0;box-shadow:none;}
   .notch,.side-btn,.vol1,.vol2{display:none!important;}
 }
 @media(min-width:500px) and (max-width:800px){
@@ -368,7 +431,7 @@ body{font-family:'Nunito',sans-serif;background:#c8cfe8;min-height:100vh;display
   <!-- ═══════════════════════════════════════════════ -->
   <!-- SCR-005: DASHBOARD (UPDATED WITH BRANCHES)      -->
   <!-- ═══════════════════════════════════════════════ -->
-  <div class="screen" id="scr-005">
+  <div class="screen has-nav" id="scr-005">
     <div class="sbar" style="padding-top:36px;"><span>9:41</span><div class="sbar-icons"><span>🔋</span></div></div>
     <!-- HEADER -->
     <div style="background:linear-gradient(145deg,#080f35 0%,#0d1f5c 55%,#162272 100%);padding:12px 18px 16px;flex-shrink:0;position:relative;overflow:hidden;">
@@ -680,19 +743,12 @@ body{font-family:'Nunito',sans-serif;background:#c8cfe8;min-height:100vh;display
       <div style="height:16px;"></div>
     </div>
 
-    <div class="bnav">
-      <button class="nv on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>Home</button>
-      <button class="nv" onclick="goTo('scr-007')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>Payments</button>
-      <button class="nv" onclick="goTo('scr-016')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>Reports</button>
-      <button class="nv" onclick="goTo('scr-023')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>Alerts</button>
-      <button class="nv" onclick="goTo('scr-024')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>More</button>
-    </div>
   </div>
 
   <!-- ═══════════════════════════════════════════════ -->
   <!-- SCR-006: HOME -->
   <!-- ═══════════════════════════════════════════════ -->
-  <div class="screen" id="scr-006">
+  <div class="screen has-nav" id="scr-006">
     <div class="sbar" style="padding-top:36px;"><span>9:41</span><div class="sbar-icons"><span>🔋</span></div></div>
     <div style="background:linear-gradient(145deg,#080f35 0%,#0d1f5c 100%);padding:12px 18px 20px;flex-shrink:0;">
       <div style="display:flex;justify-content:space-between;align-items:center;">
@@ -726,19 +782,12 @@ body{font-family:'Nunito',sans-serif;background:#c8cfe8;min-height:100vh;display
       </div>
       <div style="height:12px;"></div>
     </div>
-    <div class="bnav">
-      <button class="nv on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>Home</button>
-      <button class="nv" onclick="goTo('scr-007')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>Payments</button>
-      <button class="nv" onclick="goTo('scr-016')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>Reports</button>
-      <button class="nv" onclick="goTo('scr-023')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>Alerts</button>
-      <button class="nv" onclick="goTo('scr-024')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>More</button>
-    </div>
   </div>
 
   <!-- ═══════════════════════════════════════════════ -->
   <!-- SCR-007: PAY FEES MENU — with school selector   -->
   <!-- ═══════════════════════════════════════════════ -->
-  <div class="screen" id="scr-007">
+  <div class="screen has-nav" id="scr-007">
     <div class="sbar"><span>9:41</span><div class="sbar-icons"><span>🔋</span></div></div>
     <div class="hdr"><button class="back" onclick="goTo('scr-005')">‹</button><div><div class="hdr-title">Pay Fees</div><div class="hdr-sub">Choose school &amp; payment type</div></div></div>
     <div class="scrl">
@@ -807,20 +856,13 @@ body{font-family:'Nunito',sans-serif;background:#c8cfe8;min-height:100vh;display
       </div>
       <div style="height:16px;"></div>
     </div>
-    <div class="bnav">
-      <button class="nv" onclick="goTo('scr-005')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>Home</button>
-      <button class="nv on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>Payments</button>
-      <button class="nv" onclick="goTo('scr-016')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/></svg>Reports</button>
-      <button class="nv" onclick="goTo('scr-023')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/></svg>Alerts</button>
-      <button class="nv" onclick="goTo('scr-024')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>More</button>
-    </div>
   </div>
 
 
   <!-- ═══════════════════════════════════════════════ -->
   <!-- SCR-008: PAY CURRENT YEAR — Accordion Design   -->
   <!-- ═══════════════════════════════════════════════ -->
-  <div class="screen" id="scr-008">
+  <div class="screen has-nav" id="scr-008">
     <div class="sbar"><span>9:41</span><div class="sbar-icons"><span>▲▲▲</span><span>🔋</span></div></div>
     <div class="hdr">
       <button class="back" onclick="goTo('scr-007')">‹</button>
@@ -1122,7 +1164,7 @@ body{font-family:'Nunito',sans-serif;background:#c8cfe8;min-height:100vh;display
 
   <!-- SCR-009: PAYMENT DETAILS -->
   <!-- ═══════════════════════════════════════════════ -->
-  <div class="screen" id="scr-009">
+  <div class="screen has-nav" id="scr-009">
     <div class="sbar"><span>9:41</span><div class="sbar-icons"><span>🔋</span></div></div>
     <div class="hdr"><button class="back" onclick="goTo('scr-008')">‹</button><div><div class="hdr-title">Payment Details</div></div></div>
     <div class="scrl">
@@ -1161,7 +1203,7 @@ body{font-family:'Nunito',sans-serif;background:#c8cfe8;min-height:100vh;display
   <!-- ═══════════════════════════════════════════════ -->
   <!-- SCR-010: PAY ADVANCE -->
   <!-- ═══════════════════════════════════════════════ -->
-  <div class="screen" id="scr-010">
+  <div class="screen has-nav" id="scr-010">
     <div class="sbar"><span>9:41</span><div class="sbar-icons"><span>🔋</span></div></div>
     <div class="hdr"><button class="back" onclick="goTo('scr-007')">‹</button><div><div class="hdr-title">Advance Payment</div><div class="hdr-sub">Next Academic Year 2025-2026</div></div></div>
     <div class="scrl">
@@ -1188,7 +1230,7 @@ body{font-family:'Nunito',sans-serif;background:#c8cfe8;min-height:100vh;display
   <!-- ═══════════════════════════════════════════════ -->
   <!-- SCR-011: ADVANCE DETAILS -->
   <!-- ═══════════════════════════════════════════════ -->
-  <div class="screen" id="scr-011">
+  <div class="screen has-nav" id="scr-011">
     <div class="sbar"><span>9:41</span><div class="sbar-icons"><span>🔋</span></div></div>
     <div class="hdr"><button class="back" onclick="goTo('scr-010')">‹</button><div><div class="hdr-title">Advance Confirmation</div></div></div>
     <div class="scrl">
@@ -1213,7 +1255,7 @@ body{font-family:'Nunito',sans-serif;background:#c8cfe8;min-height:100vh;display
   <!-- ═══════════════════════════════════════════════ -->
   <!-- SCR-012: OLD DEBTS YEAR SELECTION -->
   <!-- ═══════════════════════════════════════════════ -->
-  <div class="screen" id="scr-012">
+  <div class="screen has-nav" id="scr-012">
     <div class="sbar"><span>9:41</span><div class="sbar-icons"><span>🔋</span></div></div>
     <div class="hdr"><button class="back" onclick="goTo('scr-007')">‹</button><div><div class="hdr-title">Old Debts</div><div class="hdr-sub">Select one year to pay</div></div></div>
     <div class="scrl">
@@ -1237,7 +1279,7 @@ body{font-family:'Nunito',sans-serif;background:#c8cfe8;min-height:100vh;display
   <!-- ═══════════════════════════════════════════════ -->
   <!-- SCR-013: OLD DEBTS STUDENTS -->
   <!-- ═══════════════════════════════════════════════ -->
-  <div class="screen" id="scr-013">
+  <div class="screen has-nav" id="scr-013">
     <div class="sbar"><span>9:41</span><div class="sbar-icons"><span>🔋</span></div></div>
     <div class="hdr"><button class="back" onclick="goTo('scr-012')">‹</button><div><div class="hdr-title">Old Debts — 2022/2023</div></div></div>
     <div class="scrl">
@@ -1273,7 +1315,7 @@ body{font-family:'Nunito',sans-serif;background:#c8cfe8;min-height:100vh;display
   <!-- ═══════════════════════════════════════════════ -->
   <!-- SCR-014: PAYMENT CHECKOUT -->
   <!-- ═══════════════════════════════════════════════ -->
-  <div class="screen" id="scr-014">
+  <div class="screen has-nav" id="scr-014">
     <div class="sbar"><span>9:41</span><div class="sbar-icons"><span>🔋</span></div></div>
     <div class="hdr"><button class="back" onclick="goTo('scr-013')">‹</button><div><div class="hdr-title">Checkout</div></div></div>
     <div class="scrl">
@@ -1299,7 +1341,7 @@ body{font-family:'Nunito',sans-serif;background:#c8cfe8;min-height:100vh;display
   <!-- ═══════════════════════════════════════════════ -->
   <!-- SCR-015: PAYMENT RESULT -->
   <!-- ═══════════════════════════════════════════════ -->
-  <div class="screen" id="scr-015">
+  <div class="screen has-nav" id="scr-015">
     <div class="sbar"><span>9:41</span><div class="sbar-icons"><span>🔋</span></div></div>
     <div class="scrl-white" style="background:white;">
       <div style="padding:40px 24px 20px;text-align:center;">
@@ -1329,7 +1371,7 @@ body{font-family:'Nunito',sans-serif;background:#c8cfe8;min-height:100vh;display
   <!-- ═══════════════════════════════════════════════ -->
   <!-- SCR-016: REPORTS -->
   <!-- ═══════════════════════════════════════════════ -->
-  <div class="screen" id="scr-016">
+  <div class="screen has-nav" id="scr-016">
     <div class="sbar"><span>9:41</span><div class="sbar-icons"><span>🔋</span></div></div>
     <div class="hdr"><button class="back" onclick="goTo('scr-005')">‹</button><div><div class="hdr-title">Reports</div></div></div>
     <div class="scrl">
@@ -1356,19 +1398,12 @@ body{font-family:'Nunito',sans-serif;background:#c8cfe8;min-height:100vh;display
         </div>
       </div>
     </div>
-    <div class="bnav">
-      <button class="nv" onclick="goTo('scr-005')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>Home</button>
-      <button class="nv" onclick="goTo('scr-007')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="1" y="4" width="22" height="16" rx="2"/></svg>Payments</button>
-      <button class="nv on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>Reports</button>
-      <button class="nv" onclick="goTo('scr-023')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/></svg>Alerts</button>
-      <button class="nv" onclick="goTo('scr-024')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>More</button>
-    </div>
   </div>
 
   <!-- ═══════════════════════════════════════════════ -->
   <!-- SCR-017: FINANCIAL POLICY -->
   <!-- ═══════════════════════════════════════════════ -->
-  <div class="screen" id="scr-017">
+  <div class="screen has-nav" id="scr-017">
     <div class="sbar"><span>9:41</span><div class="sbar-icons"><span>🔋</span></div></div>
     <div class="hdr"><button class="back" onclick="goTo('scr-016')">‹</button><div><div class="hdr-title">Financial Policy</div></div></div>
     <div class="scrl">
@@ -1395,7 +1430,7 @@ body{font-family:'Nunito',sans-serif;background:#c8cfe8;min-height:100vh;display
   <!-- ═══════════════════════════════════════════════ -->
   <!-- SCR-018: PAYMENT HISTORY -->
   <!-- ═══════════════════════════════════════════════ -->
-  <div class="screen" id="scr-018">
+  <div class="screen has-nav" id="scr-018">
     <div class="sbar"><span>9:41</span><div class="sbar-icons"><span>🔋</span></div></div>
     <div class="hdr"><button class="back" onclick="goTo('scr-016')">‹</button><div><div class="hdr-title">Payment History</div></div></div>
     <div class="scrl">
@@ -1444,7 +1479,7 @@ body{font-family:'Nunito',sans-serif;background:#c8cfe8;min-height:100vh;display
   <!-- ═══════════════════════════════════════════════ -->
   <!-- SCR-019: STATEMENT OF ACCOUNT -->
   <!-- ═══════════════════════════════════════════════ -->
-  <div class="screen" id="scr-019">
+  <div class="screen has-nav" id="scr-019">
     <div class="sbar"><span>9:41</span><div class="sbar-icons"><span>🔋</span></div></div>
     <div class="hdr"><button class="back" onclick="goTo('scr-016')">‹</button><div><div class="hdr-title">Statement of Account</div></div></div>
     <div class="scrl">
@@ -1475,7 +1510,7 @@ body{font-family:'Nunito',sans-serif;background:#c8cfe8;min-height:100vh;display
   <!-- ═══════════════════════════════════════════════ -->
   <!-- SCR-020: NEXT YEAR ENROLLMENT -->
   <!-- ═══════════════════════════════════════════════ -->
-  <div class="screen" id="scr-020">
+  <div class="screen has-nav" id="scr-020">
     <div class="sbar"><span>9:41</span><div class="sbar-icons"><span>🔋</span></div></div>
     <div class="hdr"><button class="back" onclick="goTo('scr-005')">‹</button><div><div class="hdr-title">Next Year Enrollment</div><div class="hdr-sub">2025–2026 Academic Year</div></div></div>
     <div class="scrl">
@@ -1501,7 +1536,7 @@ body{font-family:'Nunito',sans-serif;background:#c8cfe8;min-height:100vh;display
   <!-- ═══════════════════════════════════════════════ -->
   <!-- SCR-021: ACADEMIC SEQUENCE -->
   <!-- ═══════════════════════════════════════════════ -->
-  <div class="screen" id="scr-021">
+  <div class="screen has-nav" id="scr-021">
     <div class="sbar"><span>9:41</span><div class="sbar-icons"><span>🔋</span></div></div>
     <div class="hdr"><button class="back" onclick="goTo('scr-016')">‹</button><div><div class="hdr-title">Academic Sequence</div><div class="hdr-sub">Ahmad Mohammed</div></div></div>
     <div class="scrl">
@@ -1527,7 +1562,7 @@ body{font-family:'Nunito',sans-serif;background:#c8cfe8;min-height:100vh;display
   <!-- ═══════════════════════════════════════════════ -->
   <!-- SCR-022: CONTACT ADMIN -->
   <!-- ═══════════════════════════════════════════════ -->
-  <div class="screen" id="scr-022">
+  <div class="screen has-nav" id="scr-022">
     <div class="sbar"><span>9:41</span><div class="sbar-icons"><span>🔋</span></div></div>
     <div class="hdr"><button class="back" onclick="goTo('scr-005')">‹</button><div><div class="hdr-title">Contact Administration</div></div></div>
     <div class="scrl">
@@ -1561,7 +1596,7 @@ body{font-family:'Nunito',sans-serif;background:#c8cfe8;min-height:100vh;display
   <!-- ═══════════════════════════════════════════════ -->
   <!-- SCR-023: NOTIFICATIONS -->
   <!-- ═══════════════════════════════════════════════ -->
-  <div class="screen" id="scr-023">
+  <div class="screen has-nav" id="scr-023">
     <div class="sbar"><span>9:41</span><div class="sbar-icons"><span>🔋</span></div></div>
     <div class="hdr"><button class="back" onclick="goTo('scr-005')">‹</button><div class="hdr-title">Notifications</div><button class="btn-sm" style="background:rgba(255,255,255,0.15);font-size:11px;">Mark All Read</button></div>
     <div class="scrl" style="background:white;">
@@ -1590,19 +1625,12 @@ body{font-family:'Nunito',sans-serif;background:#c8cfe8;min-height:100vh;display
         <div style="flex:1;"><div style="font-size:13px;font-weight:700;color:var(--text);">School Holiday Notice</div><div style="font-size:12px;color:var(--muted);margin-top:2px;font-weight:600;">School will be closed on May 10 for National Day.</div><div style="font-size:11px;color:var(--muted);margin-top:4px;font-weight:700;">15 Apr 2025 • General</div></div>
       </div>
     </div>
-    <div class="bnav">
-      <button class="nv" onclick="goTo('scr-005')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>Home</button>
-      <button class="nv" onclick="goTo('scr-007')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="1" y="4" width="22" height="16" rx="2"/></svg>Payments</button>
-      <button class="nv" onclick="goTo('scr-016')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/></svg>Reports</button>
-      <button class="nv on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>Alerts</button>
-      <button class="nv" onclick="goTo('scr-024')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>More</button>
-    </div>
   </div>
 
   <!-- ═══════════════════════════════════════════════ -->
   <!-- SCR-024: SETTINGS / OTHER SERVICES -->
   <!-- ═══════════════════════════════════════════════ -->
-  <div class="screen" id="scr-024">
+  <div class="screen has-nav" id="scr-024">
     <div class="sbar"><span>9:41</span><div class="sbar-icons"><span>🔋</span></div></div>
     <div style="background:linear-gradient(145deg,#080f35 0%,#0d1f5c 100%);padding:40px 18px 24px;flex-shrink:0;">
       <div style="display:flex;align-items:center;gap:14px;">
@@ -1638,19 +1666,12 @@ body{font-family:'Nunito',sans-serif;background:#c8cfe8;min-height:100vh;display
       </div>
       <div style="height:16px;"></div>
     </div>
-    <div class="bnav">
-      <button class="nv" onclick="goTo('scr-005')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>Home</button>
-      <button class="nv" onclick="goTo('scr-007')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="1" y="4" width="22" height="16" rx="2"/></svg>Payments</button>
-      <button class="nv" onclick="goTo('scr-016')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/></svg>Reports</button>
-      <button class="nv" onclick="goTo('scr-023')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/></svg>Alerts</button>
-      <button class="nv on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>More</button>
-    </div>
   </div>
 
   <!-- ═══════════════════════════════════════════════ -->
   <!-- SCR-025: RECEIPT DETAILS -->
   <!-- ═══════════════════════════════════════════════ -->
-  <div class="screen" id="scr-025">
+  <div class="screen has-nav" id="scr-025">
     <div class="sbar"><span>9:41</span><div class="sbar-icons"><span>🔋</span></div></div>
     <div class="hdr"><button class="back" onclick="goTo('scr-018')">‹</button><div class="hdr-title">Receipt Details</div></div>
     <div class="scrl-white">
@@ -1695,6 +1716,66 @@ body{font-family:'Nunito',sans-serif;background:#c8cfe8;min-height:100vh;display
   </div>
 
 
+
+  <!-- ══════════════════════════════════════════════════ -->
+  <!-- GLOBAL BOTTOM NAVIGATION — fixed across all screens -->
+  <!-- ══════════════════════════════════════════════════ -->
+  <nav id="globalNav">
+    <!-- Home -->
+    <button class="nv" id="gnav-home" onclick="navGo('scr-005','home')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+        <polyline points="9,22 9,12 15,12 15,22"/>
+      </svg>
+      <span class="nv-lbl">Home</span>
+    </button>
+    <!-- Students -->
+    <button class="nv" id="gnav-students" onclick="navGo('scr-005','students')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
+        <circle cx="9" cy="7" r="4"/>
+        <path d="M23 21v-2a4 4 0 00-3-3.87"/>
+        <path d="M16 3.13a4 4 0 010 7.75"/>
+      </svg>
+      <span class="nv-lbl">Students</span>
+    </button>
+    <!-- Payments -->
+    <button class="nv" id="gnav-pay" onclick="navGo('scr-007','pay')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <rect x="1" y="4" width="22" height="16" rx="2"/>
+        <line x1="1" y1="10" x2="23" y2="10"/>
+      </svg>
+      <span class="nv-lbl">Payments</span>
+    </button>
+    <!-- Reports -->
+    <button class="nv" id="gnav-reports" onclick="navGo('scr-016','reports')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+        <polyline points="14,2 14,8 20,8"/>
+        <line x1="8" y1="13" x2="16" y2="13"/>
+        <line x1="8" y1="17" x2="13" y2="17"/>
+      </svg>
+      <span class="nv-lbl">Reports</span>
+    </button>
+    <!-- Notifications -->
+    <button class="nv" id="gnav-notif" onclick="navGo('scr-023','notif')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+        <path d="M13.73 21a2 2 0 01-3.46 0"/>
+      </svg>
+      <span class="nv-lbl">Alerts</span>
+      <span class="nv-badge">3</span>
+    </button>
+    <!-- Profile -->
+    <button class="nv" id="gnav-profile" onclick="navGo('scr-024','profile')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <circle cx="12" cy="8" r="4"/>
+        <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+      </svg>
+      <span class="nv-lbl">Profile</span>
+    </button>
+  </nav>
+
 </div><!-- end app-container -->
 <div class="scr-label" id="scrLabel">SCR-001 — Login</div>
 </div>
@@ -1716,16 +1797,61 @@ const labels={
   'scr-025':'SCR-025 — Receipt Details'
 };
 
+/* screens that should NOT show the bottom nav */
+var NO_NAV_SCREENS=['scr-001'];
+
+/* which nav tab is active for each screen */
+var SCREEN_NAV_MAP={
+  'scr-005':'home','scr-006':'home',
+  'scr-007':'pay','scr-008':'pay','scr-009':'pay',
+  'scr-010':'pay','scr-011':'pay','scr-012':'pay',
+  'scr-013':'pay','scr-014':'pay','scr-015':'pay',
+  'scr-016':'reports','scr-017':'reports','scr-018':'reports',
+  'scr-019':'reports','scr-021':'reports',
+  'scr-023':'notif',
+  'scr-020':'students',
+  'scr-022':'home',
+  'scr-024':'profile','scr-025':'pay'
+};
+
 function goTo(id){
-  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-  const scr=document.getElementById(id);
-  if(scr){scr.classList.add('active');const s=scr.querySelector('.scrl,.scrl-white');if(s)s.scrollTop=0;}
-  const lbl=document.getElementById('scrLabel');
+  document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});
+  var scr=document.getElementById(id);
+  if(scr){
+    scr.classList.add('active');
+    var s=scr.querySelector('.scrl,.scrl-white');
+    if(s) s.scrollTop=0;
+  }
+  var lbl=document.getElementById('scrLabel');
   if(lbl) lbl.textContent=labels[id]||id;
-  document.querySelectorAll('.pg-btn').forEach(b=>{
+  document.querySelectorAll('.pg-btn').forEach(function(b){
     b.classList.remove('on');
     if((b.getAttribute('onclick')||'').includes("'"+id+"'")) b.classList.add('on');
   });
+  /* show/hide global nav */
+  var nav=document.getElementById('globalNav');
+  if(nav){
+    var hide=NO_NAV_SCREENS.indexOf(id)>=0;
+    nav.style.display=hide?'none':'grid';
+    /* update active tab */
+    var activeTab=SCREEN_NAV_MAP[id]||'home';
+    updateNavTab(activeTab);
+  }
+}
+
+function updateNavTab(tab){
+  var tabs=['home','students','pay','reports','notif','profile'];
+  tabs.forEach(function(t){
+    var el=document.getElementById('gnav-'+t);
+    if(el) el.classList.remove('on');
+  });
+  var active=document.getElementById('gnav-'+tab);
+  if(active) active.classList.add('on');
+}
+
+function navGo(scr,tab){
+  goTo(scr);
+  updateNavTab(tab);
 }
 function showScr(id,btn){
   goTo(id);
