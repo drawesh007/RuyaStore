@@ -18,50 +18,12 @@
   --amber:#d97706;--amber2:#fef3c7;--blue:#2563eb;
   --shadow:0 4px 20px rgba(13,31,92,0.12);
 }
-
-/* ── RESET & BASE ─────────────────────────────────── */
 html{height:100%;-webkit-text-size-adjust:100%;}
-body{
-  font-family:'Nunito',sans-serif;
-  background:#c8cfe8;
-  min-height:100vh;
-  /* MOBILE: full screen app */
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-}
-
-/* ── SCREEN CONTAINER ─────────────────────────────── */
-/* On real mobile: fills the whole viewport               */
-/* On desktop: shows as phone frame                       */
-.app-container{
-  position:relative;
-  background:var(--white);
-  width:100%;
-  min-height:100vh;
-  display:flex;
-  flex-direction:column;
-  overflow:hidden;
-}
-
-/* ── DESKTOP ONLY: phone frame + nav buttons ─────── */
+body{font-family:'Nunito',sans-serif;background:#c8cfe8;min-height:100vh;display:flex;flex-direction:column;align-items:center;}
+.app-container{position:relative;background:var(--white);width:100%;min-height:100vh;display:flex;flex-direction:column;overflow:visible;}
 @media(min-width:500px){
-  body{
-    padding:30px 20px;
-    align-items:flex-start;
-    justify-content:center;
-    flex-direction:row;
-    flex-wrap:wrap;
-    gap:20px;
-  }
-  .app-container{
-    width:390px;
-    min-height:0;
-    height:844px;
-    border-radius:50px;
-    box-shadow:0 0 0 12px #1a1a1a,0 0 0 14px #333,0 30px 80px rgba(0,0,0,0.4);
-    flex-shrink:0;
-  }
+  body{padding:30px 20px;align-items:flex-start;justify-content:center;flex-direction:row;flex-wrap:wrap;gap:20px;}
+  .app-container{width:390px;min-height:0;height:844px;border-radius:50px;box-shadow:0 0 0 12px #1a1a1a,0 0 0 14px #333,0 30px 80px rgba(0,0,0,0.4);flex-shrink:0;overflow:hidden;}
   .notch{display:block!important;}
   .side-btn{display:block!important;}
   .vol1{display:block!important;}
@@ -69,192 +31,80 @@ body{
   .pg-nav{display:flex!important;}
   .scr-label{display:block!important;}
 }
-
-/* ── PHONE CHROME (desktop only) ──────────────────── */
-.notch{
-  display:none;
-  position:absolute;top:0;left:50%;transform:translateX(-50%);
-  width:130px;height:34px;background:#1a1a1a;
-  border-radius:0 0 22px 22px;z-index:999;
-}
+.notch{display:none;position:absolute;top:0;left:50%;transform:translateX(-50%);width:130px;height:34px;background:#1a1a1a;border-radius:0 0 22px 22px;z-index:999;}
 .side-btn{display:none;position:absolute;right:-14px;top:160px;width:6px;height:70px;background:#333;border-radius:3px;}
 .vol1{display:none;position:absolute;left:-14px;top:150px;width:6px;height:40px;background:#333;border-radius:3px;}
 .vol2{display:none;position:absolute;left:-14px;top:205px;width:6px;height:60px;background:#333;border-radius:3px;}
-
-/* ── SCREEN NAV (desktop only) ───────────────────── */
-.pg-nav{
-  display:none;
-  flex-wrap:wrap;
-  justify-content:center;
-  gap:8px;
-  max-width:420px;
-  padding:0 10px;
-}
-.pg-btn{
-  background:rgba(255,255,255,0.15);
-  border:1px solid rgba(255,255,255,0.25);
-  color:white;border-radius:8px;padding:5px 10px;
-  font-size:10px;font-weight:700;cursor:pointer;
-  font-family:'Nunito',sans-serif;transition:all 0.2s;
-  white-space:nowrap;
-}
+.pg-nav{display:none;flex-wrap:wrap;justify-content:center;gap:8px;max-width:420px;padding:0 10px;}
+.pg-btn{background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.25);color:white;border-radius:8px;padding:5px 10px;font-size:10px;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif;transition:all 0.2s;white-space:nowrap;}
 .pg-btn:hover,.pg-btn.on{background:white;color:var(--navy);}
-.scr-label{
-  display:none;
-  text-align:center;
-  font-size:11px;font-weight:700;color:rgba(255,255,255,0.6);
-  margin-top:8px;letter-spacing:0.5px;font-family:'Nunito',sans-serif;
-  width:390px;
-}
-
-/* ── SCREENS ──────────────────────────────────────── */
-.screen{
-  display:none;
-  flex-direction:column;
-  /* Mobile: fill viewport height */
-  height:100vh;
-  /* Desktop: fill phone frame */
-}
-@media(min-width:500px){
-  .screen{height:844px;}
-}
+.scr-label{display:none;text-align:center;font-size:11px;font-weight:700;color:rgba(255,255,255,0.6);margin-top:8px;letter-spacing:0.5px;font-family:'Nunito',sans-serif;width:390px;}
+.screen{display:none;flex-direction:column;height:100vh;}
+@media(min-width:500px){.screen{height:844px;}}
 .screen.active{display:flex;}
-
-/* ── STATUS BAR ───────────────────────────────────── */
-.sbar{
-  background:var(--navy);
-  padding:10px 22px 6px;
-  display:flex;justify-content:space-between;align-items:center;
-  color:white;font-size:11px;font-weight:700;flex-shrink:0;
-}
-/* On real iPhone: add safe-area padding for notch */
-@supports(padding-top:env(safe-area-inset-top)){
-  .sbar{padding-top:calc(env(safe-area-inset-top) + 6px);}
-}
-@media(min-width:500px){
-  .sbar{padding-top:38px;}
-}
+.sbar{background:var(--navy);padding:10px 22px 6px;display:flex;justify-content:space-between;align-items:center;color:white;font-size:11px;font-weight:700;flex-shrink:0;}
+@supports(padding-top:env(safe-area-inset-top)){.sbar{padding-top:calc(env(safe-area-inset-top) + 6px);}}
+@media(min-width:500px){.sbar{padding-top:38px;}}
 .sbar-icons{display:flex;gap:5px;align-items:center;}
-
-/* ── SCROLL AREAS ─────────────────────────────────── */
 .scrl{flex:1;overflow-y:auto;background:var(--bg);-webkit-overflow-scrolling:touch;scrollbar-width:none;}
 .scrl::-webkit-scrollbar{display:none;}
 .scrl-white{flex:1;overflow-y:auto;background:white;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
 .scrl-white::-webkit-scrollbar{display:none;}
-
-/* ── HEADER ───────────────────────────────────────── */
-.hdr{
-  background:var(--navy);
-  padding:14px 18px;color:white;
-  display:flex;align-items:center;gap:10px;flex-shrink:0;
-}
+.hdr{background:var(--navy);padding:14px 18px;color:white;display:flex;align-items:center;gap:10px;flex-shrink:0;}
 .hdr-title{font-size:17px;font-weight:800;flex:1;font-family:'Poppins',sans-serif;}
 .hdr-sub{font-size:11px;color:rgba(255,255,255,0.65);margin-top:1px;}
-.back{
-  width:36px;height:36px;border-radius:50%;
-  background:rgba(255,255,255,0.15);border:none;color:white;
-  cursor:pointer;font-size:20px;display:flex;align-items:center;justify-content:center;
-  min-width:44px;min-height:44px;
-}
-
-/* ── BOTTOM NAV ───────────────────────────────────── */
-.bnav{
-  background:white;
-  border-top:1.5px solid var(--border);
-  display:grid;grid-template-columns:repeat(5,1fr);
-  padding:8px 0;flex-shrink:0;
-  box-shadow:0 -4px 20px rgba(0,0,0,0.06);
-}
-/* iPhone home bar safe area */
-@supports(padding-bottom:env(safe-area-inset-bottom)){
-  .bnav{padding-bottom:calc(env(safe-area-inset-bottom) + 8px);}
-}
-.nv{
-  display:flex;flex-direction:column;align-items:center;gap:3px;
-  color:var(--muted);font-size:10px;font-weight:700;
-  cursor:pointer;border:none;background:none;padding:4px 0;
-  min-height:44px;font-family:'Nunito',sans-serif;
-}
+.back{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.15);border:none;color:white;cursor:pointer;font-size:20px;display:flex;align-items:center;justify-content:center;min-width:44px;min-height:44px;}
+.bnav{background:white;border-top:1.5px solid var(--border);display:grid;grid-template-columns:repeat(5,1fr);padding:8px 0;flex-shrink:0;box-shadow:0 -4px 20px rgba(0,0,0,0.06);}
+@supports(padding-bottom:env(safe-area-inset-bottom)){.bnav{padding-bottom:calc(env(safe-area-inset-bottom) + 8px);}}
+.nv{display:flex;flex-direction:column;align-items:center;gap:3px;color:var(--muted);font-size:10px;font-weight:700;cursor:pointer;border:none;background:none;padding:4px 0;min-height:44px;font-family:'Nunito',sans-serif;}
 .nv.on{color:var(--navy);}
 .nv svg{width:22px;height:22px;}
-
-/* ── LOADING OVERLAY ──────────────────────────────── */
-.loading{
-  display:none;position:absolute;inset:0;
-  background:rgba(255,255,255,0.92);z-index:500;
-  align-items:center;justify-content:center;flex-direction:column;gap:12px;
-}
+.loading{display:none;position:absolute;inset:0;background:rgba(255,255,255,0.92);z-index:500;align-items:center;justify-content:center;flex-direction:column;gap:12px;}
 .loading.on{display:flex;}
 .spin{width:40px;height:40px;border:4px solid var(--border);border-top-color:var(--navy);border-radius:50%;animation:spin 0.7s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg);}}
-
-/* ── CARDS ────────────────────────────────────────── */
 .card{background:white;border-radius:18px;padding:16px;margin:8px 16px;border:1px solid var(--border);box-shadow:0 2px 12px rgba(13,31,92,0.06);}
-
-/* ── BUTTONS ──────────────────────────────────────── */
 .btn{background:var(--navy);color:white;border:none;border-radius:16px;padding:15px 20px;font-size:15px;font-weight:800;font-family:'Poppins',sans-serif;cursor:pointer;width:100%;transition:all 0.2s;letter-spacing:0.3px;min-height:50px;}
 .btn:active{background:var(--navy2);transform:scale(0.98);}
 .btn-red{background:var(--red);color:white;border:none;border-radius:16px;padding:15px 20px;font-size:15px;font-weight:800;font-family:'Poppins',sans-serif;cursor:pointer;width:100%;min-height:50px;}
 .btn-out{background:white;color:var(--navy);border:2.5px solid var(--navy);border-radius:16px;padding:13px 20px;font-size:14px;font-weight:800;font-family:'Poppins',sans-serif;cursor:pointer;width:100%;min-height:50px;}
 .btn-sm{background:var(--navy);color:white;border:none;border-radius:10px;padding:8px 16px;font-size:12px;font-weight:700;font-family:'Nunito',sans-serif;cursor:pointer;min-height:36px;}
-
-/* ── INPUT ────────────────────────────────────────── */
 .lbl{font-size:12px;color:var(--muted);font-weight:700;margin-bottom:5px;letter-spacing:0.3px;}
 .inp{width:100%;border:2px solid var(--border);border-radius:13px;padding:13px 15px;font-size:16px;font-family:'Nunito',sans-serif;outline:none;color:var(--text);transition:border-color 0.2s;background:white;-webkit-appearance:none;}
 .inp:focus{border-color:var(--navy);}
 .ig{margin-bottom:14px;}
-
-/* ── BADGE ────────────────────────────────────────── */
 .bdg{font-size:11px;padding:4px 10px;border-radius:20px;font-weight:700;}
 .bdg-g{background:#d1fae5;color:#065f46;}
 .bdg-r{background:#fee2e2;color:#991b1b;}
 .bdg-b{background:#dbeafe;color:#1e40af;}
 .bdg-a{background:#fef3c7;color:#92400e;}
 .bdg-n{background:#e0e7ff;color:#3730a3;}
-
-/* ── SELECTION CARD ───────────────────────────────── */
 .scard{background:white;border-radius:16px;padding:14px 16px;margin:7px 16px;border:2.5px solid transparent;cursor:pointer;display:flex;align-items:center;gap:12px;box-shadow:0 2px 10px rgba(13,31,92,0.06);transition:all 0.2s;min-height:64px;}
 .scard:active,.scard.sel{border-color:var(--navy);background:#f0f3ff;}
 .scard-icon{width:48px;height:48px;border-radius:14px;background:var(--navy);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;}
 .scard-icon.r{background:var(--red);}
 .scard-icon.g{background:#059669;}
 .scard-icon.p{background:#7c3aed;}
-
-/* ── CONTEXT BAR ──────────────────────────────────── */
 .ctxbar{background:white;border-bottom:1.5px solid var(--border);padding:8px 16px;display:flex;gap:6px;align-items:center;flex-wrap:wrap;flex-shrink:0;}
 .chip{background:#eef0fa;color:var(--navy);font-size:11px;font-weight:700;padding:4px 10px;border-radius:8px;}
-
-/* ── STUDENT CARD ─────────────────────────────────── */
 .stcard{background:white;border-radius:18px;margin:8px 16px;overflow:hidden;box-shadow:var(--shadow);border:1px solid var(--border);}
 .stcard-hdr{background:var(--navy);padding:13px 16px;display:flex;align-items:center;gap:10px;}
 .stcard-av{width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:800;color:white;border:2px solid rgba(255,255,255,0.3);}
 .stcard-body{padding:13px 16px;}
-
-/* ── FIN ROW ──────────────────────────────────────── */
 .frow{display:flex;justify-content:space-between;margin-bottom:7px;}
 .frow-l{font-size:12px;color:var(--muted);font-weight:600;}
 .frow-v{font-size:12px;font-weight:800;color:var(--text);}
-
-/* ── GRID MENU ────────────────────────────────────── */
 .mgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;padding:12px 16px;}
 .mitem{background:white;border-radius:16px;padding:18px 12px;display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer;border:1.5px solid var(--border);box-shadow:0 2px 8px rgba(13,31,92,0.05);transition:all 0.2s;min-height:90px;}
 .mitem:active{background:#f0f3ff;transform:scale(0.97);}
 .micon{width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;}
 .mlbl{font-size:12px;font-weight:800;color:var(--text);text-align:center;font-family:'Poppins',sans-serif;}
-
-/* ── TOTALS ───────────────────────────────────────── */
 .tgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin:8px 16px;}
 .tcell{background:white;border-radius:14px;padding:13px;text-align:center;border:1.5px solid var(--border);}
 .tcell-l{font-size:10px;color:var(--muted);font-weight:700;margin-bottom:5px;text-transform:uppercase;letter-spacing:0.4px;}
 .tcell-v{font-size:17px;font-weight:900;color:var(--navy);font-family:'Poppins',sans-serif;}
 .tcell.rem .tcell-v{color:var(--red);}
 .tcell.paid .tcell-v{color:var(--green);}
-
-/* ── QUICK SWITCH ─────────────────────────────────── */
-.qs{background:rgba(255,255,255,0.1);border-radius:12px;padding:9px 12px;display:flex;gap:7px;align-items:center;flex-wrap:wrap;}
-.qs-btn{background:rgba(255,255,255,0.15);border:1.5px solid rgba(255,255,255,0.25);border-radius:9px;padding:5px 10px;font-size:10px;color:white;cursor:pointer;font-family:'Nunito',sans-serif;font-weight:700;min-height:32px;}
-
-/* ── PAY METHOD ───────────────────────────────────── */
 .pmeth{border:2.5px solid var(--border);border-radius:14px;padding:13px 16px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:all 0.2s;margin-bottom:10px;min-height:60px;}
 .pmeth.sel{border-color:var(--navy);background:#f0f3ff;}
 .pmeth-logo{font-size:26px;width:40px;text-align:center;}
@@ -262,8 +112,6 @@ body{
 .pmeth-sub{font-size:11px;color:var(--muted);}
 .pmeth-check{margin-left:auto;width:22px;height:22px;border-radius:50%;background:var(--navy);display:none;align-items:center;justify-content:center;color:white;font-size:11px;}
 .pmeth.sel .pmeth-check{display:flex;}
-
-/* ── MISC ─────────────────────────────────────────── */
 .suc-icon{width:90px;height:90px;border-radius:50%;background:#d1fae5;display:flex;align-items:center;justify-content:center;font-size:40px;margin:0 auto 16px;}
 .fail-icon{width:90px;height:90px;border-radius:50%;background:#fee2e2;display:flex;align-items:center;justify-content:center;font-size:40px;margin:0 auto 16px;}
 .nitem{display:flex;gap:12px;padding:13px 16px;border-bottom:1.5px solid var(--border);cursor:pointer;min-height:60px;}
@@ -318,6 +166,91 @@ body{
 .green{color:var(--green);}
 .muted{color:var(--muted);}
 .poppins{font-family:'Poppins',sans-serif;}
+
+/* ── SCHOOL DROPDOWN ───────────────────────────────── */
+.sdrop-item{display:flex;align-items:center;gap:12px;padding:12px 16px;cursor:pointer;border-bottom:1px solid var(--border);transition:background 0.15s;}
+.sdrop-item:last-child{border-bottom:none;}
+.sdrop-item:active{background:#f0f3ff;}
+.sdrop-item.sel{background:#f0f3ff;}
+.sdrop-check{width:22px;height:22px;border-radius:50%;background:var(--navy);display:flex;align-items:center;justify-content:center;color:white;font-size:11px;flex-shrink:0;}
+
+/* ── RESPONSIVE ────────────────────────────────────── */
+@media(max-width:499px){
+  .app-container{width:100%;min-height:100vh;height:auto;border-radius:0;box-shadow:none;}
+  .screen{height:100vh;height:100dvh;}
+  .notch,.side-btn,.vol1,.vol2{display:none!important;}
+}
+@media(min-width:500px) and (max-width:800px){
+  body{padding:20px;justify-content:center;}
+  .app-container{width:375px;height:812px;}
+}
+@media(min-width:801px) and (max-width:1100px){
+  body{padding:30px;}
+  .app-container{width:390px;height:844px;}
+}
+@media(min-width:1101px){
+  body{padding:40px 60px;gap:30px;}
+}
+.branch-card{
+  margin:6px 16px;
+  border-radius:20px;
+  overflow:hidden;
+  box-shadow:0 4px 18px rgba(13,31,92,0.10);
+  border:1.5px solid var(--border);
+  transition:box-shadow 0.2s;
+}
+.branch-card.open{box-shadow:0 6px 28px rgba(13,31,92,0.16);}
+.branch-hdr{
+  display:flex;align-items:center;gap:12px;
+  padding:14px 16px;cursor:pointer;user-select:none;
+  transition:background 0.15s;
+}
+.branch-hdr:active{filter:brightness(0.95);}
+.branch-icon{
+  width:46px;height:46px;border-radius:14px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:20px;flex-shrink:0;
+}
+.branch-info{flex:1;min-width:0;}
+.branch-name{font-size:15px;font-weight:800;color:white;font-family:'Poppins',sans-serif;}
+.branch-meta{font-size:11px;color:rgba(255,255,255,0.65);font-weight:600;margin-top:2px;}
+.branch-fin{text-align:right;flex-shrink:0;}
+.branch-fin-lbl{font-size:9px;color:rgba(255,255,255,0.5);font-weight:700;letter-spacing:0.4px;text-transform:uppercase;}
+.branch-fin-val{font-size:14px;font-weight:900;color:white;font-family:'Poppins',sans-serif;}
+.branch-chev{
+  width:28px;height:28px;border-radius:50%;
+  background:rgba(255,255,255,0.15);
+  display:flex;align-items:center;justify-content:center;
+  color:white;font-size:14px;flex-shrink:0;
+  transition:transform 0.3s cubic-bezier(0.4,0,0.2,1);
+  margin-left:4px;
+}
+.branch-card.open .branch-chev{transform:rotate(180deg);}
+.branch-body{
+  display:none;
+  background:#f8f9ff;
+  border-top:1.5px solid rgba(13,31,92,0.08);
+  padding:10px 0 4px;
+}
+.branch-card.open .branch-body{
+  display:block;
+}
+/* student card inside branch */
+.branch-stcard{
+  background:white;border-radius:16px;margin:6px 12px;
+  overflow:hidden;box-shadow:0 2px 10px rgba(13,31,92,0.07);
+  border:1px solid var(--border);
+  cursor:pointer;transition:transform 0.15s,box-shadow 0.15s;
+}
+.branch-stcard:active{transform:scale(0.98);box-shadow:0 1px 6px rgba(13,31,92,0.1);}
+.branch-stcard-hdr{padding:11px 14px;display:flex;align-items:center;gap:10px;}
+.branch-stcard-av{width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:white;border:2px solid rgba(255,255,255,0.3);flex-shrink:0;}
+.branch-stcard-body{padding:10px 14px 12px;}
+.branch-stcard-frow{display:flex;justify-content:space-between;margin-bottom:5px;}
+.branch-stcard-quick{display:flex;gap:6px;margin-top:8px;}
+.bsq-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:5px;padding:7px 6px;border-radius:10px;border:none;font-size:11px;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif;min-height:32px;}
+/* branch footer inside expanded */
+.branch-footer{background:rgba(13,31,92,0.05);margin:8px 12px 6px;border-radius:12px;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;}
 </style>
 </head>
 <body>
@@ -325,9 +258,6 @@ body{
 <!-- ── DESKTOP: screen navigator ──────────────────── -->
 <div class="pg-nav" id="pgNav">
   <button class="pg-btn on" onclick="showScr('scr-001',this)">001 Login</button>
-  <button class="pg-btn" onclick="showScr('scr-002',this)">002 Institution</button>
-  <button class="pg-btn" onclick="showScr('scr-003',this)">003 School</button>
-  <button class="pg-btn" onclick="showScr('scr-004',this)">004 Branch</button>
   <button class="pg-btn" onclick="showScr('scr-005',this)">005 Dashboard</button>
   <button class="pg-btn" onclick="showScr('scr-006',this)">006 Home</button>
   <button class="pg-btn" onclick="showScr('scr-007',this)">007 Pay Menu</button>
@@ -351,7 +281,6 @@ body{
   <button class="pg-btn" onclick="showScr('scr-025',this)">025 Receipt</button>
 </div>
 
-<!-- ── APP FRAME ───────────────────────────────────── -->
 <div style="display:flex;flex-direction:column;align-items:center;">
 <div class="app-container" id="mainPhone">
   <div class="notch"></div>
@@ -362,20 +291,21 @@ body{
     <div class="spin"></div>
     <div style="font-size:13px;color:var(--muted);font-family:'Nunito',sans-serif;font-weight:700;">Loading...</div>
   </div>
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!-- SCR-001: LOGIN -->
+  <!-- ═══════════════════════════════════════════════ -->
   <div class="screen active" id="scr-001">
     <div class="scrl-white">
-      <!-- HERO TOP -->
       <div style="background:linear-gradient(155deg,#080f35 0%,#0d1f5c 55%,#1a2a8c 100%);padding:52px 24px 36px;text-align:center;position:relative;overflow:hidden;">
         <div style="position:absolute;top:-50px;right:-50px;width:220px;height:220px;background:rgba(192,32,26,0.12);border-radius:50%;"></div>
         <div style="position:absolute;bottom:-80px;left:-40px;width:200px;height:200px;background:rgba(255,255,255,0.04);border-radius:50%;"></div>
-        <!-- Logo -->
         <div style="background:white;border-radius:22px;padding:14px 32px;display:inline-block;margin-bottom:18px;box-shadow:0 8px 30px rgba(0,0,0,0.3);">
           <div style="display:flex;align-items:center;gap:6px;">
             <span style="font-family:'Poppins',sans-serif;font-size:28px;font-weight:900;color:#0d1f5c;letter-spacing:-1px;">al<span style="color:#c0201a;">ru</span>ya</span>
             <div style="width:8px;height:8px;background:#c0201a;border-radius:50%;margin-bottom:14px;"></div>
           </div>
         </div>
-        <!-- Icon Circles — matching reference image -->
         <div style="display:flex;justify-content:center;gap:14px;flex-wrap:wrap;margin-bottom:8px;">
           <div style="width:50px;height:50px;border-radius:50%;background:white;border:2.5px solid #c0201a;display:flex;align-items:center;justify-content:center;font-size:22px;box-shadow:0 4px 14px rgba(192,32,26,0.25);">🧮</div>
           <div style="width:50px;height:50px;border-radius:50%;background:white;border:2.5px solid #c0201a;display:flex;align-items:center;justify-content:center;font-size:22px;box-shadow:0 4px 14px rgba(192,32,26,0.25);">🎓</div>
@@ -385,12 +315,9 @@ body{
         </div>
         <div style="color:rgba(255,255,255,0.65);font-size:12px;font-weight:600;letter-spacing:0.5px;margin-top:6px;">SCHOOL MANAGEMENT SYSTEM</div>
       </div>
-
-      <!-- FORM -->
       <div style="padding:28px 22px;">
         <div style="font-size:22px;font-weight:900;color:var(--text);margin-bottom:4px;font-family:'Poppins',sans-serif;">Welcome Back</div>
         <div style="font-size:13px;color:var(--muted);margin-bottom:22px;font-weight:600;">Sign in to manage your children's education</div>
-
         <div class="ig">
           <div class="lbl">USERNAME / MOBILE / CIVIL ID</div>
           <div style="position:relative;">
@@ -405,7 +332,6 @@ body{
             <span style="position:absolute;right:14px;top:50%;transform:translateY(-50%);font-size:18px;cursor:pointer;">👁️</span>
           </div>
         </div>
-
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:22px;">
           <div style="font-size:12px;color:var(--red);cursor:pointer;font-weight:700;">Forgot Password?</div>
           <div style="display:flex;gap:7px;">
@@ -413,35 +339,25 @@ body{
             <div style="font-size:11px;padding:5px 12px;border-radius:8px;border:1.5px solid var(--border);cursor:pointer;font-weight:700;">AR</div>
           </div>
         </div>
-
-        <button class="btn" onclick="goTo('scr-002')">Sign In</button>
-
-        <!-- FACE ID -->
+        <button class="btn" onclick="showLoading('scr-005')">Sign In</button>
         <div style="text-align:center;margin-top:24px;">
           <div style="font-size:11px;color:var(--muted);font-weight:700;margin-bottom:12px;letter-spacing:0.5px;">OR USE BIOMETRICS</div>
           <div style="cursor:pointer;display:inline-block;" onclick="doFaceId()">
             <svg class="face-id-svg" viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg" id="faceIdSvg">
-              <!-- Corner brackets -->
               <path d="M8 22V8H22" stroke="#0d1f5c" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
               <path d="M50 8H64V22" stroke="#0d1f5c" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
               <path d="M64 50V64H50" stroke="#0d1f5c" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
               <path d="M22 64H8V50" stroke="#0d1f5c" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
-              <!-- Eyes -->
               <circle cx="26" cy="30" r="2.5" fill="#0d1f5c"/>
               <circle cx="46" cy="30" r="2.5" fill="#0d1f5c"/>
-              <!-- Nose -->
               <path d="M34 33V40H38" stroke="#0d1f5c" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-              <!-- Mouth -->
               <path d="M26 46C26 46 29 50 36 50C43 50 46 46 46 46" stroke="#0d1f5c" stroke-width="2.5" stroke-linecap="round"/>
-              <!-- Eyebrow left -->
               <path d="M22 25C23 23 25 22 28 22" stroke="#0d1f5c" stroke-width="2" stroke-linecap="round"/>
-              <!-- Eyebrow right -->
               <path d="M50 25C49 23 47 22 44 22" stroke="#0d1f5c" stroke-width="2" stroke-linecap="round"/>
             </svg>
           </div>
           <div style="font-size:12px;color:var(--navy);font-weight:700;margin-top:6px;">Tap to use Face ID</div>
         </div>
-
         <div style="text-align:center;margin-top:18px;font-size:13px;color:var(--muted);font-weight:600;">
           New user? <span style="color:var(--navy);font-weight:800;cursor:pointer;">Create Account</span>
         </div>
@@ -450,133 +366,40 @@ body{
   </div>
 
   <!-- ═══════════════════════════════════════════════ -->
-  <!-- SCR-002: INSTITUTION SELECTION -->
-  <!-- ═══════════════════════════════════════════════ -->
-  <div class="screen" id="scr-002">
-    <div class="sbar"><span>9:41</span><div class="sbar-icons"><span>▲▲▲</span><span>WiFi</span><span>🔋</span></div></div>
-    <div class="hdr-grad" style="padding:14px 18px 20px;">
-      <div style="font-size:20px;font-weight:900;font-family:'Poppins',sans-serif;">Select Institution</div>
-      <div style="font-size:12px;color:rgba(255,255,255,0.65);margin-top:3px;">Welcome, Mohammed Ahmed 👋</div>
-    </div>
-    <div class="scrl">
-      <div style="font-size:11px;font-weight:700;color:var(--muted);padding:12px 16px 4px;letter-spacing:0.5px;text-transform:uppercase;">Available Institutions</div>
-      <div class="scard sel" onclick="toggleSel(this)">
-        <div class="scard-icon">🏛️</div>
-        <div style="flex:1;">
-          <div style="font-size:15px;font-weight:800;color:var(--text);font-family:'Poppins',sans-serif;">Alruya Educational Group</div>
-          <div style="font-size:12px;color:var(--muted);margin-top:3px;font-weight:600;">3 Schools • 8 Students</div>
-        </div>
-        <div style="color:var(--navy);font-size:20px;">✓</div>
-      </div>
-      <div class="scard" onclick="toggleSel(this)">
-        <div class="scard-icon r">🏫</div>
-        <div style="flex:1;">
-          <div style="font-size:15px;font-weight:800;color:var(--text);font-family:'Poppins',sans-serif;">International Academy</div>
-          <div style="font-size:12px;color:var(--muted);margin-top:3px;font-weight:600;">2 Schools • 3 Students</div>
-        </div>
-        <div style="color:var(--muted);font-size:20px;">›</div>
-      </div>
-      <div class="scard" onclick="toggleSel(this)">
-        <div class="scard-icon g">⭐</div>
-        <div style="flex:1;">
-          <div style="font-size:15px;font-weight:800;color:var(--text);font-family:'Poppins',sans-serif;">Stars Schools</div>
-          <div style="font-size:12px;color:var(--muted);margin-top:3px;font-weight:600;">1 School • 2 Students</div>
-        </div>
-        <div style="color:var(--muted);font-size:20px;">›</div>
-      </div>
-      <div style="padding:16px;"><button class="btn" onclick="showLoading('scr-003')">Continue</button></div>
-    </div>
-  </div>
-
-  <!-- ═══════════════════════════════════════════════ -->
-  <!-- SCR-003: SCHOOL SELECTION -->
-  <!-- ═══════════════════════════════════════════════ -->
-  <div class="screen" id="scr-003">
-    <div class="sbar"><span>9:41</span><div class="sbar-icons"><span>🔋</span></div></div>
-    <div class="hdr"><button class="back" onclick="goTo('scr-002')">‹</button><div><div class="hdr-title">Select School</div></div></div>
-    <div class="ctxbar"><div class="chip">🏛️ Alruya Group</div></div>
-    <div class="scrl">
-      <div class="sec-t">Schools under this institution</div>
-      <div class="scard" onclick="toggleSel(this)">
-        <div class="scard-icon">📚</div>
-        <div style="flex:1;"><div style="font-size:15px;font-weight:800;color:var(--text);font-family:'Poppins',sans-serif;">Alruya Primary School</div><div style="font-size:12px;color:var(--muted);margin-top:3px;font-weight:600;">4 Branches</div></div>
-        <div style="color:var(--muted);font-size:20px;">›</div>
-      </div>
-      <div class="scard sel" onclick="toggleSel(this)">
-        <div class="scard-icon r">🎒</div>
-        <div style="flex:1;"><div style="font-size:15px;font-weight:800;color:var(--text);font-family:'Poppins',sans-serif;">Alruya Middle School</div><div style="font-size:12px;color:var(--muted);margin-top:3px;font-weight:600;">3 Branches</div></div>
-        <div style="color:var(--navy);font-size:20px;">✓</div>
-      </div>
-      <div class="scard" onclick="toggleSel(this)">
-        <div class="scard-icon p">🎓</div>
-        <div style="flex:1;"><div style="font-size:15px;font-weight:800;color:var(--text);font-family:'Poppins',sans-serif;">Alruya High School</div><div style="font-size:12px;color:var(--muted);margin-top:3px;font-weight:600;">2 Branches</div></div>
-        <div style="color:var(--muted);font-size:20px;">›</div>
-      </div>
-      <div style="padding:16px;"><button class="btn" onclick="showLoading('scr-004')">Continue</button></div>
-    </div>
-  </div>
-
-  <!-- ═══════════════════════════════════════════════ -->
-  <!-- SCR-004: BRANCH SELECTION -->
-  <!-- ═══════════════════════════════════════════════ -->
-  <div class="screen" id="scr-004">
-    <div class="sbar"><span>9:41</span><div class="sbar-icons"><span>🔋</span></div></div>
-    <div class="hdr"><button class="back" onclick="goTo('scr-003')">‹</button><div><div class="hdr-title">Select Branch</div></div></div>
-    <div class="ctxbar"><div class="chip">🏛️ Alruya</div><span style="color:var(--muted);font-size:11px;">›</span><div class="chip">🎒 Middle</div></div>
-    <div class="scrl">
-      <div class="sec-t">Available Branches</div>
-      <div class="scard" onclick="toggleSel(this)">
-        <div class="scard-icon">📍</div>
-        <div style="flex:1;"><div style="font-size:15px;font-weight:800;color:var(--text);font-family:'Poppins',sans-serif;">Salmiya Branch</div><div style="font-size:12px;color:var(--muted);margin-top:3px;font-weight:600;">5 Students linked</div></div>
-        <div style="color:var(--muted);font-size:20px;">›</div>
-      </div>
-      <div class="scard sel" onclick="toggleSel(this)">
-        <div class="scard-icon r">📍</div>
-        <div style="flex:1;"><div style="font-size:15px;font-weight:800;color:var(--text);font-family:'Poppins',sans-serif;">Hawalli Branch</div><div style="font-size:12px;color:var(--muted);margin-top:3px;font-weight:600;">3 Students linked</div></div>
-        <div style="color:var(--navy);font-size:20px;">✓</div>
-      </div>
-      <div class="scard" onclick="toggleSel(this)">
-        <div class="scard-icon g">📍</div>
-        <div style="flex:1;"><div style="font-size:15px;font-weight:800;color:var(--text);font-family:'Poppins',sans-serif;">Mangaf Branch</div><div style="font-size:12px;color:var(--muted);margin-top:3px;font-weight:600;">2 Students linked</div></div>
-        <div style="color:var(--muted);font-size:20px;">›</div>
-      </div>
-      <div style="padding:16px;"><button class="btn" onclick="showLoading('scr-005')">Continue — Load Students</button></div>
-    </div>
-  </div>
-
-  <!-- ═══════════════════════════════════════════════ -->
-  <!-- SCR-005: STUDENTS DASHBOARD -->
+  <!-- SCR-005: DASHBOARD (UPDATED WITH BRANCHES)      -->
   <!-- ═══════════════════════════════════════════════ -->
   <div class="screen" id="scr-005">
     <div class="sbar" style="padding-top:36px;"><span>9:41</span><div class="sbar-icons"><span>🔋</span></div></div>
+    <!-- HEADER -->
     <div style="background:linear-gradient(145deg,#080f35 0%,#0d1f5c 55%,#162272 100%);padding:12px 18px 16px;flex-shrink:0;position:relative;overflow:hidden;">
       <div style="position:absolute;right:-30px;top:-30px;width:160px;height:160px;background:rgba(192,32,26,0.12);border-radius:50%;"></div>
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
-        <div><div style="font-size:12px;color:rgba(255,255,255,0.6);font-weight:600;">GUARDIAN</div><div style="font-size:17px;font-weight:900;color:white;font-family:'Poppins',sans-serif;">Mohammed Ahmed</div></div>
-        <div style="background:rgba(255,255,255,0.15);border-radius:12px;padding:8px 10px;text-align:center;cursor:pointer;position:relative;" onclick="goTo('scr-023')">
-          <div style="font-size:20px;">🔔</div>
-          <div style="position:absolute;top:-2px;right:-2px;width:16px;height:16px;background:var(--red);border-radius:50%;font-size:9px;color:white;display:flex;align-items:center;justify-content:center;font-weight:800;">3</div>
+        <div>
+          <div style="font-size:12px;color:rgba(255,255,255,0.6);font-weight:600;">GUARDIAN</div>
+          <div style="font-size:17px;font-weight:900;color:white;font-family:'Poppins',sans-serif;">Mohammed Ahmed</div>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <div style="background:rgba(255,255,255,0.1);border-radius:10px;padding:6px 10px;cursor:pointer;" onclick="goTo('scr-024')">
+            <div style="font-size:18px;">👤</div>
+          </div>
+          <div style="background:rgba(255,255,255,0.15);border-radius:12px;padding:8px 10px;text-align:center;cursor:pointer;position:relative;" onclick="goTo('scr-023')">
+            <div style="font-size:20px;">🔔</div>
+            <div style="position:absolute;top:-2px;right:-2px;width:16px;height:16px;background:var(--red);border-radius:50%;font-size:9px;color:white;display:flex;align-items:center;justify-content:center;font-weight:800;">3</div>
+          </div>
         </div>
       </div>
-      <!-- Context -->
-      <div style="background:rgba(255,255,255,0.08);border-radius:10px;padding:8px 11px;margin-bottom:10px;">
-        <div style="font-size:10px;color:rgba(255,255,255,0.5);font-weight:700;letter-spacing:0.5px;margin-bottom:5px;">CURRENT CONTEXT</div>
-        <div style="display:flex;gap:6px;flex-wrap:wrap;">
-          <div style="background:rgba(255,255,255,0.15);border-radius:7px;padding:3px 9px;font-size:11px;font-weight:700;color:white;">🏛️ Alruya Group</div>
-          <div style="background:rgba(255,255,255,0.15);border-radius:7px;padding:3px 9px;font-size:11px;font-weight:700;color:white;">🎒 Middle School</div>
-          <div style="background:rgba(255,255,255,0.15);border-radius:7px;padding:3px 9px;font-size:11px;font-weight:700;color:white;">📍 Hawalli</div>
+      <!-- Institution Badge -->
+      <div style="background:rgba(255,255,255,0.08);border-radius:10px;padding:7px 11px;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;">
+        <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;">
+          <div style="background:rgba(255,255,255,0.15);border-radius:7px;padding:3px 9px;font-size:11px;font-weight:700;color:white;">🏛️ Alruya Educational Group</div>
+          <div style="background:rgba(255,255,255,0.1);border-radius:7px;padding:3px 9px;font-size:11px;font-weight:700;color:rgba(255,255,255,0.7);">3 Schools • 8 Students</div>
         </div>
-      </div>
-      <!-- Quick Switch -->
-      <div class="qs">
-        <span style="font-size:10px;color:rgba(255,255,255,0.5);font-weight:700;">⚡ QUICK SWITCH:</span>
-        <button class="qs-btn" onclick="goTo('scr-002')">Institution</button>
-        <button class="qs-btn" onclick="goTo('scr-003')">School</button>
-        <button class="qs-btn" onclick="goTo('scr-004')">Branch</button>
+        <div style="font-size:11px;color:rgba(255,255,255,0.5);font-weight:700;cursor:pointer;text-decoration:underline;" onclick="goTo('scr-001')">Switch</div>
       </div>
     </div>
+
     <div class="scrl">
-      <!-- Overall Totals -->
+      <!-- OVERALL FINANCIAL SUMMARY — KEPT EXACTLY -->
       <div class="sec-t">Overall Financial Summary</div>
       <div class="tgrid">
         <div class="tcell"><div class="tcell-l">Total Required</div><div class="tcell-v">KWD 950</div></div>
@@ -585,7 +408,7 @@ body{
         <div class="tcell rem"><div class="tcell-l">Remaining</div><div class="tcell-v">320</div></div>
       </div>
 
-      <!-- Quick Actions -->
+      <!-- QUICK ACTIONS — KEPT EXACTLY -->
       <div class="sec-t">Quick Actions</div>
       <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:4px 16px 8px;">
         <div style="background:var(--navy);border-radius:14px;padding:12px 6px;text-align:center;cursor:pointer;" onclick="goTo('scr-007')">
@@ -606,61 +429,260 @@ body{
         </div>
       </div>
 
-      <!-- Students -->
-      <div class="sec-t">Students (3)</div>
+      <!-- ══════════════════════════════════════════ -->
+      <!-- BRANCHES (NEW EXPANDABLE SECTION)          -->
+      <!-- ══════════════════════════════════════════ -->
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 16px 4px;">
+        <div style="font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:0.6px;">Branches (3)</div>
+        <div style="font-size:11px;font-weight:700;color:var(--navy);cursor:pointer;" onclick="expandAllBranches()">Expand All</div>
+      </div>
 
-      <!-- Student 1 -->
-      <div class="stcard">
-        <div class="stcard-hdr">
-          <div class="stcard-av">AH</div>
-          <div style="flex:1;"><div style="color:white;font-size:14px;font-weight:800;font-family:'Poppins',sans-serif;">Ahmad Mohammed</div><div style="color:rgba(255,255,255,0.65);font-size:12px;font-weight:600;">Grade 7 — Class A • ID: 2024001</div></div>
-          <span class="bdg" style="background:rgba(255,255,255,0.2);color:white;font-size:10px;">Active</span>
+      <!-- ─── BRANCH 1: Hawalli — 3 students ─────── -->
+      <div class="branch-card" id="branch-hawalli">
+        <div class="branch-hdr" style="background:linear-gradient(135deg,#0d1f5c,#1a2a8c);" onclick="toggleBranch('branch-hawalli')">
+          <div class="branch-icon" style="background:rgba(255,255,255,0.15);">📍</div>
+          <div class="branch-info">
+            <div class="branch-name">Hawalli Branch</div>
+            <div class="branch-meta">Alruya Middle School • 3 Students • 2024–2025</div>
+          </div>
+          <div class="branch-fin">
+            <div class="branch-fin-lbl">Due</div>
+            <div class="branch-fin-val">KWD 150</div>
+          </div>
+          <div class="branch-chev">⌄</div>
         </div>
-        <div class="stcard-body">
-          <div class="frow"><div class="frow-l">Total Fees</div><div class="frow-v">KWD 350</div></div>
-          <div class="frow"><div class="frow-l">Paid</div><div class="frow-v" style="color:var(--green);">KWD 200</div></div>
-          <div class="frow"><div class="frow-l">Discount</div><div class="frow-v" style="color:var(--amber);">KWD 20</div></div>
-          <div style="height:1px;background:var(--border);margin:6px 0;"></div>
-          <div class="frow"><div class="frow-l" style="font-weight:800;color:var(--text);">Remaining</div><div class="frow-v" style="color:var(--red);font-size:14px;">KWD 130</div></div>
+        <div class="branch-body">
+          <!-- Mini financial summary inside branch -->
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:0 12px 8px;background:white;border-radius:12px;padding:10px;border:1px solid var(--border);">
+            <div style="text-align:center;">
+              <div style="font-size:9px;color:var(--muted);font-weight:700;text-transform:uppercase;margin-bottom:2px;">Total</div>
+              <div style="font-size:13px;font-weight:900;color:var(--navy);font-family:'Poppins',sans-serif;">950</div>
+            </div>
+            <div style="text-align:center;border-left:1px solid var(--border);border-right:1px solid var(--border);">
+              <div style="font-size:9px;color:var(--muted);font-weight:700;text-transform:uppercase;margin-bottom:2px;">Paid</div>
+              <div style="font-size:13px;font-weight:900;color:var(--green);font-family:'Poppins',sans-serif;">580</div>
+            </div>
+            <div style="text-align:center;">
+              <div style="font-size:9px;color:var(--muted);font-weight:700;text-transform:uppercase;margin-bottom:2px;">Due</div>
+              <div style="font-size:13px;font-weight:900;color:var(--red);font-family:'Poppins',sans-serif;">150</div>
+            </div>
+          </div>
+
+          <!-- Student 1 inside branch — full original stcard design -->
+          <div class="stcard" style="margin:6px 10px;cursor:pointer;" onclick="goTo('scr-007')">
+            <div class="stcard-hdr">
+              <div class="stcard-av">AH</div>
+              <div style="flex:1;"><div style="color:white;font-size:14px;font-weight:800;font-family:'Poppins',sans-serif;">Ahmad Mohammed</div><div style="color:rgba(255,255,255,0.65);font-size:12px;font-weight:600;">Grade 7 — Class A • ID: 2024001</div></div>
+              <span class="bdg" style="background:rgba(255,255,255,0.2);color:white;font-size:10px;">Active</span>
+            </div>
+            <div class="stcard-body">
+              <div class="frow"><div class="frow-l">Total Fees</div><div class="frow-v">KWD 350</div></div>
+              <div class="frow"><div class="frow-l">Paid</div><div class="frow-v" style="color:var(--green);">KWD 200</div></div>
+              <div class="frow"><div class="frow-l">Discount</div><div class="frow-v" style="color:var(--amber);">KWD 20</div></div>
+              <div style="height:1px;background:var(--border);margin:6px 0;"></div>
+              <div class="frow"><div class="frow-l" style="font-weight:800;color:var(--text);">Remaining</div><div class="frow-v" style="color:var(--red);font-size:14px;">KWD 130</div></div>
+              <div style="display:flex;gap:6px;margin-top:8px;">
+                <button class="bsq-btn" style="background:#e0edff;color:var(--navy);" onclick="event.stopPropagation();goTo('scr-007')">💳 Pay</button>
+                <button class="bsq-btn" style="background:#fef2f2;color:var(--red);" onclick="event.stopPropagation();goTo('scr-016')">📋 Reports</button>
+                <button class="bsq-btn" style="background:#f0fdf4;color:var(--green);" onclick="event.stopPropagation();goTo('scr-019')">📊 Stmt</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Student 2 inside branch — full original stcard design -->
+          <div class="stcard" style="margin:6px 10px;cursor:pointer;" onclick="goTo('scr-007')">
+            <div class="stcard-hdr" style="background:var(--red);">
+              <div class="stcard-av">SM</div>
+              <div style="flex:1;"><div style="color:white;font-size:14px;font-weight:800;font-family:'Poppins',sans-serif;">Sara Mohammed</div><div style="color:rgba(255,255,255,0.65);font-size:12px;font-weight:600;">Grade 5 — Class B • ID: 2024002</div></div>
+              <span class="bdg" style="background:rgba(255,255,255,0.2);color:white;font-size:10px;">Active</span>
+            </div>
+            <div class="stcard-body">
+              <div class="frow"><div class="frow-l">Total Fees</div><div class="frow-v">KWD 300</div></div>
+              <div class="frow"><div class="frow-l">Paid</div><div class="frow-v" style="color:var(--green);">KWD 280</div></div>
+              <div class="frow"><div class="frow-l">Discount</div><div class="frow-v" style="color:var(--amber);">KWD 30</div></div>
+              <div style="height:1px;background:var(--border);margin:6px 0;"></div>
+              <div class="frow"><div class="frow-l" style="font-weight:800;color:var(--text);">Remaining</div><div class="frow-v" style="color:var(--red);font-size:14px;">KWD 20</div></div>
+              <div style="display:flex;gap:6px;margin-top:8px;">
+                <button class="bsq-btn" style="background:#e0edff;color:var(--navy);" onclick="event.stopPropagation();goTo('scr-007')">💳 Pay</button>
+                <button class="bsq-btn" style="background:#fef2f2;color:var(--red);" onclick="event.stopPropagation();goTo('scr-016')">📋 Reports</button>
+                <button class="bsq-btn" style="background:#f0fdf4;color:var(--green);" onclick="event.stopPropagation();goTo('scr-019')">📊 Stmt</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Student 3 inside branch — full original stcard design -->
+          <div class="stcard" style="margin:6px 10px;cursor:pointer;" onclick="goTo('scr-007')">
+            <div class="stcard-hdr" style="background:#059669;">
+              <div class="stcard-av">KM</div>
+              <div style="flex:1;"><div style="color:white;font-size:14px;font-weight:800;font-family:'Poppins',sans-serif;">Khalid Mohammed</div><div style="color:rgba(255,255,255,0.65);font-size:12px;font-weight:600;">Grade 9 — Class C • ID: 2024003</div></div>
+              <span class="bdg" style="background:rgba(255,255,255,0.2);color:white;font-size:10px;">Active</span>
+            </div>
+            <div class="stcard-body">
+              <div class="frow"><div class="frow-l">Total Fees</div><div class="frow-v">KWD 300</div></div>
+              <div class="frow"><div class="frow-l">Paid</div><div class="frow-v" style="color:var(--green);">KWD 100</div></div>
+              <div class="frow"><div class="frow-l">Discount</div><div class="frow-v" style="color:var(--amber);">KWD 0</div></div>
+              <div style="height:1px;background:var(--border);margin:6px 0;"></div>
+              <div class="frow"><div class="frow-l" style="font-weight:800;color:var(--text);">Remaining</div><div class="frow-v" style="color:var(--red);font-size:14px;">KWD 200</div></div>
+              <div style="display:flex;gap:6px;margin-top:8px;">
+                <button class="bsq-btn" style="background:#e0edff;color:var(--navy);" onclick="event.stopPropagation();goTo('scr-007')">💳 Pay</button>
+                <button class="bsq-btn" style="background:#fef2f2;color:var(--red);" onclick="event.stopPropagation();goTo('scr-016')">📋 Reports</button>
+                <button class="bsq-btn" style="background:#f0fdf4;color:var(--green);" onclick="event.stopPropagation();goTo('scr-019')">📊 Stmt</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="branch-footer">
+            <div style="font-size:11px;color:var(--muted);font-weight:700;">3 students • Hawalli Branch</div>
+            <button class="btn-sm" style="font-size:10px;padding:6px 12px;" onclick="goTo('scr-007')">Pay All →</button>
+          </div>
         </div>
       </div>
 
-      <!-- Student 2 -->
-      <div class="stcard">
-        <div class="stcard-hdr" style="background:var(--red);">
-          <div class="stcard-av">SM</div>
-          <div style="flex:1;"><div style="color:white;font-size:14px;font-weight:800;font-family:'Poppins',sans-serif;">Sara Mohammed</div><div style="color:rgba(255,255,255,0.65);font-size:12px;font-weight:600;">Grade 5 — Class B • ID: 2024002</div></div>
-          <span class="bdg" style="background:rgba(255,255,255,0.2);color:white;font-size:10px;">Active</span>
+      <!-- ─── BRANCH 2: Salmiya — 2 students ───── -->
+      <div class="branch-card" id="branch-salmiya">
+        <div class="branch-hdr" style="background:linear-gradient(135deg,#7c3aed,#5b21b6);" onclick="toggleBranch('branch-salmiya')">
+          <div class="branch-icon" style="background:rgba(255,255,255,0.15);">📍</div>
+          <div class="branch-info">
+            <div class="branch-name">Salmiya Branch</div>
+            <div class="branch-meta">Alruya Primary School • 2 Students • 2024–2025</div>
+          </div>
+          <div class="branch-fin">
+            <div class="branch-fin-lbl">Due</div>
+            <div class="branch-fin-val">KWD 95</div>
+          </div>
+          <div class="branch-chev">⌄</div>
         </div>
-        <div class="stcard-body">
-          <div class="frow"><div class="frow-l">Total Fees</div><div class="frow-v">KWD 300</div></div>
-          <div class="frow"><div class="frow-l">Paid</div><div class="frow-v" style="color:var(--green);">KWD 280</div></div>
-          <div class="frow"><div class="frow-l">Discount</div><div class="frow-v" style="color:var(--amber);">KWD 30</div></div>
-          <div style="height:1px;background:var(--border);margin:6px 0;"></div>
-          <div class="frow"><div class="frow-l" style="font-weight:800;color:var(--text);">Remaining</div><div class="frow-v" style="color:var(--red);font-size:14px;">KWD 20</div></div>
+        <div class="branch-body">
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:0 12px 8px;background:white;border-radius:12px;padding:10px;border:1px solid var(--border);">
+            <div style="text-align:center;"><div style="font-size:9px;color:var(--muted);font-weight:700;text-transform:uppercase;margin-bottom:2px;">Total</div><div style="font-size:13px;font-weight:900;color:var(--navy);font-family:'Poppins',sans-serif;">580</div></div>
+            <div style="text-align:center;border-left:1px solid var(--border);border-right:1px solid var(--border);"><div style="font-size:9px;color:var(--muted);font-weight:700;text-transform:uppercase;margin-bottom:2px;">Paid</div><div style="font-size:13px;font-weight:900;color:var(--green);font-family:'Poppins',sans-serif;">485</div></div>
+            <div style="text-align:center;"><div style="font-size:9px;color:var(--muted);font-weight:700;text-transform:uppercase;margin-bottom:2px;">Due</div><div style="font-size:13px;font-weight:900;color:var(--red);font-family:'Poppins',sans-serif;">95</div></div>
+          </div>
+
+          <!-- Student: Fatima — full original stcard design -->
+          <div class="stcard" style="margin:6px 10px;cursor:pointer;" onclick="goTo('scr-007')">
+            <div class="stcard-hdr" style="background:linear-gradient(135deg,#7c3aed,#5b21b6);">
+              <div class="stcard-av">FA</div>
+              <div style="flex:1;"><div style="color:white;font-size:14px;font-weight:800;font-family:'Poppins',sans-serif;">Fatima Ahmed</div><div style="color:rgba(255,255,255,0.65);font-size:12px;font-weight:600;">Grade 3 — Class A • ID: 2024004</div></div>
+              <span class="bdg" style="background:rgba(255,255,255,0.2);color:white;font-size:10px;">Active</span>
+            </div>
+            <div class="stcard-body">
+              <div class="frow"><div class="frow-l">Total Fees</div><div class="frow-v">KWD 280</div></div>
+              <div class="frow"><div class="frow-l">Paid</div><div class="frow-v" style="color:var(--green);">KWD 240</div></div>
+              <div class="frow"><div class="frow-l">Discount</div><div class="frow-v" style="color:var(--amber);">KWD 15</div></div>
+              <div style="height:1px;background:var(--border);margin:6px 0;"></div>
+              <div class="frow"><div class="frow-l" style="font-weight:800;color:var(--text);">Remaining</div><div class="frow-v" style="color:var(--red);font-size:14px;">KWD 55</div></div>
+              <div style="display:flex;gap:6px;margin-top:8px;">
+                <button class="bsq-btn" style="background:#e0edff;color:var(--navy);" onclick="event.stopPropagation();goTo('scr-007')">💳 Pay</button>
+                <button class="bsq-btn" style="background:#fef2f2;color:var(--red);" onclick="event.stopPropagation();goTo('scr-016')">📋 Reports</button>
+                <button class="bsq-btn" style="background:#f0fdf4;color:var(--green);" onclick="event.stopPropagation();goTo('scr-019')">📊 Stmt</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Student: Omar — full original stcard design -->
+          <div class="stcard" style="margin:6px 10px;cursor:pointer;" onclick="goTo('scr-007')">
+            <div class="stcard-hdr" style="background:linear-gradient(135deg,#d97706,#b45309);">
+              <div class="stcard-av">OM</div>
+              <div style="flex:1;"><div style="color:white;font-size:14px;font-weight:800;font-family:'Poppins',sans-serif;">Omar Ahmed</div><div style="color:rgba(255,255,255,0.65);font-size:12px;font-weight:600;">Grade 1 — Class B • ID: 2024005</div></div>
+              <span class="bdg" style="background:rgba(255,255,255,0.2);color:white;font-size:10px;">Active</span>
+            </div>
+            <div class="stcard-body">
+              <div class="frow"><div class="frow-l">Total Fees</div><div class="frow-v">KWD 300</div></div>
+              <div class="frow"><div class="frow-l">Paid</div><div class="frow-v" style="color:var(--green);">KWD 245</div></div>
+              <div class="frow"><div class="frow-l">Discount</div><div class="frow-v" style="color:var(--amber);">KWD 15</div></div>
+              <div style="height:1px;background:var(--border);margin:6px 0;"></div>
+              <div class="frow"><div class="frow-l" style="font-weight:800;color:var(--text);">Remaining</div><div class="frow-v" style="color:var(--red);font-size:14px;">KWD 40</div></div>
+              <div style="display:flex;gap:6px;margin-top:8px;">
+                <button class="bsq-btn" style="background:#e0edff;color:var(--navy);" onclick="event.stopPropagation();goTo('scr-007')">💳 Pay</button>
+                <button class="bsq-btn" style="background:#fef2f2;color:var(--red);" onclick="event.stopPropagation();goTo('scr-016')">📋 Reports</button>
+                <button class="bsq-btn" style="background:#f0fdf4;color:var(--green);" onclick="event.stopPropagation();goTo('scr-019')">📊 Stmt</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="branch-footer">
+            <div style="font-size:11px;color:var(--muted);font-weight:700;">2 students • Salmiya Branch</div>
+            <button class="btn-sm" style="font-size:10px;padding:6px 12px;background:#7c3aed;" onclick="goTo('scr-007')">Pay All →</button>
+          </div>
         </div>
       </div>
 
-      <!-- Student 3 -->
-      <div class="stcard">
-        <div class="stcard-hdr" style="background:#059669;">
-          <div class="stcard-av">KM</div>
-          <div style="flex:1;"><div style="color:white;font-size:14px;font-weight:800;font-family:'Poppins',sans-serif;">Khalid Mohammed</div><div style="color:rgba(255,255,255,0.65);font-size:12px;font-weight:600;">Grade 9 — Class C • ID: 2024003</div></div>
-          <span class="bdg" style="background:rgba(255,255,255,0.2);color:white;font-size:10px;">Active</span>
+      <!-- ─── BRANCH 3: Mangaf — 3 students ────── -->
+      <div class="branch-card" id="branch-mangaf">
+        <div class="branch-hdr" style="background:linear-gradient(135deg,#c0201a,#9b1212);" onclick="toggleBranch('branch-mangaf')">
+          <div class="branch-icon" style="background:rgba(255,255,255,0.15);">📍</div>
+          <div class="branch-info">
+            <div class="branch-name">Mangaf Branch</div>
+            <div class="branch-meta">Alruya High School • 3 Students • 2024–2025</div>
+          </div>
+          <div class="branch-fin">
+            <div class="branch-fin-lbl">Due</div>
+            <div class="branch-fin-val">KWD 75</div>
+          </div>
+          <div class="branch-chev">⌄</div>
         </div>
-        <div class="stcard-body">
-          <div class="frow"><div class="frow-l">Total Fees</div><div class="frow-v">KWD 300</div></div>
-          <div class="frow"><div class="frow-l">Paid</div><div class="frow-v" style="color:var(--green);">KWD 100</div></div>
-          <div class="frow"><div class="frow-l">Discount</div><div class="frow-v" style="color:var(--amber);">KWD 0</div></div>
-          <div style="height:1px;background:var(--border);margin:6px 0;"></div>
-          <div class="frow"><div class="frow-l" style="font-weight:800;color:var(--text);">Remaining</div><div class="frow-v" style="color:var(--red);font-size:14px;">KWD 200</div></div>
+        <div class="branch-body">
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:0 12px 8px;background:white;border-radius:12px;padding:10px;border:1px solid var(--border);">
+            <div style="text-align:center;"><div style="font-size:9px;color:var(--muted);font-weight:700;text-transform:uppercase;margin-bottom:2px;">Total</div><div style="font-size:13px;font-weight:900;color:var(--navy);font-family:'Poppins',sans-serif;">420</div></div>
+            <div style="text-align:center;border-left:1px solid var(--border);border-right:1px solid var(--border);"><div style="font-size:9px;color:var(--muted);font-weight:700;text-transform:uppercase;margin-bottom:2px;">Paid</div><div style="font-size:13px;font-weight:900;color:var(--green);font-family:'Poppins',sans-serif;">345</div></div>
+            <div style="text-align:center;"><div style="font-size:9px;color:var(--muted);font-weight:700;text-transform:uppercase;margin-bottom:2px;">Due</div><div style="font-size:13px;font-weight:900;color:var(--red);font-family:'Poppins',sans-serif;">75</div></div>
+          </div>
+
+          <!-- Student: Nour — full original stcard design -->
+          <div class="stcard" style="margin:6px 10px;cursor:pointer;" onclick="goTo('scr-007')">
+            <div class="stcard-hdr" style="background:linear-gradient(135deg,#c0201a,#9b1212);">
+              <div class="stcard-av">NA</div>
+              <div style="flex:1;"><div style="color:white;font-size:14px;font-weight:800;font-family:'Poppins',sans-serif;">Nour Ahmed</div><div style="color:rgba(255,255,255,0.65);font-size:12px;font-weight:600;">Grade 11 — Class A • ID: 2024006</div></div>
+              <span class="bdg" style="background:rgba(255,255,255,0.2);color:white;font-size:10px;">Active</span>
+            </div>
+            <div class="stcard-body">
+              <div class="frow"><div class="frow-l">Total Fees</div><div class="frow-v">KWD 420</div></div>
+              <div class="frow"><div class="frow-l">Paid</div><div class="frow-v" style="color:var(--green);">KWD 345</div></div>
+              <div class="frow"><div class="frow-l">Discount</div><div class="frow-v" style="color:var(--amber);">KWD 0</div></div>
+              <div style="height:1px;background:var(--border);margin:6px 0;"></div>
+              <div class="frow"><div class="frow-l" style="font-weight:800;color:var(--text);">Remaining</div><div class="frow-v" style="color:var(--red);font-size:14px;">KWD 75</div></div>
+              <div style="display:flex;gap:6px;margin-top:8px;">
+                <button class="bsq-btn" style="background:#e0edff;color:var(--navy);" onclick="event.stopPropagation();goTo('scr-007')">💳 Pay</button>
+                <button class="bsq-btn" style="background:#fef2f2;color:var(--red);" onclick="event.stopPropagation();goTo('scr-016')">📋 Reports</button>
+                <button class="bsq-btn" style="background:#f0fdf4;color:var(--green);" onclick="event.stopPropagation();goTo('scr-019')">📊 Stmt</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="branch-footer">
+            <div style="font-size:11px;color:var(--muted);font-weight:700;">1 student • Mangaf Branch</div>
+            <button class="btn-sm" style="font-size:10px;padding:6px 12px;background:var(--red);" onclick="goTo('scr-007')">Pay All →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- RECENT NOTIFICATIONS -->
+      <div class="sec-t">Recent Notifications</div>
+      <div style="background:white;margin:4px 16px 8px;border-radius:16px;overflow:hidden;border:1.5px solid var(--border);">
+        <div style="display:flex;gap:12px;padding:12px 14px;border-bottom:1px solid var(--border);cursor:pointer;" onclick="goTo('scr-023')">
+          <div style="width:8px;height:8px;border-radius:50%;background:var(--red);flex-shrink:0;margin-top:4px;"></div>
+          <div style="flex:1;">
+            <div style="font-size:12px;font-weight:800;color:var(--text);">Payment Reminder</div>
+            <div style="font-size:11px;color:var(--muted);font-weight:600;margin-top:1px;">KWD 320 outstanding. Pay before May 15.</div>
+          </div>
+          <div style="font-size:10px;color:var(--muted);font-weight:600;white-space:nowrap;">5 May</div>
+        </div>
+        <div style="display:flex;gap:12px;padding:12px 14px;cursor:pointer;" onclick="goTo('scr-023')">
+          <div style="width:8px;height:8px;border-radius:50%;background:var(--green);flex-shrink:0;margin-top:4px;"></div>
+          <div style="flex:1;">
+            <div style="font-size:12px;font-weight:800;color:var(--text);">Enrollment Approved</div>
+            <div style="font-size:11px;color:var(--muted);font-weight:600;margin-top:1px;">Ahmad's 2025-2026 enrollment approved.</div>
+          </div>
+          <div style="font-size:10px;color:var(--muted);font-weight:600;white-space:nowrap;">3 May</div>
         </div>
       </div>
       <div style="height:16px;"></div>
     </div>
+
     <div class="bnav">
-      <button class="nv" onclick="goTo('scr-006')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>Home</button>
-      <button class="nv on" onclick="goTo('scr-007')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>Payments</button>
+      <button class="nv on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>Home</button>
+      <button class="nv" onclick="goTo('scr-007')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>Payments</button>
       <button class="nv" onclick="goTo('scr-016')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>Reports</button>
       <button class="nv" onclick="goTo('scr-023')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>Alerts</button>
       <button class="nv" onclick="goTo('scr-024')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>More</button>
@@ -714,40 +736,79 @@ body{
   </div>
 
   <!-- ═══════════════════════════════════════════════ -->
-  <!-- SCR-007: PAY FEES MENU -->
+  <!-- SCR-007: PAY FEES MENU — with school selector   -->
   <!-- ═══════════════════════════════════════════════ -->
   <div class="screen" id="scr-007">
     <div class="sbar"><span>9:41</span><div class="sbar-icons"><span>🔋</span></div></div>
-    <div class="hdr"><button class="back" onclick="goTo('scr-006')">‹</button><div><div class="hdr-title">Pay Fees</div><div class="hdr-sub">Choose payment type</div></div></div>
+    <div class="hdr"><button class="back" onclick="goTo('scr-005')">‹</button><div><div class="hdr-title">Pay Fees</div><div class="hdr-sub">Choose school &amp; payment type</div></div></div>
     <div class="scrl">
-      <div style="padding:16px;">
-        <div style="background:var(--navy);border-radius:18px;padding:18px;margin-bottom:12px;display:flex;align-items:center;gap:14px;cursor:pointer;box-shadow:0 6px 20px rgba(13,31,92,0.25);" onclick="goTo('scr-008')">
-          <div style="width:56px;height:56px;background:rgba(255,255,255,0.15);border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:28px;">📅</div>
-          <div style="flex:1;"><div style="font-size:16px;font-weight:900;color:white;font-family:'Poppins',sans-serif;">Pay Current Year</div><div style="font-size:12px;color:rgba(255,255,255,0.65);margin-top:3px;font-weight:600;">2024-2025 Academic Year</div></div>
+
+      <!-- ── SCHOOL SELECTOR ─────────────────────── -->
+      <div style="padding:12px 16px 4px;">
+        <div style="font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:0.6px;margin-bottom:8px;">Select School</div>
+        <div id="schoolDropdown">
+          <!-- Selected trigger -->
+          <div id="schoolSelected" onclick="toggleSchoolDrop()" style="background:white;border:2.5px solid var(--navy);border-radius:14px;padding:13px 16px;display:flex;align-items:center;gap:12px;cursor:pointer;box-shadow:0 2px 10px rgba(13,31,92,0.08);">
+            <div id="schoolIcon" style="width:36px;height:36px;border-radius:10px;background:var(--navy);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">🎒</div>
+            <div style="flex:1;">
+              <div id="schoolName" style="font-size:14px;font-weight:800;color:var(--navy);font-family:'Poppins',sans-serif;">Alruya Middle School</div>
+              <div id="schoolBranch" style="font-size:11px;color:var(--muted);font-weight:600;margin-top:1px;">📍 Hawalli Branch • 3 Students</div>
+            </div>
+            <div id="schoolDropArrow" style="color:var(--navy);font-size:20px;font-weight:700;transition:transform 0.25s;line-height:1;">▾</div>
+          </div>
+          <!-- Inline dropdown list (expands below, NOT absolute) -->
+          <div id="schoolDropList" style="display:none;background:white;border-radius:0 0 14px 14px;border:2.5px solid var(--navy);border-top:none;margin-top:-4px;overflow:hidden;">
+            <div class="sdrop-item sel" id="sdrop-0" onclick="selectSchool(0,'Alruya Middle School','📍 Hawalli Branch • 3 Students','🎒','var(--navy)')">
+              <div style="width:34px;height:34px;border-radius:9px;background:var(--navy);display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;">🎒</div>
+              <div style="flex:1;"><div style="font-size:13px;font-weight:800;color:var(--text);">Alruya Middle School</div><div style="font-size:11px;color:var(--muted);font-weight:600;">📍 Hawalli Branch • 3 Students</div></div>
+              <div id="sdrop-chk-0" style="width:22px;height:22px;border-radius:50%;background:var(--navy);display:flex;align-items:center;justify-content:center;color:white;font-size:12px;font-weight:800;">✓</div>
+            </div>
+            <div class="sdrop-item" id="sdrop-1" onclick="selectSchool(1,'Alruya Primary School','📍 Salmiya Branch • 2 Students','📚','#7c3aed')">
+              <div style="width:34px;height:34px;border-radius:9px;background:#7c3aed;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;">📚</div>
+              <div style="flex:1;"><div style="font-size:13px;font-weight:800;color:var(--text);">Alruya Primary School</div><div style="font-size:11px;color:var(--muted);font-weight:600;">📍 Salmiya Branch • 2 Students</div></div>
+              <div id="sdrop-chk-1" style="width:22px;height:22px;border-radius:50%;background:#e5e7eb;display:flex;align-items:center;justify-content:center;color:white;font-size:12px;">·</div>
+            </div>
+            <div class="sdrop-item" id="sdrop-2" onclick="selectSchool(2,'Alruya High School','📍 Mangaf Branch • 1 Student','🎓','var(--red)')">
+              <div style="width:34px;height:34px;border-radius:9px;background:var(--red);display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;">🎓</div>
+              <div style="flex:1;"><div style="font-size:13px;font-weight:800;color:var(--text);">Alruya High School</div><div style="font-size:11px;color:var(--muted);font-weight:600;">📍 Mangaf Branch • 1 Student</div></div>
+              <div id="sdrop-chk-2" style="width:22px;height:22px;border-radius:50%;background:#e5e7eb;display:flex;align-items:center;justify-content:center;color:white;font-size:12px;">·</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── PAYMENT TYPE ─────────────────────────── -->
+      <div style="padding:12px 16px 4px;">
+        <div style="font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:0.6px;margin-bottom:8px;">Payment Type</div>
+        <div style="background:var(--navy);border-radius:18px;padding:18px;margin-bottom:10px;display:flex;align-items:center;gap:14px;cursor:pointer;box-shadow:0 6px 20px rgba(13,31,92,0.25);" onclick="goTo('scr-008')">
+          <div style="width:52px;height:52px;background:rgba(255,255,255,0.15);border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:26px;">📅</div>
+          <div style="flex:1;"><div style="font-size:15px;font-weight:900;color:white;font-family:'Poppins',sans-serif;">Pay Current Year</div><div style="font-size:11px;color:rgba(255,255,255,0.65);margin-top:3px;font-weight:600;">2024-2025 Academic Year</div></div>
           <div style="color:rgba(255,255,255,0.6);font-size:22px;">›</div>
         </div>
-        <div style="background:var(--red);border-radius:18px;padding:18px;margin-bottom:12px;display:flex;align-items:center;gap:14px;cursor:pointer;box-shadow:0 6px 20px rgba(192,32,26,0.25);" onclick="goTo('scr-010')">
-          <div style="width:56px;height:56px;background:rgba(255,255,255,0.15);border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:28px;">⏩</div>
-          <div style="flex:1;"><div style="font-size:16px;font-weight:900;color:white;font-family:'Poppins',sans-serif;">Pay in Advance</div><div style="font-size:12px;color:rgba(255,255,255,0.65);margin-top:3px;font-weight:600;">Next academic year fees</div></div>
+        <div style="background:var(--red);border-radius:18px;padding:18px;margin-bottom:10px;display:flex;align-items:center;gap:14px;cursor:pointer;box-shadow:0 6px 20px rgba(192,32,26,0.25);" onclick="goTo('scr-010')">
+          <div style="width:52px;height:52px;background:rgba(255,255,255,0.15);border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:26px;">⏩</div>
+          <div style="flex:1;"><div style="font-size:15px;font-weight:900;color:white;font-family:'Poppins',sans-serif;">Pay in Advance</div><div style="font-size:11px;color:rgba(255,255,255,0.65);margin-top:3px;font-weight:600;">Next academic year fees</div></div>
           <div style="color:rgba(255,255,255,0.6);font-size:22px;">›</div>
         </div>
         <div style="background:linear-gradient(135deg,#1a1a4e,#2d2d6e);border-radius:18px;padding:18px;display:flex;align-items:center;gap:14px;cursor:pointer;box-shadow:0 6px 20px rgba(0,0,0,0.2);" onclick="goTo('scr-012')">
-          <div style="width:56px;height:56px;background:rgba(255,255,255,0.1);border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:28px;">🗂️</div>
-          <div style="flex:1;"><div style="font-size:16px;font-weight:900;color:white;font-family:'Poppins',sans-serif;">Pay Old Debts</div><div style="font-size:12px;color:rgba(255,255,255,0.65);margin-top:3px;font-weight:600;">Previous years outstanding</div></div>
+          <div style="width:52px;height:52px;background:rgba(255,255,255,0.1);border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:26px;">🗂️</div>
+          <div style="flex:1;"><div style="font-size:15px;font-weight:900;color:white;font-family:'Poppins',sans-serif;">Pay Old Debts</div><div style="font-size:11px;color:rgba(255,255,255,0.65);margin-top:3px;font-weight:600;">Previous years outstanding</div></div>
           <div style="color:rgba(255,255,255,0.6);font-size:22px;">›</div>
         </div>
       </div>
+
       <!-- Outstanding summary -->
-      <div class="card" style="margin-top:4px;">
+      <div class="card">
         <div style="font-size:13px;font-weight:800;color:var(--text);margin-bottom:10px;font-family:'Poppins',sans-serif;">Outstanding Summary</div>
         <div class="frow"><div class="frow-l">Current Year</div><div class="frow-v navy">KWD 320.000</div></div>
         <div class="frow"><div class="frow-l">Old Debts</div><div class="frow-v red">KWD 150.000</div></div>
         <div class="div"></div>
         <div class="frow"><div class="frow-l fw8">Total Due</div><div class="frow-v" style="font-size:15px;color:var(--red);">KWD 470.000</div></div>
       </div>
+      <div style="height:16px;"></div>
     </div>
     <div class="bnav">
-      <button class="nv" onclick="goTo('scr-006')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>Home</button>
+      <button class="nv" onclick="goTo('scr-005')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>Home</button>
       <button class="nv on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>Payments</button>
       <button class="nv" onclick="goTo('scr-016')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/></svg>Reports</button>
       <button class="nv" onclick="goTo('scr-023')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/></svg>Alerts</button>
@@ -1256,7 +1317,7 @@ body{
       </div>
       <div style="padding:12px 16px;display:flex;gap:10px;">
         <button class="btn-out" onclick="goTo('scr-025')">📄 Download Receipt</button>
-        <button class="btn" onclick="goTo('scr-006')">Done</button>
+        <button class="btn" onclick="goTo('scr-005')">Done</button>
       </div>
       <!-- Failed state toggle -->
       <div style="padding:0 16px 20px;text-align:center;">
@@ -1270,7 +1331,7 @@ body{
   <!-- ═══════════════════════════════════════════════ -->
   <div class="screen" id="scr-016">
     <div class="sbar"><span>9:41</span><div class="sbar-icons"><span>🔋</span></div></div>
-    <div class="hdr"><button class="back" onclick="goTo('scr-006')">‹</button><div><div class="hdr-title">Reports</div></div></div>
+    <div class="hdr"><button class="back" onclick="goTo('scr-005')">‹</button><div><div class="hdr-title">Reports</div></div></div>
     <div class="scrl">
       <div style="padding:12px 16px 4px;display:grid;grid-template-columns:repeat(2,1fr);gap:10px;">
         <div style="background:white;border-radius:18px;padding:18px;text-align:center;border:1.5px solid var(--border);cursor:pointer;box-shadow:0 2px 10px rgba(0,0,0,0.05);" onclick="goTo('scr-017')">
@@ -1296,7 +1357,7 @@ body{
       </div>
     </div>
     <div class="bnav">
-      <button class="nv" onclick="goTo('scr-006')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>Home</button>
+      <button class="nv" onclick="goTo('scr-005')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>Home</button>
       <button class="nv" onclick="goTo('scr-007')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="1" y="4" width="22" height="16" rx="2"/></svg>Payments</button>
       <button class="nv on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>Reports</button>
       <button class="nv" onclick="goTo('scr-023')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/></svg>Alerts</button>
@@ -1416,7 +1477,7 @@ body{
   <!-- ═══════════════════════════════════════════════ -->
   <div class="screen" id="scr-020">
     <div class="sbar"><span>9:41</span><div class="sbar-icons"><span>🔋</span></div></div>
-    <div class="hdr"><button class="back" onclick="goTo('scr-006')">‹</button><div><div class="hdr-title">Next Year Enrollment</div><div class="hdr-sub">2025–2026 Academic Year</div></div></div>
+    <div class="hdr"><button class="back" onclick="goTo('scr-005')">‹</button><div><div class="hdr-title">Next Year Enrollment</div><div class="hdr-sub">2025–2026 Academic Year</div></div></div>
     <div class="scrl">
       <div class="encard">
         <div class="en-av">AH</div>
@@ -1468,7 +1529,7 @@ body{
   <!-- ═══════════════════════════════════════════════ -->
   <div class="screen" id="scr-022">
     <div class="sbar"><span>9:41</span><div class="sbar-icons"><span>🔋</span></div></div>
-    <div class="hdr"><button class="back" onclick="goTo('scr-006')">‹</button><div><div class="hdr-title">Contact Administration</div></div></div>
+    <div class="hdr"><button class="back" onclick="goTo('scr-005')">‹</button><div><div class="hdr-title">Contact Administration</div></div></div>
     <div class="scrl">
       <div class="ctform" style="padding-top:14px;">
         <div class="ig"><div class="lbl">STUDENT</div>
@@ -1502,7 +1563,7 @@ body{
   <!-- ═══════════════════════════════════════════════ -->
   <div class="screen" id="scr-023">
     <div class="sbar"><span>9:41</span><div class="sbar-icons"><span>🔋</span></div></div>
-    <div class="hdr"><button class="back" onclick="goTo('scr-006')">‹</button><div class="hdr-title">Notifications</div><button class="btn-sm" style="background:rgba(255,255,255,0.15);font-size:11px;">Mark All Read</button></div>
+    <div class="hdr"><button class="back" onclick="goTo('scr-005')">‹</button><div class="hdr-title">Notifications</div><button class="btn-sm" style="background:rgba(255,255,255,0.15);font-size:11px;">Mark All Read</button></div>
     <div class="scrl" style="background:white;">
       <div class="nitem">
         <div class="ndot"></div>
@@ -1530,7 +1591,7 @@ body{
       </div>
     </div>
     <div class="bnav">
-      <button class="nv" onclick="goTo('scr-006')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>Home</button>
+      <button class="nv" onclick="goTo('scr-005')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>Home</button>
       <button class="nv" onclick="goTo('scr-007')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="1" y="4" width="22" height="16" rx="2"/></svg>Payments</button>
       <button class="nv" onclick="goTo('scr-016')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/></svg>Reports</button>
       <button class="nv on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>Alerts</button>
@@ -1578,7 +1639,7 @@ body{
       <div style="height:16px;"></div>
     </div>
     <div class="bnav">
-      <button class="nv" onclick="goTo('scr-006')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>Home</button>
+      <button class="nv" onclick="goTo('scr-005')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>Home</button>
       <button class="nv" onclick="goTo('scr-007')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="1" y="4" width="22" height="16" rx="2"/></svg>Payments</button>
       <button class="nv" onclick="goTo('scr-016')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/></svg>Reports</button>
       <button class="nv" onclick="goTo('scr-023')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/></svg>Alerts</button>
@@ -1640,9 +1701,9 @@ body{
 
 <script>
 const labels={
-  'scr-001':'SCR-001 — Login','scr-002':'SCR-002 — Institution',
-  'scr-003':'SCR-003 — School','scr-004':'SCR-004 — Branch',
-  'scr-005':'SCR-005 — Students Dashboard','scr-006':'SCR-006 — Home',
+  'scr-001':'SCR-001 — Login',
+  'scr-005':'SCR-005 — Dashboard (Branches)',
+  'scr-006':'SCR-006 — Home',
   'scr-007':'SCR-007 — Pay Fees Menu','scr-008':'SCR-008 — Pay Current Year',
   'scr-009':'SCR-009 — Payment Details','scr-010':'SCR-010 — Pay Advance',
   'scr-011':'SCR-011 — Advance Details','scr-012':'SCR-012 — Old Debts Year',
@@ -1658,7 +1719,7 @@ const labels={
 function goTo(id){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   const scr=document.getElementById(id);
-  if(scr){scr.classList.add('active');scr.querySelector('.scrl,.scrl-white')&&(scr.querySelector('.scrl,.scrl-white').scrollTop=0);}
+  if(scr){scr.classList.add('active');const s=scr.querySelector('.scrl,.scrl-white');if(s)s.scrollTop=0;}
   const lbl=document.getElementById('scrLabel');
   if(lbl) lbl.textContent=labels[id]||id;
   document.querySelectorAll('.pg-btn').forEach(b=>{
@@ -1678,11 +1739,7 @@ function showLoading(next){
 }
 function toggleSel(el){
   const siblings=el.parentElement.querySelectorAll('.scard');
-  siblings.forEach(s=>{
-    s.classList.remove('sel');
-    const last=s.querySelector('div:last-child');
-    if(last){last.textContent='›';last.style.color='';}
-  });
+  siblings.forEach(s=>{s.classList.remove('sel');const last=s.querySelector('div:last-child');if(last){last.textContent='›';last.style.color='';}});
   el.classList.add('sel');
   const last=el.querySelector('div:last-child');
   if(last){last.textContent='✓';last.style.color='var(--navy)';}
@@ -1707,8 +1764,68 @@ function togglePayResult(){
 }
 function doFaceId(){
   const svg=document.getElementById('faceIdSvg');
-  if(svg){svg.style.opacity='0.4';setTimeout(()=>{svg.style.opacity='1';showLoading('scr-002');},600);}
+  if(svg){svg.style.opacity='0.4';setTimeout(()=>{svg.style.opacity='1';showLoading('scr-005');},600);}
 }
+
+
+/* ── BRANCH ACCORDION — fixed, no CSS class dependency ─── */
+function toggleBranch(id){
+  var card=document.getElementById(id);
+  if(!card) return;
+  var body=card.querySelector('.branch-body');
+  var chev=card.querySelector('.branch-chev');
+  if(!body) return;
+  var isOpen=(body.style.display==='block');
+  body.style.display=isOpen?'none':'block';
+  if(chev) chev.style.transform=isOpen?'rotate(0deg)':'rotate(180deg)';
+}
+function expandAllBranches(){
+  var cards=document.querySelectorAll('.branch-card');
+  for(var i=0;i<cards.length;i++){
+    var body=cards[i].querySelector('.branch-body');
+    var chev=cards[i].querySelector('.branch-chev');
+    if(body) body.style.display='block';
+    if(chev) chev.style.transform='rotate(180deg)';
+  }
+}
+
+/* ── SCHOOL DROPDOWN (SCR-007) — inline expand, no overflow clip ── */
+var _schoolOpen=false;
+function toggleSchoolDrop(){
+  _schoolOpen=!_schoolOpen;
+  var list=document.getElementById('schoolDropList');
+  var arrow=document.getElementById('schoolDropArrow');
+  var selEl=document.getElementById('schoolSelected');
+  if(list) list.style.display=_schoolOpen?'block':'none';
+  if(arrow) arrow.style.transform=_schoolOpen?'rotate(180deg)':'rotate(0deg)';
+  if(selEl) selEl.style.borderRadius=_schoolOpen?'14px 14px 0 0':'14px';
+}
+function selectSchool(idx,name,branch,icon,color){
+  var nm=document.getElementById('schoolName');
+  var br=document.getElementById('schoolBranch');
+  var ic=document.getElementById('schoolIcon');
+  if(nm) nm.textContent=name;
+  if(br) br.textContent=branch;
+  if(ic){ ic.textContent=icon; ic.style.background=color; }
+  for(var i=0;i<3;i++){
+    var item=document.getElementById('sdrop-'+i);
+    var chk=document.getElementById('sdrop-chk-'+i);
+    if(item) item.style.background='white';
+    if(chk){ chk.style.background='#e5e7eb'; chk.textContent='·'; chk.style.color='#9ca3af'; }
+  }
+  var selItem=document.getElementById('sdrop-'+idx);
+  var selChk=document.getElementById('sdrop-chk-'+idx);
+  if(selItem) selItem.style.background='#f0f3ff';
+  if(selChk){ selChk.style.background=color; selChk.textContent='✓'; selChk.style.color='white'; }
+  _schoolOpen=false;
+  var list=document.getElementById('schoolDropList');
+  var arrow=document.getElementById('schoolDropArrow');
+  var selEl=document.getElementById('schoolSelected');
+  if(list) list.style.display='none';
+  if(arrow) arrow.style.transform='rotate(0deg)';
+  if(selEl) selEl.style.borderRadius='14px';
+}
+
 // SCR-008 accordion + fee logic
 function toggleAccordion(sid){
   const body=document.getElementById(sid+'-body');
@@ -1721,10 +1838,7 @@ function toggleAccordion(sid){
 function masterCheck(sid,fids){
   const master=document.getElementById(sid+'-master');
   if(!master) return;
-  fids.forEach(fid=>{
-    const chk=document.getElementById(fid+'-chk');
-    if(chk){chk.checked=master.checked;toggleFeeInput(fid);}
-  });
+  fids.forEach(fid=>{const chk=document.getElementById(fid+'-chk');if(chk){chk.checked=master.checked;toggleFeeInput(fid);}});
   recalc008();
 }
 function toggleFeeInput(fid){
