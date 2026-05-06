@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <title>Ruya Schools App</title>
@@ -19,8 +19,8 @@
   --shadow:0 4px 20px rgba(13,31,92,0.12);
 }
 html{height:100%;-webkit-text-size-adjust:100%;}
-body{font-family:'Nunito',sans-serif;background:#c8cfe8;min-height:100vh;display:flex;flex-direction:column;align-items:center;}
-.app-container{position:relative;background:var(--white);width:100%;height:100vh;height:100dvh;display:flex;flex-direction:column;overflow:hidden;}
+body{font-family:'Nunito',sans-serif;background:#c8cfe8;min-height:100vh;min-height:-webkit-fill-available;display:flex;flex-direction:column;align-items:center;}
+.app-container{position:relative;background:var(--white);width:100%;height:var(--app-height,100vh);min-height:var(--app-height,100vh);display:flex;flex-direction:column;overflow:hidden;}
 @media(min-width:500px){
   body{padding:30px 20px;align-items:flex-start;justify-content:center;flex-direction:row;flex-wrap:wrap;gap:20px;}
   .app-container{width:390px;min-height:0;height:844px;border-radius:50px;box-shadow:0 0 0 12px #1a1a1a,0 0 0 14px #333,0 30px 80px rgba(0,0,0,0.4);flex-shrink:0;overflow:hidden;}
@@ -47,7 +47,8 @@ body{font-family:'Nunito',sans-serif;background:#c8cfe8;min-height:100vh;display
   top:0;left:0;right:0;
   /* leave room for nav bar (66px) at bottom */
   bottom:66px;
-  overflow:hidden;
+  overflow:auto;
+  -webkit-overflow-scrolling:touch;
 }
 /* Login screen — no nav, fills full height */
 .screen#scr-001{bottom:0;}
@@ -268,7 +269,8 @@ html[dir="rtl"] .out-ban { direction: rtl; }
   z-index: 2000;
   align-items: flex-end;
   justify-content: center;
-  backdrop-filter: blur(3px);
+  /* iOS compatibility: backdrop-filter disabled to avoid blank rendering issues */
+  /* backdrop-filter: blur(3px); */
 }
 #langModal.open { display: flex; }
 #langSheet {
@@ -349,7 +351,7 @@ html[dir="rtl"] .out-ban { direction: rtl; }
 
 /* ── RESPONSIVE ────────────────────────────────────── */
 @media(max-width:499px){
-  .app-container{width:100%;height:100vh;height:100dvh;border-radius:0;box-shadow:none;}
+  .app-container{width:100%;height:var(--app-height,100vh);min-height:var(--app-height,100vh);border-radius:0;box-shadow:none;}
   .notch,.side-btn,.vol1,.vol2{display:none!important;}
 }
 @media(min-width:500px) and (max-width:800px){
@@ -1930,6 +1932,40 @@ html[dir="rtl"] .out-ban { direction: rtl; }
 </div>
 
 <script>
+
+/* iOS / Chrome-on-iPhone viewport compatibility
+   Chrome on iPhone uses Apple's WebKit engine, so 100vh/100dvh can render incorrectly.
+   This sets a stable CSS variable based on the real visible viewport height. */
+(function(){
+  function setAppHeight(){
+    var h = (window.visualViewport && window.visualViewport.height) ? window.visualViewport.height : window.innerHeight;
+    document.documentElement.style.setProperty('--app-height', h + 'px');
+  }
+  setAppHeight();
+  window.addEventListener('resize', setAppHeight);
+  window.addEventListener('orientationchange', function(){ setTimeout(setAppHeight, 250); });
+  if (window.visualViewport) window.visualViewport.addEventListener('resize', setAppHeight);
+})();
+
+/* Optional debug: open the URL with ?debug=1 to show JavaScript errors on iPhone. */
+window.onerror = function(msg, url, line, col){
+  try {
+    console.error('Ruya App Error:', msg, 'line:', line, 'col:', col);
+    if (window.location.search.indexOf('debug=1') >= 0) {
+      alert('JavaScript error: ' + msg + ' line:' + line);
+    }
+  } catch(e) {}
+  return false;
+};
+
+function safeGetStorage(key, fallback){
+  try { return localStorage.getItem(key) || fallback; }
+  catch(e) { return fallback; }
+}
+function safeSetStorage(key, value){
+  try { localStorage.setItem(key, value); } catch(e) {}
+}
+
 const labels={
   'scr-001':'SCR-001 — Login',
   'scr-005':'SCR-005 — Dashboard (Branches)',
@@ -2321,11 +2357,11 @@ var TRANSLATIONS = {
   }
 };
 
-var currentLang = localStorage.getItem('ruya_lang') || 'en';
+var currentLang = safeGetStorage('ruya_lang', 'en');
 
 function applyLang(lang) {
   currentLang = lang;
-  localStorage.setItem('ruya_lang', lang);
+  safeSetStorage('ruya_lang', lang);
 
   var t = TRANSLATIONS[lang];
   var isAr = (lang === 'ar');
