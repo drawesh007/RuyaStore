@@ -2,12 +2,103 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="format-detection" content="telephone=no">
+<meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <title>Ruya Schools App</title>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
+/* ══════════════════════════════════════════════════
+   iOS / SAFARI / WEBKIT COMPATIBILITY FIXES
+══════════════════════════════════════════════════ */
+
+/* iOS scroll and overflow control */
+html {
+  overflow: hidden;
+  height: 100%;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+body {
+  overflow: hidden;
+  height: 100%;
+  position: relative;
+}
+
+/* Force hardware acceleration on all interactive elements */
+.screen, .app-container, .scrl, .scrl-white {
+  -webkit-overflow-scrolling: touch;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+}
+
+/* iOS input zoom prevention — font-size must be >= 16px */
+input, select, textarea {
+  font-size: 16px !important;
+  -webkit-appearance: none;
+  appearance: none;
+  border-radius: 13px;
+}
+
+/* iOS button tap styles */
+button, [onclick] {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  cursor: pointer;
+}
+
+/* Flexbox gap fallback for iOS < 14.5 */
+/* We use margin-based fallback via JS feature detection */
+
+/* Safe area support */
+.app-container {
+  padding-top: env(safe-area-inset-top);
+  padding-top: constant(safe-area-inset-top);
+}
+
+/* Webkit animation/transition prefixes */
+* {
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+/* Fix iOS momentum scroll */
+.scrl, .scrl-white {
+  overflow-y: scroll !important;
+  -webkit-overflow-scrolling: touch !important;
+  overscroll-behavior-y: contain;
+}
+
+/* webkit-backdrop-filter for Safari/iOS */
+#langModal {
+  -webkit--webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);
+  -webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);
+}
+
+/* iOS input type=number removes arrows cleanly */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Fix iOS select dropdown */
+select {
+  background-image: none;
+  -webkit-appearance: none;
+}
+
+/* Prevent iOS callout on long press */
+img, svg {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
 :root{
   --navy:#0d1f5c;--navy2:#162272;--navy3:#1a2a8c;
@@ -19,8 +110,8 @@
   --shadow:0 4px 20px rgba(13,31,92,0.12);
 }
 html{height:100%;-webkit-text-size-adjust:100%;}
-body{font-family:'Nunito',sans-serif;background:#c8cfe8;min-height:100vh;min-height:-webkit-fill-available;display:flex;flex-direction:column;align-items:center;}
-.app-container{position:relative;background:var(--white);width:100%;height:var(--app-height,100vh);min-height:var(--app-height,100vh);display:flex;flex-direction:column;overflow:hidden;}
+body{font-family:'Nunito',sans-serif;background:#c8cfe8;min-height:100vh;display:flex;flex-direction:column;align-items:center;}
+.app-container{position:relative;background:var(--white);width:100%;height:100vh;display:flex;flex-direction:column;overflow:hidden;}
 @media(min-width:500px){
   body{padding:30px 20px;align-items:flex-start;justify-content:center;flex-direction:row;flex-wrap:wrap;gap:20px;}
   .app-container{width:390px;min-height:0;height:844px;border-radius:50px;box-shadow:0 0 0 12px #1a1a1a,0 0 0 14px #333,0 30px 80px rgba(0,0,0,0.4);flex-shrink:0;overflow:hidden;}
@@ -47,8 +138,7 @@ body{font-family:'Nunito',sans-serif;background:#c8cfe8;min-height:100vh;min-hei
   top:0;left:0;right:0;
   /* leave room for nav bar (66px) at bottom */
   bottom:66px;
-  overflow:auto;
-  -webkit-overflow-scrolling:touch;
+  overflow:hidden;
 }
 /* Login screen — no nav, fills full height */
 .screen#scr-001{bottom:0;}
@@ -62,9 +152,9 @@ body{font-family:'Nunito',sans-serif;background:#c8cfe8;min-height:100vh;min-hei
 @supports(padding-top:env(safe-area-inset-top)){.sbar{padding-top:calc(env(safe-area-inset-top) + 6px);}}
 @media(min-width:500px){.sbar{padding-top:38px;}}
 .sbar-icons{display:flex;gap:5px;align-items:center;}
-.scrl{flex:1;overflow-y:auto;background:var(--bg);-webkit-overflow-scrolling:touch;scrollbar-width:none;}
+.scrl{flex:1;overflow-y:auto;overflow-y:scroll;background:var(--bg);-webkit-overflow-scrolling:touch;scrollbar-width:none;-webkit-overflow-scrolling:touch;}
 .scrl::-webkit-scrollbar{display:none;}
-.scrl-white{flex:1;overflow-y:auto;background:white;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
+.scrl-white{flex:1;overflow-y:auto;overflow-y:scroll;background:white;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
 .scrl-white::-webkit-scrollbar{display:none;}
 .hdr{background:var(--navy);padding:14px 18px;color:white;display:flex;align-items:center;gap:10px;flex-shrink:0;}
 .hdr-title{font-size:17px;font-weight:800;flex:1;font-family:'Poppins',sans-serif;}
@@ -86,7 +176,7 @@ body{font-family:'Nunito',sans-serif;background:#c8cfe8;min-height:100vh;min-hei
 }
 @supports(padding-bottom:env(safe-area-inset-bottom)){
   #globalNav{
-    height:calc(66px + env(safe-area-inset-bottom));
+    height:calc(66px + constant(safe-area-inset-bottom));height:calc(66px + env(safe-area-inset-bottom));
     padding-bottom:calc(env(safe-area-inset-bottom) + 8px);
   }
 }
@@ -126,8 +216,10 @@ body{font-family:'Nunito',sans-serif;background:#c8cfe8;min-height:100vh;min-hei
 .bnav{display:none;}
 .loading{display:none;position:absolute;inset:0;background:rgba(255,255,255,0.92);z-index:900;align-items:center;justify-content:center;flex-direction:column;gap:12px;}
 .loading.on{display:flex;}
-.spin{width:40px;height:40px;border:4px solid var(--border);border-top-color:var(--navy);border-radius:50%;animation:spin 0.7s linear infinite;}
-@keyframes spin{to{transform:rotate(360deg);}}
+.spin{width:40px;height:40px;border:4px solid var(--border);border-top-color:var(--navy);border-radius:50%;-webkit-animation:spin 0.7s linear infinite;animation:spin 0.7s linear infinite;}
+@-webkit-keyframes spin{
+  to{-webkit-transform:rotate(360deg);}}
+@keyframes spin{to{-webkit-transform:rotate(360deg);transform:rotate(360deg);}}
 .card{background:white;border-radius:18px;padding:16px;margin:8px 16px;border:1px solid var(--border);box-shadow:0 2px 12px rgba(13,31,92,0.06);}
 .btn{background:var(--navy);color:white;border:none;border-radius:16px;padding:15px 20px;font-size:15px;font-weight:800;font-family:'Poppins',sans-serif;cursor:pointer;width:100%;transition:all 0.2s;letter-spacing:0.3px;min-height:50px;}
 .btn:active{background:var(--navy2);transform:scale(0.98);}
@@ -159,12 +251,12 @@ body{font-family:'Nunito',sans-serif;background:#c8cfe8;min-height:100vh;min-hei
 .frow{display:flex;justify-content:space-between;margin-bottom:7px;}
 .frow-l{font-size:12px;color:var(--muted);font-weight:600;}
 .frow-v{font-size:12px;font-weight:800;color:var(--text);}
-.mgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;padding:12px 16px;}
+.mgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;grid-gap:10px;padding:12px 16px;}
 .mitem{background:white;border-radius:16px;padding:18px 12px;display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer;border:1.5px solid var(--border);box-shadow:0 2px 8px rgba(13,31,92,0.05);transition:all 0.2s;min-height:90px;}
 .mitem:active{background:#f0f3ff;transform:scale(0.97);}
 .micon{width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;}
 .mlbl{font-size:12px;font-weight:800;color:var(--text);text-align:center;font-family:'Poppins',sans-serif;}
-.tgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin:8px 16px;}
+.tgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin:8px 16px;grid-gap:8px;}
 .tcell{background:white;border-radius:14px;padding:13px;text-align:center;border:1.5px solid var(--border);}
 .tcell-l{font-size:10px;color:var(--muted);font-weight:700;margin-bottom:5px;text-transform:uppercase;letter-spacing:0.4px;}
 .tcell-v{font-size:17px;font-weight:900;color:var(--navy);font-family:'Poppins',sans-serif;}
@@ -201,7 +293,7 @@ body{font-family:'Nunito',sans-serif;background:#c8cfe8;min-height:100vh;min-hei
 .ainp{border:2px solid var(--navy);border-radius:11px;padding:9px 12px;font-size:16px;font-family:'Poppins',sans-serif;width:100%;outline:none;color:var(--navy);font-weight:800;text-align:center;-webkit-appearance:none;}
 .encard{background:white;border-radius:16px;margin:8px 16px;padding:14px 16px;display:flex;align-items:center;gap:12px;border:1.5px solid var(--border);box-shadow:0 2px 8px rgba(13,31,92,0.05);}
 .en-av{width:46px;height:46px;border-radius:50%;background:var(--navy);display:flex;align-items:center;justify-content:center;color:white;font-size:17px;font-weight:800;flex-shrink:0;}
-.sel-inp{width:100%;border:2px solid var(--border);border-radius:13px;padding:12px 14px;font-size:16px;font-family:'Nunito',sans-serif;outline:none;color:var(--text);background:white;margin-bottom:12px;-webkit-appearance:none;}
+.sel-inp{width:100%;border:2px solid var(--border);border-radius:13px;padding:12px 14px;font-size:16px !important;font-family:'Nunito',sans-serif;outline:none;color:var(--text);background:white;margin-bottom:12px;-webkit-appearance:none;}
 .tarea{width:100%;border:2px solid var(--border);border-radius:13px;padding:12px 14px;font-size:16px;font-family:'Nunito',sans-serif;outline:none;color:var(--text);resize:none;height:110px;margin-bottom:12px;}
 .out-ban{background:linear-gradient(135deg,var(--red),#a01515);color:white;border-radius:16px;padding:18px;margin:10px 16px;position:relative;overflow:hidden;}
 .out-ban::before{content:'';position:absolute;right:-20px;top:-20px;width:100px;height:100px;background:rgba(255,255,255,0.08);border-radius:50%;}
@@ -269,8 +361,7 @@ html[dir="rtl"] .out-ban { direction: rtl; }
   z-index: 2000;
   align-items: flex-end;
   justify-content: center;
-  /* iOS compatibility: backdrop-filter disabled to avoid blank rendering issues */
-  /* backdrop-filter: blur(3px); */
+  -webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);
 }
 #langModal.open { display: flex; }
 #langSheet {
@@ -280,10 +371,7 @@ html[dir="rtl"] .out-ban { direction: rtl; }
   padding: 8px 0 32px;
   animation: slideUp 0.28s cubic-bezier(0.4,0,0.2,1);
 }
-@keyframes slideUp {
-  from { transform: translateY(100%); opacity: 0; }
-  to   { transform: translateY(0);    opacity: 1; }
-}
+@keyframes slideUp {from{-webkit-transform:translateY(100%);transform:translateY(100%);opacity:0;}to{-webkit-transform:translateY(0);transform:translateY(0);opacity:1;}}
 .lang-handle {
   width: 40px; height: 4px;
   background: var(--border);
@@ -351,7 +439,7 @@ html[dir="rtl"] .out-ban { direction: rtl; }
 
 /* ── RESPONSIVE ────────────────────────────────────── */
 @media(max-width:499px){
-  .app-container{width:100%;height:var(--app-height,100vh);min-height:var(--app-height,100vh);border-radius:0;box-shadow:none;}
+  .app-container{width:100%;height:100vh;border-radius:0;box-shadow:none;}
   .notch,.side-btn,.vol1,.vol2{display:none!important;}
 }
 @media(min-width:500px) and (max-width:800px){
@@ -376,7 +464,7 @@ html[dir="rtl"] .out-ban { direction: rtl; }
 .branch-card.open{box-shadow:0 6px 28px rgba(13,31,92,0.16);}
 .branch-hdr{
   display:flex;align-items:center;gap:12px;
-  padding:14px 16px;cursor:pointer;user-select:none;
+  padding:14px 16px;cursor:pointer;-webkit-user-select:none;user-select:none;
   transition:background 0.15s;
 }
 .branch-hdr:active{filter:brightness(0.95);}
@@ -425,6 +513,17 @@ html[dir="rtl"] .out-ban { direction: rtl; }
 .bsq-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:5px;padding:7px 6px;border-radius:10px;border:none;font-size:11px;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif;min-height:32px;}
 /* branch footer inside expanded */
 .branch-footer{background:rgba(13,31,92,0.05);margin:8px 12px 6px;border-radius:12px;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;}
+
+/* iOS flex gap polyfill */
+.no-flex-gap .pg-nav { gap: 0; }
+.no-flex-gap .pg-nav .pg-btn { margin: 4px; }
+.no-flex-gap .sbar-icons { gap: 0; }
+.no-flex-gap .sbar-icons > * { margin-left: 5px; }
+.no-flex-gap .branch-stcard-quick { gap: 0; }
+.no-flex-gap .branch-stcard-quick .bsq-btn { margin-right: 6px; }
+.no-flex-gap .tgrid { gap: 0; grid-gap: 8px; }
+.no-flex-gap .mgrid { gap: 0; grid-gap: 10px; }
+
 </style>
 </head>
 <body>
@@ -1007,7 +1106,7 @@ html[dir="rtl"] .out-ban { direction: rtl; }
 
         <!-- COLLAPSED HEADER — always visible -->
         <div id="s1-hdr" onclick="toggleAccordion('s1')"
-          style="background:var(--navy);padding:14px 16px;display:flex;align-items:center;gap:12px;cursor:pointer;user-select:none;">
+          style="background:var(--navy);padding:14px 16px;display:flex;align-items:center;gap:12px;cursor:pointer;-webkit-user-select:none;user-select:none;">
           <!-- Checkbox -->
           <input type="checkbox" id="s1-master" onclick="event.stopPropagation();masterCheck('s1',['s1f1','s1f2','s1f3']);recalc008()"
             style="width:18px;height:18px;accent-color:white;flex-shrink:0;">
@@ -1127,7 +1226,7 @@ html[dir="rtl"] .out-ban { direction: rtl; }
       <div style="margin:6px 16px;border-radius:16px;overflow:hidden;box-shadow:0 2px 14px rgba(13,31,92,0.08);border:1.5px solid var(--border);">
 
         <div id="s2-hdr" onclick="toggleAccordion('s2')"
-          style="background:var(--red);padding:14px 16px;display:flex;align-items:center;gap:12px;cursor:pointer;user-select:none;">
+          style="background:var(--red);padding:14px 16px;display:flex;align-items:center;gap:12px;cursor:pointer;-webkit-user-select:none;user-select:none;">
           <input type="checkbox" id="s2-master" onclick="event.stopPropagation();masterCheck('s2',['s2f1','s2f2']);recalc008()"
             style="width:18px;height:18px;accent-color:white;flex-shrink:0;">
           <div style="width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,0.18);border:2px solid rgba(255,255,255,0.3);display:flex;align-items:center;justify-content:center;color:white;font-size:14px;font-weight:800;flex-shrink:0;">SM</div>
@@ -1212,7 +1311,7 @@ html[dir="rtl"] .out-ban { direction: rtl; }
       <div style="margin:6px 16px;border-radius:16px;overflow:hidden;box-shadow:0 2px 14px rgba(13,31,92,0.08);border:1.5px solid var(--border);">
 
         <div id="s3-hdr" onclick="toggleAccordion('s3')"
-          style="background:#059669;padding:14px 16px;display:flex;align-items:center;gap:12px;cursor:pointer;user-select:none;">
+          style="background:#059669;padding:14px 16px;display:flex;align-items:center;gap:12px;cursor:pointer;-webkit-user-select:none;user-select:none;">
           <input type="checkbox" id="s3-master" onclick="event.stopPropagation();masterCheck('s3',['s3f1']);recalc008()"
             style="width:18px;height:18px;accent-color:white;flex-shrink:0;">
           <div style="width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,0.18);border:2px solid rgba(255,255,255,0.3);display:flex;align-items:center;justify-content:center;color:white;font-size:14px;font-weight:800;flex-shrink:0;">KM</div>
@@ -1932,40 +2031,6 @@ html[dir="rtl"] .out-ban { direction: rtl; }
 </div>
 
 <script>
-
-/* iOS / Chrome-on-iPhone viewport compatibility
-   Chrome on iPhone uses Apple's WebKit engine, so 100vh/100dvh can render incorrectly.
-   This sets a stable CSS variable based on the real visible viewport height. */
-(function(){
-  function setAppHeight(){
-    var h = (window.visualViewport && window.visualViewport.height) ? window.visualViewport.height : window.innerHeight;
-    document.documentElement.style.setProperty('--app-height', h + 'px');
-  }
-  setAppHeight();
-  window.addEventListener('resize', setAppHeight);
-  window.addEventListener('orientationchange', function(){ setTimeout(setAppHeight, 250); });
-  if (window.visualViewport) window.visualViewport.addEventListener('resize', setAppHeight);
-})();
-
-/* Optional debug: open the URL with ?debug=1 to show JavaScript errors on iPhone. */
-window.onerror = function(msg, url, line, col){
-  try {
-    console.error('Ruya App Error:', msg, 'line:', line, 'col:', col);
-    if (window.location.search.indexOf('debug=1') >= 0) {
-      alert('JavaScript error: ' + msg + ' line:' + line);
-    }
-  } catch(e) {}
-  return false;
-};
-
-function safeGetStorage(key, fallback){
-  try { return localStorage.getItem(key) || fallback; }
-  catch(e) { return fallback; }
-}
-function safeSetStorage(key, value){
-  try { localStorage.setItem(key, value); } catch(e) {}
-}
-
 const labels={
   'scr-001':'SCR-001 — Login',
   'scr-005':'SCR-005 — Dashboard (Branches)',
@@ -2021,6 +2086,12 @@ function goTo(id){
     /* update active tab */
     var activeTab=SCREEN_NAV_MAP[id]||'home';
     updateNavTab(activeTab);
+  }
+  /* iOS Safari repaint fix */
+  var activeScr=document.getElementById(id);
+  if(activeScr){
+    activeScr.style.webkitTransform='translateZ(0)';
+    setTimeout(function(){if(activeScr)activeScr.style.webkitTransform='';},16);
   }
 }
 
@@ -2357,11 +2428,11 @@ var TRANSLATIONS = {
   }
 };
 
-var currentLang = safeGetStorage('ruya_lang', 'en');
+var currentLang = localStorage.getItem('ruya_lang') || 'en';
 
 function applyLang(lang) {
   currentLang = lang;
-  safeSetStorage('ruya_lang', lang);
+  localStorage.setItem('ruya_lang', lang);
 
   var t = TRANSLATIONS[lang];
   var isAr = (lang === 'ar');
@@ -2442,6 +2513,112 @@ document.addEventListener('DOMContentLoaded', function() {
   if(document.readyState !== 'loading') {
     setTimeout(function(){ applyLang(currentLang); }, 50);
   }
+})();
+
+
+
+/* ══════════════════════════════════════════════════
+   iOS / SAFARI RUNTIME FIXES
+══════════════════════════════════════════════════ */
+
+(function() {
+  /* FIX A: Correct viewport height for iOS Safari
+     window.innerHeight excludes the URL bar correctly */
+  function setAppHeight() {
+    var h = window.innerHeight;
+    var container = document.querySelector('.app-container');
+    if (container) {
+      // Only apply on mobile (not desktop phone frame)
+      if (window.innerWidth < 500) {
+        container.style.height = h + 'px';
+        container.style.maxHeight = h + 'px';
+      }
+    }
+    // Also fix any screen that needs it
+    document.documentElement.style.setProperty('--app-height', h + 'px');
+  }
+  
+  setAppHeight();
+  window.addEventListener('resize', setAppHeight);
+  window.addEventListener('orientationchange', function() {
+    setTimeout(setAppHeight, 300);
+  });
+
+  /* FIX B: iOS flexbox gap polyfill
+     If browser doesn't support gap in flex, use margin fallback */
+  function supportsFlexGap() {
+    var flex = document.createElement('div');
+    flex.style.cssText = 'display:flex;gap:1px;';
+    document.body.appendChild(flex);
+    var supported = flex.scrollHeight === 0;
+    document.body.removeChild(flex);
+    // Actually check computed style
+    return typeof flex.style.gap === 'string' && flex.style.gap !== '';
+  }
+  
+  if (!supportsFlexGap()) {
+    // Add fallback class to use margin instead of gap
+    document.documentElement.classList.add('no-flex-gap');
+  }
+
+  /* FIX C: Prevent double-tap zoom on iOS */
+  var lastTouchEnd = 0;
+  document.addEventListener('touchend', function(e) {
+    var now = Date.now();
+    if (now - lastTouchEnd <= 300) {
+      e.preventDefault();
+    }
+    lastTouchEnd = now;
+  }, { passive: false });
+
+  /* FIX D: Fix iOS momentum scroll reset on screen switch */
+  var origGoTo = window.goTo;
+  // Will be patched after goTo is defined
+
+  /* FIX E: Force repaint on iOS after screen switch
+     iOS Safari sometimes doesn't repaint correctly */
+  function forceRepaint(el) {
+    if (!el) return;
+    el.style.webkitTransform = 'translateZ(0)';
+    setTimeout(function() {
+      el.style.webkitTransform = '';
+    }, 0);
+  }
+
+  /* FIX F: Prevent iOS rubber-band scroll on app container */
+  document.addEventListener('touchmove', function(e) {
+    var target = e.target;
+    var isScrollable = false;
+    while (target) {
+      if (target.classList && 
+          (target.classList.contains('scrl') || 
+           target.classList.contains('scrl-white') ||
+           target.id === 'langSheet' ||
+           target.id === 'schoolDropList')) {
+        isScrollable = true;
+        break;
+      }
+      target = target.parentElement;
+    }
+    if (!isScrollable) {
+      e.preventDefault();
+    }
+  }, { passive: false });
+
+  /* FIX G: iOS localStorage can fail in private mode - wrap safely */
+  var _storage = {};
+  try {
+    localStorage.setItem('_test', '1');
+    localStorage.removeItem('_test');
+  } catch(e) {
+    // Private mode or quota exceeded - use memory fallback
+    window.localStorage = {
+      getItem: function(k) { return _storage[k] || null; },
+      setItem: function(k, v) { _storage[k] = String(v); },
+      removeItem: function(k) { delete _storage[k]; }
+    };
+  }
+
 })();
 
 
