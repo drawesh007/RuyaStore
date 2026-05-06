@@ -524,6 +524,168 @@ html[dir="rtl"] .out-ban { direction: rtl; }
 .no-flex-gap .tgrid { gap: 0; grid-gap: 8px; }
 .no-flex-gap .mgrid { gap: 0; grid-gap: 10px; }
 
+/* ═══════════════════════════════════════════════════ */
+/* SCR-001 LOGIN — REDESIGNED (OTP + Circular Logos)   */
+/* ═══════════════════════════════════════════════════ */
+#scr-001 .lg-hero{
+  background:#0b1a52;
+  padding:14px 20px 22px;
+  position:relative;overflow:hidden;
+  flex-shrink:0;
+}
+@supports(padding-top:env(safe-area-inset-top)){
+  #scr-001 .lg-hero{padding-top:calc(env(safe-area-inset-top) + 8px);}
+}
+#scr-001 .lg-hero-arc{
+  position:absolute;bottom:-1px;left:0;right:0;height:20px;
+  background:#edf0f8;border-radius:20px 20px 0 0;z-index:2;
+}
+#scr-001 .lg-deco-r{position:absolute;right:-40px;top:-40px;width:170px;height:170px;background:rgba(192,32,26,0.1);border-radius:50%;}
+#scr-001 .lg-deco-l{position:absolute;left:-30px;bottom:5px;width:110px;height:110px;background:rgba(255,255,255,0.04);border-radius:50%;}
+
+#scr-001 .lg-logo-row{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:18px;position:relative;z-index:3;gap:8px;
+}
+#scr-001 .lg-ruya-circle{
+  width:68px;height:68px;border-radius:50%;
+  background:#fff;
+  border:3px solid rgba(255,255,255,0.4);
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 6px 18px rgba(0,0,0,0.3);
+  flex-shrink:0;overflow:hidden;
+}
+#scr-001 .lg-globe-wrap{position:relative;flex-shrink:0;}
+#scr-001 .lg-globe-btn{
+  width:54px;height:54px;border-radius:50%;
+  background:rgba(255,255,255,0.13);
+  border:2px solid rgba(255,255,255,0.25);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;color:#fff;
+  transition:all 0.2s;
+  min-width:54px;min-height:54px;
+  -webkit-tap-highlight-color:transparent;
+}
+#scr-001 .lg-globe-btn:active{background:rgba(255,255,255,0.25);transform:scale(0.95);}
+#scr-001 .lg-globe-btn svg{width:30px;height:30px;}
+#scr-001 .lg-globe-lbl{
+  position:absolute;bottom:-14px;left:50%;transform:translateX(-50%);
+  font-size:9px;font-weight:700;color:rgba(255,255,255,0.55);letter-spacing:0.5px;
+  white-space:nowrap;font-family:'Nunito',sans-serif;pointer-events:none;
+}
+#scr-001 .lg-school-circle{
+  width:68px;height:68px;border-radius:50%;
+  background:rgba(255,255,255,0.08);
+  border:2.5px dashed rgba(255,255,255,0.28);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
+  flex-shrink:0;
+}
+#scr-001 .lg-school-circle svg{width:22px;height:22px;opacity:0.45;}
+#scr-001 .lg-school-lbl{font-size:8px;font-weight:700;color:rgba(255,255,255,0.4);letter-spacing:0.4px;line-height:1;text-align:center;font-family:'Nunito',sans-serif;}
+
+#scr-001 .lg-hero-text{position:relative;z-index:3;}
+#scr-001 .lg-hero-title{font-size:20px;font-weight:800;color:#fff;line-height:1.2;margin-bottom:6px;font-family:'Poppins',sans-serif;}
+#scr-001 .lg-hero-sub{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+#scr-001 .lg-aud-tag{
+  display:inline-flex;align-items:center;gap:4px;
+  background:rgba(192,32,26,0.22);border:1px solid rgba(192,32,26,0.38);
+  border-radius:20px;padding:3px 10px;
+  font-size:10px;font-weight:700;color:#fca5a5;
+}
+#scr-001 .lg-aud-tag svg{width:10px;height:10px;}
+#scr-001 .lg-hero-cap{font-size:11.5px;font-weight:600;color:rgba(255,255,255,0.5);}
+
+#scr-001 .lg-form{background:#edf0f8;padding:18px 18px 8px;}
+#scr-001 .lg-fl{font-size:11px;font-weight:800;color:var(--muted);margin-bottom:6px;
+  letter-spacing:0.4px;text-transform:uppercase;font-family:'Nunito',sans-serif;}
+#scr-001 .lg-fi{
+  background:#fff;border-radius:13px;border:1.5px solid var(--border);
+  display:flex;align-items:center;gap:10px;padding:0 14px;
+  min-height:52px;margin-bottom:13px;transition:all 0.18s;
+}
+#scr-001 .lg-fi.focus{border-color:var(--navy);box-shadow:0 0 0 3px rgba(11,26,82,0.08);}
+#scr-001 .lg-fi svg{width:18px;height:18px;flex-shrink:0;color:#9ca3af;}
+#scr-001 .lg-fi-in{
+  flex:1;border:none;outline:none;font-size:16px !important;
+  font-family:'Nunito',sans-serif;color:var(--text);
+  background:transparent;padding:14px 0;-webkit-appearance:none;min-width:0;
+  border-radius:0;
+}
+#scr-001 .lg-fi-cc{font-size:13px;font-weight:800;color:var(--navy);flex-shrink:0;
+  background:#e8ecf7;padding:6px 10px;border-radius:8px;font-family:'Nunito',sans-serif;}
+
+#scr-001 .lg-otp-note{
+  background:#fff;border-radius:13px;padding:12px 14px;
+  display:flex;align-items:flex-start;gap:10px;margin-bottom:14px;
+  border:1.5px solid var(--border);
+}
+#scr-001 .lg-otp-dot{
+  width:32px;height:32px;border-radius:50%;background:#e0e7ff;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;
+}
+#scr-001 .lg-otp-dot svg{width:17px;height:17px;color:#3730a3;}
+#scr-001 .lg-otp-txt{font-size:12.5px;font-weight:600;color:var(--text2);line-height:1.55;}
+
+#scr-001 .lg-btn-main{
+  width:100%;background:var(--navy);color:#fff;border:none;
+  border-radius:14px;padding:15px;font-size:15px;font-weight:800;
+  font-family:'Poppins',sans-serif;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;gap:9px;
+  min-height:54px;margin-bottom:5px;letter-spacing:0.2px;
+}
+#scr-001 .lg-btn-main:active{background:var(--navy2);transform:scale(0.98);}
+#scr-001 .lg-btn-main svg{width:18px;height:18px;}
+
+#scr-001 .lg-divider{display:flex;align-items:center;gap:10px;padding:13px 0 11px;}
+#scr-001 .lg-div-line{flex:1;height:1px;background:#d8dce8;}
+#scr-001 .lg-div-txt{font-size:11px;color:#9ca3af;font-weight:700;letter-spacing:0.3px;white-space:nowrap;font-family:'Nunito',sans-serif;}
+
+#scr-001 .lg-bio-card{
+  background:#fff;border-radius:16px;border:1.5px solid var(--border);
+  padding:14px 15px;display:flex;align-items:center;gap:14px;
+  cursor:pointer;margin-bottom:14px;transition:all 0.2s;
+  min-height:60px;
+}
+#scr-001 .lg-bio-card:active{border-color:#c7d2fe;background:#fafbff;transform:scale(0.99);}
+#scr-001 .lg-bio-ring{
+  width:56px;height:56px;border-radius:50%;
+  background:#f0f3fa;border:2px solid #c7d2fe;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+#scr-001 .lg-bio-ring svg{width:30px;height:30px;}
+#scr-001 .lg-bio-info{flex:1;min-width:0;}
+#scr-001 .lg-bio-title{font-size:14px;font-weight:800;color:var(--text);margin-bottom:2px;font-family:'Poppins',sans-serif;}
+#scr-001 .lg-bio-sub{font-size:12px;font-weight:600;color:var(--muted);}
+#scr-001 .lg-bio-arr svg{width:18px;height:18px;color:#9ca3af;flex-shrink:0;}
+
+#scr-001 .lg-reg-row{text-align:center;font-size:12.5px;color:var(--muted);font-weight:600;padding:4px 0 14px;}
+#scr-001 .lg-reg-row a{color:var(--navy);font-weight:800;cursor:pointer;}
+
+#scr-001 .lg-trust{
+  background:#fff;border-top:1px solid #e9ecf3;
+  padding:10px 16px;display:flex;justify-content:center;gap:14px;flex-shrink:0;
+  flex-wrap:wrap;
+}
+@supports(padding-bottom:env(safe-area-inset-bottom)){
+  #scr-001 .lg-trust{padding-bottom:calc(env(safe-area-inset-bottom) + 10px);}
+}
+#scr-001 .lg-ti{display:flex;align-items:center;gap:5px;}
+#scr-001 .lg-ti svg{width:13px;height:13px;color:#9ca3af;flex-shrink:0;}
+#scr-001 .lg-ti span{font-size:10px;color:#9ca3af;font-weight:700;font-family:'Nunito',sans-serif;}
+
+/* RTL flip for arrows */
+[dir="rtl"] #scr-001 .lg-btn-main svg,
+[dir="rtl"] #scr-001 .lg-bio-arr svg{transform:scaleX(-1);}
+
+/* Small phones */
+@media(max-width:360px){
+  #scr-001 .lg-ruya-circle,#scr-001 .lg-school-circle{width:60px;height:60px;}
+  #scr-001 .lg-globe-btn{width:48px;height:48px;min-width:48px;min-height:48px;}
+  #scr-001 .lg-globe-btn svg{width:26px;height:26px;}
+  #scr-001 .lg-hero-title{font-size:18px;}
+  #scr-001 .lg-trust{gap:10px;}
+}
+
 </style>
 </head>
 <body>
@@ -569,77 +731,149 @@ html[dir="rtl"] .out-ban { direction: rtl; }
   <!-- SCR-001: LOGIN -->
   <!-- ═══════════════════════════════════════════════ -->
   <div class="screen active" id="scr-001">
-    <div class="scrl-white">
-      <div style="background:linear-gradient(155deg,#080f35 0%,#0d1f5c 55%,#1a2a8c 100%);padding:52px 24px 36px;text-align:center;position:relative;overflow:hidden;">
-        <div style="position:absolute;top:-50px;right:-50px;width:220px;height:220px;background:rgba(192,32,26,0.12);border-radius:50%;"></div>
-        <div style="position:absolute;bottom:-80px;left:-40px;width:200px;height:200px;background:rgba(255,255,255,0.04);border-radius:50%;"></div>
-        <div style="background:white;border-radius:22px;padding:14px 32px;display:inline-block;margin-bottom:18px;box-shadow:0 8px 30px rgba(0,0,0,0.3);">
-          <div style="display:flex;align-items:center;gap:6px;">
-            <span style="font-family:'Poppins',sans-serif;font-size:28px;font-weight:900;color:#0d1f5c;letter-spacing:-1px;">al<span style="color:#c0201a;">ru</span>ya</span>
-            <div style="width:8px;height:8px;background:#c0201a;border-radius:50%;margin-bottom:14px;"></div>
-          </div>
-        </div>
-        <div style="display:flex;justify-content:center;gap:14px;flex-wrap:wrap;margin-bottom:8px;">
-          <div style="width:50px;height:50px;border-radius:50%;background:white;border:2.5px solid #c0201a;display:flex;align-items:center;justify-content:center;font-size:22px;box-shadow:0 4px 14px rgba(192,32,26,0.25);">🧮</div>
-          <div style="width:50px;height:50px;border-radius:50%;background:white;border:2.5px solid #c0201a;display:flex;align-items:center;justify-content:center;font-size:22px;box-shadow:0 4px 14px rgba(192,32,26,0.25);">🎓</div>
-          <div style="width:50px;height:50px;border-radius:50%;background:white;border:2.5px solid #c0201a;display:flex;align-items:center;justify-content:center;font-size:22px;box-shadow:0 4px 14px rgba(192,32,26,0.25);">✏️</div>
-          <div style="width:50px;height:50px;border-radius:50%;background:white;border:2.5px solid #c0201a;display:flex;align-items:center;justify-content:center;font-size:22px;box-shadow:0 4px 14px rgba(192,32,26,0.25);">💡</div>
-          <div style="width:50px;height:50px;border-radius:50%;background:white;border:2.5px solid #c0201a;display:flex;align-items:center;justify-content:center;font-size:22px;box-shadow:0 4px 14px rgba(192,32,26,0.25);">📊</div>
-        </div>
-        <div style="color:rgba(255,255,255,0.65);font-size:12px;font-weight:600;letter-spacing:0.5px;margin-top:6px;"><span data-i18n="sms">SCHOOL MANAGEMENT SYSTEM</span></div>
-        <button class="globe-btn" onclick="openLangModal()" style="position:absolute;top:14px;right:14px;" title="Language">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/>
-            <path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/>
+    <!-- HERO -->
+    <div class="lg-hero">
+      <div class="lg-deco-r"></div>
+      <div class="lg-deco-l"></div>
+
+      <div class="lg-logo-row">
+        <!-- Ruya circular logo -->
+        <div class="lg-ruya-circle">
+          <svg width="62" height="62" viewBox="0 0 62 62" xmlns="http://www.w3.org/2000/svg">
+            <ellipse cx="31" cy="26" rx="20" ry="11" fill="none" stroke="#0b1a52" stroke-width="2.2"/>
+            <circle cx="31" cy="26" r="6" fill="#0b1a52"/>
+            <circle cx="33" cy="24" r="2" fill="#fff"/>
+            <path d="M9 36 Q19 48 31 46 Q43 48 53 36" stroke="#c0201a" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+            <text x="31" y="58" text-anchor="middle" font-family="Georgia,serif" font-size="9" font-weight="700" fill="#0b1a52" letter-spacing="0.2">alru'ya</text>
           </svg>
-        </button>
+        </div>
+
+        <!-- Globe language switcher (opens bottom sheet) -->
+        <div class="lg-globe-wrap">
+          <button class="lg-globe-btn" onclick="openLangModal()" title="Language / اللغة" aria-label="Change language">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="2" y1="12" x2="22" y2="12"/>
+              <path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/>
+            </svg>
+          </button>
+          <div class="lg-globe-lbl">EN / ع</div>
+        </div>
+
+        <!-- School logo placeholder (appears after first login) -->
+        <div class="lg-school-circle" title="School logo will appear after first login">
+          <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round">
+            <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+            <polyline points="9,22 9,14 15,14 15,22"/>
+          </svg>
+          <div class="lg-school-lbl"><span data-i18n="school_logo_top">SCHOOL</span><br><span data-i18n="school_logo_bot">LOGO</span></div>
+        </div>
       </div>
-      <div style="padding:28px 22px;">
-        <div style="font-size:22px;font-weight:900;color:var(--text);margin-bottom:4px;font-family:'Poppins',sans-serif;"><span data-i18n="welcome_back">Welcome Back</span></div>
-        <div style="font-size:13px;color:var(--muted);margin-bottom:22px;font-weight:600;"><span data-i18n="sign_in_sub">Sign in to manage your children's education</span></div>
-        <div class="ig">
-          <div class="lbl"><span data-i18n="username_lbl">USERNAME / MOBILE / CIVIL ID</span></div>
-          <div style="position:relative;">
-            <input class="inp" type="text" placeholder="Enter your credentials" data-i18n-ph="enter_creds" value="mohammed.ahmed">
-            <span style="position:absolute;right:14px;top:50%;transform:translateY(-50%);font-size:18px;">👤</span>
+
+      <div class="lg-hero-text">
+        <div class="lg-hero-title"><span data-i18n="welcome_back">Welcome Back</span></div>
+        <div class="lg-hero-sub">
+          <div class="lg-aud-tag">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+            <span data-i18n="parents_tag">For Parents &amp; Guardians</span>
           </div>
+          <span class="lg-hero-cap" data-i18n="gcc_cap">Kuwait &amp; GCC Schools</span>
         </div>
-        <div class="ig">
-          <div class="lbl">PASSWORD</div>
-          <div style="position:relative;">
-            <input class="inp" type="password" placeholder="••••••••" value="password123">
-            <span style="position:absolute;right:14px;top:50%;transform:translateY(-50%);font-size:18px;cursor:pointer;">👁️</span>
-          </div>
+      </div>
+
+      <div class="lg-hero-arc"></div>
+    </div>
+
+    <!-- FORM (scrollable area) -->
+    <div class="scrl" style="background:#edf0f8;">
+      <div class="lg-form">
+
+        <div class="lg-fl"><span data-i18n="civil_id_lbl">Civil ID Number</span></div>
+        <div class="lg-fi focus" onclick="this.querySelector('input').focus()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <rect x="2" y="5" width="20" height="14" rx="2"/>
+            <circle cx="8" cy="12" r="2"/>
+            <path d="M13 11h5M13 14h4"/>
+          </svg>
+          <input class="lg-fi-in" type="text" inputmode="numeric" data-i18n-ph="civil_id_ph" placeholder="Enter your Civil ID" value="294012345678">
         </div>
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:22px;">
-          <div style="font-size:12px;color:var(--red);cursor:pointer;font-weight:700;"><span data-i18n="forgot_pw">Forgot Password?</span></div>
-          <div style="display:flex;gap:7px;">
-            <div style="font-size:11px;padding:5px 12px;border-radius:8px;background:var(--navy);color:white;cursor:pointer;font-weight:700;">EN</div>
-            <div style="font-size:11px;padding:5px 12px;border-radius:8px;border:1.5px solid var(--border);cursor:pointer;font-weight:700;">AR</div>
-          </div>
+
+        <div class="lg-fl"><span data-i18n="mobile_lbl">Mobile Number</span></div>
+        <div class="lg-fi" onclick="this.querySelector('input').focus()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <rect x="6" y="2" width="12" height="20" rx="2"/>
+            <line x1="11" y1="18" x2="13" y2="18"/>
+          </svg>
+          <div class="lg-fi-cc">+965</div>
+          <input class="lg-fi-in" type="tel" inputmode="numeric" data-i18n-ph="mobile_ph" placeholder="5X XXX XXXX" value="50012345">
         </div>
-        <button class="btn" onclick="showLoading('scr-005')"><span data-i18n="sign_in">Sign In</span></button>
-        <div style="text-align:center;margin-top:24px;">
-          <div style="font-size:11px;color:var(--muted);font-weight:700;margin-bottom:12px;letter-spacing:0.5px;"><span data-i18n="biometrics">OR USE BIOMETRICS</span></div>
-          <div style="cursor:pointer;display:inline-block;" onclick="doFaceId()">
-            <svg class="face-id-svg" viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg" id="faceIdSvg">
-              <path d="M8 22V8H22" stroke="#0d1f5c" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M50 8H64V22" stroke="#0d1f5c" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M64 50V64H50" stroke="#0d1f5c" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M22 64H8V50" stroke="#0d1f5c" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
-              <circle cx="26" cy="30" r="2.5" fill="#0d1f5c"/>
-              <circle cx="46" cy="30" r="2.5" fill="#0d1f5c"/>
-              <path d="M34 33V40H38" stroke="#0d1f5c" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M26 46C26 46 29 50 36 50C43 50 46 46 46 46" stroke="#0d1f5c" stroke-width="2.5" stroke-linecap="round"/>
-              <path d="M22 25C23 23 25 22 28 22" stroke="#0d1f5c" stroke-width="2" stroke-linecap="round"/>
-              <path d="M50 25C49 23 47 22 44 22" stroke="#0d1f5c" stroke-width="2" stroke-linecap="round"/>
+
+        <div class="lg-otp-note">
+          <div class="lg-otp-dot">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+              <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
             </svg>
           </div>
-          <div style="font-size:12px;color:var(--navy);font-weight:700;margin-top:6px;"><span data-i18n="face_id">Tap to use Face ID</span></div>
+          <div class="lg-otp-txt" data-i18n="otp_note">A one-time verification code (OTP) will be sent to your mobile number to confirm your identity securely.</div>
         </div>
-        <div style="text-align:center;margin-top:18px;font-size:13px;color:var(--muted);font-weight:600;">
-          New user? <span style="color:var(--navy);font-weight:800;cursor:pointer;"><span data-i18n="create_acc">Create Account</span></span>
+
+        <button class="lg-btn-main" onclick="showLoading('scr-005')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round">
+            <path d="M5 12h14M12 5l7 7-7 7"/>
+          </svg>
+          <span data-i18n="otp_btn">Send OTP &amp; Continue</span>
+        </button>
+
+        <div class="lg-divider">
+          <div class="lg-div-line"></div>
+          <span class="lg-div-txt" data-i18n="biometrics">OR USE BIOMETRICS</span>
+          <div class="lg-div-line"></div>
         </div>
+
+        <div class="lg-bio-card" onclick="doFaceId()">
+          <div class="lg-bio-ring">
+            <svg viewBox="0 0 72 72" fill="none" stroke="#3730a3" stroke-linecap="round" stroke-width="2.8" id="faceIdSvg">
+              <path d="M14 22V14H22" stroke-width="3.5"/>
+              <path d="M58 22V14H50" stroke-width="3.5"/>
+              <path d="M14 50V58H22" stroke-width="3.5"/>
+              <path d="M58 50V58H50" stroke-width="3.5"/>
+              <circle cx="28" cy="32" r="2.5" fill="#3730a3" stroke="none"/>
+              <circle cx="44" cy="32" r="2.5" fill="#3730a3" stroke="none"/>
+              <path d="M35 36v6h2"/>
+              <path d="M27 47c0 0 3 4.5 9 4.5s9-4.5 9-4.5"/>
+              <path d="M22 27c2-3.5 5-5 8-5"/>
+              <path d="M50 27c-2-3.5-5-5-8-5"/>
+            </svg>
+          </div>
+          <div class="lg-bio-info">
+            <div class="lg-bio-title"><span data-i18n="bio_title">Sign in with Face ID</span></div>
+            <div class="lg-bio-sub"><span data-i18n="bio_sub">Quick &amp; secure biometric login</span></div>
+          </div>
+          <div class="lg-bio-arr">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+          </div>
+        </div>
+
+        <div class="lg-reg-row"><span data-i18n="need_access">Need access?</span> <a data-i18n="contact_admin_link">Contact your school administration</a></div>
+
+      </div>
+    </div>
+
+    <!-- TRUST BAR -->
+    <div class="lg-trust">
+      <div class="lg-ti">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        <span data-i18n="trust_ssl">256-bit SSL</span>
+      </div>
+      <div class="lg-ti">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/></svg>
+        <span data-i18n="trust_pci">PCI Compliant</span>
+      </div>
+      <div class="lg-ti">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        <span data-i18n="trust_moe">MOE Certified</span>
       </div>
     </div>
   </div>
@@ -2294,6 +2528,16 @@ var TRANSLATIONS = {
     biometrics:'OR USE BIOMETRICS', face_id:'Tap to use Face ID',
     new_user:'New user?', create_acc:'Create Account',
     password_lbl:'PASSWORD',
+    /* OTP Login (new) */
+    civil_id_lbl:'Civil ID Number', civil_id_ph:'Enter your Civil ID',
+    mobile_lbl:'Mobile Number', mobile_ph:'5X XXX XXXX',
+    otp_note:'A one-time verification code (OTP) will be sent to your mobile number to confirm your identity securely.',
+    otp_btn:'Send OTP & Continue',
+    bio_title:'Sign in with Face ID', bio_sub:'Quick & secure biometric login',
+    parents_tag:'For Parents & Guardians', gcc_cap:'Kuwait & GCC Schools',
+    school_logo_top:'SCHOOL', school_logo_bot:'LOGO',
+    need_access:'Need access?', contact_admin_link:'Contact your school administration',
+    trust_ssl:'256-bit SSL', trust_pci:'PCI Compliant', trust_moe:'MOE Certified',
 
     /* Dashboard */
     guardian:'GUARDIAN', fin_summary:'Overall Financial Summary',
@@ -2365,6 +2609,16 @@ var TRANSLATIONS = {
     biometrics:'أو استخدم البصمة', face_id:'انقر لاستخدام Face ID',
     new_user:'مستخدم جديد؟', create_acc:'إنشاء حساب',
     password_lbl:'كلمة المرور',
+    /* OTP Login (new) */
+    civil_id_lbl:'الرقم المدني', civil_id_ph:'أدخل رقمك المدني',
+    mobile_lbl:'رقم الجوال', mobile_ph:'5X XXX XXXX',
+    otp_note:'سيتم إرسال رمز تحقق (OTP) إلى رقم جوالك لتأكيد هويتك بشكل آمن.',
+    otp_btn:'إرسال الرمز والمتابعة',
+    bio_title:'الدخول بـ Face ID', bio_sub:'تسجيل دخول سريع وآمن',
+    parents_tag:'لأولياء الأمور والأوصياء', gcc_cap:'مدارس الكويت والخليج',
+    school_logo_top:'شعار', school_logo_bot:'المدرسة',
+    need_access:'تحتاج صلاحية دخول؟', contact_admin_link:'تواصل مع إدارة مدرستك',
+    trust_ssl:'تشفير SSL 256-bit', trust_pci:'متوافق مع PCI', trust_moe:'معتمد من الوزارة',
 
     /* Dashboard */
     guardian:'ولي الأمر', fin_summary:'الملخص المالي الكلي',
